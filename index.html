@@ -1,182 +1,142 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculateur de coût de raccordement Enedis — papernest</title>
-  <style>
-    @font-face{font-family:AvenirPapernest;src:local('Avenir'), local('Avenir Next'), local('Helvetica Neue');}
-    :root{
-      --purple:#5A52FF; --purple-2:#ACA8FF; --bg:#F1F0FF; --teal:#02C5AE; --teal-2:#82E3D7; --mint:#E6F9F7; --soft:#FEF3C6; --black:#000; --white:#fff;
-    }
-    *{box-sizing:border-box;font-family:AvenirPapernest, "Avenir", "Helvetica Neue", Arial, sans-serif}
-    body{background:linear-gradient(180deg,var(--bg),#fff);color:var(--black);margin:0;padding:28px;display:flex;align-items:flex-start;justify-content:center}
-    .card{width:100%;max-width:820px;background:var(--white);border-radius:12px;box-shadow:0 6px 30px rgba(90,82,255,0.08);padding:20px}
-    header{display:flex;gap:12px;align-items:center}
-    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--purple-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
-    h1{font-size:18px;margin:0}
-    p.lead{margin:6px 0 18px;color:#334}
-    form{display:grid;gap:14px}
-    label{font-size:13px;color:#222}
-    .row{display:flex;gap:12px;align-items:center}
-    select,input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid #eee}
-    .hint{font-size:12px;color:#555;margin-top:6px;background:var(--mint);padding:8px;border-radius:8px}
-    .group{background:linear-gradient(90deg,var(--soft),#fff);padding:12px;border-radius:10px}
-    .small{font-size:12px;color:#666}
-    .controls{display:flex;gap:10px;align-items:center}
-    button{background:var(--purple);color:var(--white);border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
-    button.secondary{background:transparent;color:var(--purple);border:1px solid var(--purple)}
-    .result{margin-top:14px;padding:14px;border-radius:10px;background:linear-gradient(180deg,var(--teal-2),var(--mint));}
-    .bold{font-weight:700}
-    .muted{color:#444;font-size:13px}
-    .explain{font-size:13px;color:#333;background:#F8F8FF;padding:10px;border-radius:8px}
-    footer{margin-top:14px;font-size:12px;color:#333}
-    @media (max-width:600px){.row{flex-direction:column}} 
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calculateur de coût de raccordement Enedis — papernest</title>
+<style>
+@font-face{font-family:AvenirPapernest;src:local('Avenir'), local('Avenir Next'), local('Helvetica Neue');}
+:root{
+--purple:#5A52FF;--purple-2:#ACA8FF;--teal:#02C5AE;--teal-dark:#009b8b;--bg:#F1F0FF;--mint:#E6F9F7;--softgreen:#ECFDF5;--white:#fff;--black:#000;
+}
+*{box-sizing:border-box;font-family:AvenirPapernest,"Avenir","Helvetica Neue",Arial,sans-serif}
+body{background:#F8F8FF;margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.container{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:950px}
+.card{background:white;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.05);overflow:hidden}
+.card-header{padding:18px 24px;color:white;font-weight:700}
+.card-body{padding:24px}
+.header-left{background:linear-gradient(90deg,var(--purple),var(--purple-2))}
+.header-right{background:linear-gradient(90deg,var(--teal),var(--teal-dark))}
+.card-body h3{font-size:15px;margin-top:0;display:flex;align-items:center;gap:6px}
+.info-icon{background:#E6F9F7;color:#02C5AE;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;position:relative;font-size:13px;}
+.tooltip{display:none;position:absolute;top:24px;left:0;background:#E6F9F7;color:#333;padding:8px 10px;border-radius:8px;max-width:260px;font-size:12px;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.info-icon.active .tooltip{display:block}
+select,input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-bottom:8px}
+.result-box{background:#E6F9F7;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+.result-box span{display:block;font-size:32px;font-weight:700;color:#02C5AE;margin-bottom:8px}
+.refaction-box{background:var(--softgreen);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px}
+.refaction-box span{display:block;font-size:16px;font-weight:600;color:#009b8b;margin-bottom:4px}
+.btn-primary{background:#02C5AE;color:white;border:none;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:600;width:100%;margin-top:8px}
+.btn-secondary{background:white;border:1px solid #02C5AE;color:#02C5AE;padding:10px 20px;border-radius:10px;cursor:pointer;width:100%;margin-top:8px}
+.small{font-size:13px;color:#666}
+.hint{font-size:12px;color:#444;background:#F1F0FF;padding:10px;border-radius:8px;margin-top:10px;text-align:left}
+@media(max-width:700px){.container{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <main class="card" role="main">
-    <header>
-      <div class="logo">pn</div>
-      <div>
-        <h1>Calculateur de coût de raccordement (estimation TTC)</h1>
-        <p class="lead">Répondez au questionnaire — résultats basés sur les grilles Enedis. Les valeurs affichées sont TTC.</p>
-      </div>
-    </header>
+<div class="container">
+  <div class="card">
+    <div class="card-header header-left">⚙️ Vos informations</div>
+    <div class="card-body">
+      <p>Renseignez vos informations pour calculer le coût de votre raccordement.</p>
+      <form id="calc">
 
-    <form id="calc">
-      <div>
-        <label>1) Puissance nécessaire</label>
+        <h3>Puissance nécessaire <div class="info-icon">?<div class="tooltip">Choisissez la puissance de raccordement correspondant à votre installation. ≤36 kVA = résidentiel, 36–250 kVA = professionnel, >250 kVA = HTA (devis).</div></div></h3>
         <select id="power">
-          <option value="le36">≤ 36 kVA (domestique / petits pros)</option>
-          <option value="36_250">> 36 kVA et ≤ 250 kVA (BT pro / tertiaire)</option>
-          <option value="gt250">> 250 kVA (HTA — voir fourchettes)</option>
+          <option value="le36">≤ 36 kVA</option>
+          <option value="36_250">> 36 kVA et ≤ 250 kVA</option>
+          <option value="gt250">> 250 kVA</option>
         </select>
-        <div class="hint small">Expl.: ≤36 kVA = installations domestiques ou petits locaux. Entre 36 et 250 kVA = sites pros/tertiaire plus importants. &gt;250 kVA = raccordement HTA (moyenne tension).</div>
-      </div>
 
-      <div>
-        <label>2) Zone de facturation</label>
+        <h3>Zone de facturation <div class="info-icon">?<div class="tooltip">ZFA : zones urbaines, coûts d’extension moindres. ZFB : zones rurales/éloignées, coûts plus élevés.</div></div></h3>
         <select id="zone">
-          <option value="ZFA">ZFA — zone A (plus urbaine)</option>
-          <option value="ZFB">ZFB — zone B (plus rurale / éloignée)</option>
+          <option value="ZFA">ZFA (zone urbaine)</option>
+          <option value="ZFB">ZFB (zone rurale)</option>
         </select>
-        <div class="hint small">Expl.: ZFA = zone urbaine avec coûts moindres d'extension. ZFB = zone plus rurale/éloignée — coûts plus élevés.</div>
-      </div>
 
-      <div>
-        <label>3) Taille de l’extension nécessaire (longueur en mètres)</label>
-        <div class="row"><input id="length" type="number" min="0" step="1" value="0"><div class="small">mètres (LE)</div></div>
-        <div class="hint small">Expl.: longueur de la canalisation BT/HTA à créer. Si inconnu, mettez 0 pour aucune extension.</div>
-      </div>
+        <h3>Longueur de l’extension (LE) <div class="info-icon">?<div class="tooltip">Longueur de la canalisation à créer entre le réseau public et votre bâtiment.</div></div></h3>
+        <input id="length" type="number" min="0" value="0">
 
-      <div>
-        <label>4) Longueur du branchement (en mètres)</label>
-        <div class="row"><input id="lb" type="number" min="0" step="1" value="0"><div class="small">mètres (LB)</div></div>
-        <div class="hint small">Expl.: longueur entre le réseau public et votre point de livraison. Plus cette distance est grande, plus le coût augmente (notamment pour >36 kVA).</div>
-      </div>
+        <h3>Longueur du branchement (LB) <div class="info-icon">?<div class="tooltip">Distance entre le réseau public et le compteur. Plus cette distance est grande, plus le coût augmente.</div></div></h3>
+        <input id="lb" type="number" min="0" value="0">
 
-      <div class="group">
-        <label>5) Mise en service initiale</label>
-        <div class="row">
-          <label><input type="radio" name="ms" value="standard" checked> Standard (sous 10 jours — 28,84 € TTC)</label>
-          <label style="margin-left:10px"><input type="radio" name="ms" value="express"> Express (sous 5 jours — 76,16 € TTC)</label>
+        <h3>Mise en service initiale <div class="info-icon">?<div class="tooltip">Standard (10 jours – 28,84 €) ou Express (5 jours – 76,16 €). Frais ajoutés au total TTC.</div></div></h3>
+        <select id="ms">
+          <option value="standard">Standard – 28,84 € TTC</option>
+          <option value="express">Express – 76,16 € TTC</option>
+        </select>
+
+        <button type="button" id="compute" class="btn-primary">Calculer mon raccordement</button>
+        <button type="button" id="reset" class="btn-secondary">Réinitialiser</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header header-right">💰 Résultat</div>
+    <div class="card-body">
+      <p id="msg">Remplissez vos informations pour voir le résultat.</p>
+      <div id="out" hidden>
+        <div class="result-box">
+          <span id="summary"></span>
+          <div id="breakdown" class="small"></div>
         </div>
-        <div class="small">Expl.: frais administratifs de mise en service — inclus dans le total.</div>
+        <div class="refaction-box" id="refaction"></div>
+        <div class="hint">
+          <b>Remarques :</b>
+          <ul>
+            <li>Les prix proviennent du barème public Enedis (version 2025). Pour certains cas complexes (HTA, lotissements, producteurs), le montant est chiffré sur devis Enedis.</li>
+            <li>Toutes les valeurs affichées sont TTC. Les estimations incluent la mise en service.</li>
+          </ul>
+        </div>
       </div>
-
-      <div class="explain">
-        Remarques :
-        <ul class="small">
-          <li>Les prix proviennent du barème public Enedis (version 2025). Pour certains cas (ex: interventions complexes, HTA loin, travaux sur devis), le montant est chiffré sur devis par Enedis.</li>
-          <li>Toutes les valeurs affichées sont TTC. Le cas échéant le calculateur affiche une fourchette ou propose "devis Enedis".</li>
-        </ul>
-      </div>
-
-      <div class="controls">
-        <button type="button" id="compute">Calculer</button>
-        <button type="button" id="reset" class="secondary">Réinitialiser</button>
-      </div>
-
-      <div id="out" class="result" aria-live="polite" hidden>
-        <div id="summary" class="bold"></div>
-        <div id="breakdown" class="muted"></div>
-        <hr>
-        <div id="refaction" class="muted"></div>
-      </div>
-    </form>
-
-    <footer>
-      <div class="small">Avertissement: outil d'estimation — pour un prix ferme, demandez une offre / devis Enedis. Le calculateur utilise les valeurs publiques Enedis (barème 2025).</div>
-    </footer>
-  </main>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
-  const data = {
-    le36: {
-      branchement_complete: 2808.00,
-      extensions: {ZFA:{cfe:3058.80, cve:126.00}, ZFB:{cfe:3955.20, cve:165.60}}
-    },
-    gt36: {
-      cfB:5106.00,
-      cvB_per_m:181.20,
-      extensions: {ZFA:{cfe:3104.40, cve:154.80}, ZFB:{cfe:4039.20, cve:198.00}}
-    },
-    miseEnService:{standard:28.84, express:76.16},
-    refaction_rate:0.4 // 40% prise en charge moyenne (indicative)
-  }
+const data={
+ le36:{branchement_complete:2808.00,extensions:{ZFA:{cfe:3058.80,cve:126.00},ZFB:{cfe:3955.20,cve:165.60}}},
+ gt36:{cfB:5106.00,cvB_per_m:181.20,extensions:{ZFA:{cfe:3104.40,cve:154.80},ZFB:{cfe:4039.20,cve:198.00}}},
+ miseEnService:{standard:28.84,express:76.16},refaction_rate:0.4};
+const $=id=>document.getElementById(id);
+const fmt=x=>Number(x).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' € TTC';
 
-  const $ = id=>document.getElementById(id);
-  const fmt=x=>Number(x).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' € TTC';
+document.querySelectorAll('.info-icon').forEach(icon=>{
+ icon.addEventListener('click',e=>{
+   e.stopPropagation();
+   icon.classList.toggle('active');
+ });
+});
+window.addEventListener('click',()=>{
+ document.querySelectorAll('.info-icon').forEach(i=>i.classList.remove('active'));
+});
 
-  $('compute').addEventListener('click',()=>{
-    const power=$('power').value;
-    const zone=$('zone').value;
-    const length=Number($('length').value||0);
-    const lb=Number($('lb').value||0);
-    const ms=document.querySelector('input[name="ms"]:checked').value;
-
-    let total=0, breakdown=[], refact=0;
-
-    if(power==='le36'){
-      const branch=data.le36.branchement_complete;
-      const ext=data.le36.extensions[zone];
-      const ext_cost=ext.cfe+length*ext.cve;
-      total=branch+ext_cost+data.miseEnService[ms];
-      breakdown.push(['Branchement complet (BT ≤36 kVA)',fmt(branch)]);
-      breakdown.push([`Extension (${length} m) — ${zone}`,fmt(ext_cost)+` (Cfe ${fmt(ext.cfe)}, Cve ${ext.cve.toFixed(2)} €/ml)`]);
-    } else if(power==='36_250'){
-      const branch_fixed=data.gt36.cfB;
-      const branch_var=data.gt36.cvB_per_m*lb;
-      const ext=data.gt36.extensions[zone];
-      const ext_cost=ext.cfe+length*ext.cve;
-      total=branch_fixed+branch_var+ext_cost+data.miseEnService[ms];
-      breakdown.push(['Part fixe branchement (>36 kVA)',fmt(branch_fixed)]);
-      breakdown.push([`Part variable branchement (${lb} m)`,fmt(branch_var)]);
-      breakdown.push([`Extension (${length} m) — ${zone}`,fmt(ext_cost)+` (Cfe ${fmt(ext.cfe)}, Cve ${ext.cve.toFixed(2)} €/ml)`]);
-    } else {
-      $('out').hidden=false;
-      $('summary').textContent='Raccordement HTA (>250 kVA) : demande de devis Enedis nécessaire.';
-      $('breakdown').innerHTML='Fourchettes indicatives disponibles dans le barème Enedis (chapitre HTA).';
-      $('refaction').innerHTML='';
-      return;
-    }
-
-    total=Math.round((total+Number.EPSILON)*100)/100;
-    refact=Math.round((total*(1-data.refaction_rate))*100)/100;
-
-    $('out').hidden=false;
-    $('summary').textContent='Estimation totale : '+fmt(total);
-    $('breakdown').innerHTML=breakdown.map(b=>`<div><span class="bold">${b[0]}</span> — <span>${b[1]}</span></div>`).join('');
-    $('refaction').innerHTML=`<div class='hint small'><b>Après réfaction tarifaire (prise en charge moyenne de 40%)</b> : ${fmt(refact)}<br><i>La réfaction tarifaire est une réduction accordée par Enedis sur une partie des travaux de raccordement, financée via le TURPE. Elle varie selon le type de raccordement et peut aller jusqu'à 40% pour les usages résidentiels.</i></div>`;
-  });
-
-  $('reset').addEventListener('click',()=>{
-    $('power').value='le36';$('zone').value='ZFA';$('length').value=0;$('lb').value=0;document.querySelector('input[name="ms"][value="standard"]').checked=true;$('out').hidden=true;
-  });
+$('compute').addEventListener('click',()=>{
+ const power=$('power').value,zone=$('zone').value,length=Number($('length').value||0),lb=Number($('lb').value||0),ms=$('ms').value;
+ let total=0,breakdown=[];
+ if(power==='le36'){
+  const branch=data.le36.branchement_complete;const ext=data.le36.extensions[zone];const ext_cost=ext.cfe+length*ext.cve;total=branch+ext_cost+data.miseEnService[ms];
+  breakdown.push(`Branchement complet : ${fmt(branch)}`);
+  breakdown.push(`Extension (${length} m) ${zone} : ${fmt(ext_cost)}`);
+ } else if(power==='36_250'){
+  const branch_fixed=data.gt36.cfB;const branch_var=data.gt36.cvB_per_m*lb;const ext=data.gt36.extensions[zone];const ext_cost=ext.cfe+length*ext.cve;total=branch_fixed+branch_var+ext_cost+data.miseEnService[ms];
+  breakdown.push(`Part fixe branchement : ${fmt(branch_fixed)}`);
+  breakdown.push(`Part variable (${lb} m) : ${fmt(branch_var)}`);
+  breakdown.push(`Extension (${length} m) ${zone} : ${fmt(ext_cost)}`);
+ } else {
+  $('out').hidden=false;$('summary').textContent='Devis Enedis nécessaire (>250 kVA)';$('breakdown').textContent='Cas HTA à chiffrer sur devis.';$('refaction').textContent='';return;
+ }
+ const refact=total*(1-data.refaction_rate);
+ $('out').hidden=false;
+ $('msg').textContent='';
+ $('summary').textContent='Estimation : '+fmt(total);
+ $('breakdown').innerHTML=breakdown.join('<br>');
+ $('refaction').innerHTML=`<span>Après réfaction tarifaire (~40%) : ${fmt(refact)}</span><div class='small'><i>La réfaction tarifaire est une réduction appliquée par Enedis sur une partie des travaux, pouvant atteindre 40% selon les cas.</i></div>`;
+});
+$('reset').addEventListener('click',()=>{$('calc').reset();$('out').hidden=true;$('msg').textContent='Remplissez vos informations pour voir le résultat.'});
 })();
 </script>
 </body>
 </html>
-
