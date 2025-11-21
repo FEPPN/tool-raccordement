@@ -27,7 +27,6 @@
             border-radius: 12px;
             padding: 40px;
             box-shadow: 0 4px 20px rgba(90, 82, 255, 0.1);
-            border: 2px solid #5a52ff;
         }
         
         h1 {
@@ -213,10 +212,10 @@
         }
         
         .price-detail {
-            font-size: 30px;
+            font-size: 18px;
             color: #02C5AE;
             margin: 10px 0;
-            font-weight: bold;
+            font-weight: 600;
         }
         
         .info-box {
@@ -456,16 +455,20 @@
                     <p>Le coût inclut une base de 1 690 € TTC plus une part variable qui dépend de la longueur de l'extension nécessaire pour desservir votre terrain.</p>
                 `;
             }
-            
+          
             content += `
-                <div class="info-box">
-                    <strong>ℹ️ Information importante</strong><br>
-                    Ces prix sont estimés à partir des grilles tarifaires d'Enedis. Il est recommandé de faire un devis personnalisé auprès d'Enedis pour connaître le prix exact de votre raccordement.
-                </div>
-            `;
+        <div class="info-box">
+            <strong>ℹ️ Précision importante</strong><br>
+            Ces estimations sont issues du simulateur officiel d’Enedis. 
+            Le montant réel du raccordement peut varier en fonction de la longueur du branchement, 
+            de la zone tarifaire (ZFA/ZFB) et de l’extension éventuellement nécessaire. 
+            Une étude et un devis Enedis sont indispensables pour déterminer le coût exact de votre raccordement.
+        </div>
+    `;
             
             document.getElementById('resultContent').innerHTML = content;
             document.getElementById('result').classList.add('show');
+            
         }
         
         function answerB1(power) {
