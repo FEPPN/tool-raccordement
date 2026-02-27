@@ -117,8 +117,8 @@
             </div>
 
             <div class="options">
-                <button class="option-btn" onclick="startPath('A')">Non, je ne connais pas ces longueurs</button>
-                <button class="option-btn" onclick="startPath('B')">Oui, je connais ces longueurs</button>
+                <button class="option-btn" onclick="trackTool('select_path_unknown_lengths');startPath('A')">Non, je ne connais pas ces longueurs</button>
+                <button class="option-btn" onclick="trackTool('select_path_known_lengths');startPath('B')">Oui, je connais ces longueurs</button>
             </div>
         </div>
 
@@ -128,8 +128,8 @@
                 <div class="question-text">Quelle est votre puissance nécessaire ?</div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="answerA1('low')">Inférieure ou égale à 36 kVA</button>
-                <button class="option-btn" onclick="answerA1('high')">Supérieure à 36 kVA</button>
+                <button class="option-btn" onclick="trackTool('select_power_low');answerA1('low')">Inférieure ou égale à 36 kVA</button>
+                <button class="option-btn" onclick="trackTool('select_power_high');answerA1('high')">Supérieure à 36 kVA</button>
             </div>
         </div>
 
@@ -141,8 +141,8 @@
                 </div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="answerA2('yes')">Oui</button>
-                <button class="option-btn" onclick="answerA2('no')">Non</button>
+                <button class="option-btn" onclick="trackTool('select_viabilisation_yes');answerA2('yes')">Oui</button>
+                <button class="option-btn" onclick="trackTool('select_viabilisation_no');answerA2('no')">Non</button>
             </div>
         </div>
 
@@ -151,9 +151,9 @@
                 <div class="question-text">Votre rue est-elle desservie par le réseau électrique ?</div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="answerA3('full')">Ma rue est totalement desservie en électricité</button>
-                <button class="option-btn" onclick="answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
-                <button class="option-btn" onclick="answerA3('none')">Ma rue n'est pas desservie en électricité</button>
+                <button class="option-btn" onclick="trackTool('select_street_coverage_full');answerA3('full')">Ma rue est totalement desservie en électricité</button>
+                <button class="option-btn" onclick="trackTool('select_street_coverage_partial');answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
+                <button class="option-btn" onclick="trackTool('select_street_coverage_none');answerA3('none')">Ma rue n'est pas desservie en électricité</button>
             </div>
         </div>
 
@@ -163,9 +163,9 @@
                 <div class="question-text">Quelle est votre puissance nécessaire ?</div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="answerB1('low')">Inférieure ou égale à 36 kVA</button>
-                <button class="option-btn" onclick="answerB1('medium')">Entre 36 kVA et 250 kVA</button>
-                <button class="option-btn" onclick="answerB1('high')">Supérieure à 250 kVA</button>
+                <button class="option-btn" onclick="trackTool('select_power_low');answerB1('low')">Inférieure ou égale à 36 kVA</button>
+                <button class="option-btn" onclick="trackTool('select_power_medium');answerB1('medium')">Entre 36 kVA et 250 kVA</button>
+                <button class="option-btn" onclick="trackTool('select_power_high');answerB1('high')">Supérieure à 250 kVA</button>
             </div>
         </div>
 
@@ -177,8 +177,8 @@
                 </div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="answerB2('ZFA')">ZFA (Zone urbaine)</button>
-                <button class="option-btn" onclick="answerB2('ZFB')">ZFB (Zone rurale)</button>
+                <button class="option-btn" onclick="trackTool('select_zone_ZFA');answerB2('ZFA')">ZFA (Zone urbaine)</button>
+                <button class="option-btn" onclick="trackTool('select_zone_ZFB');answerB2('ZFB')">ZFB (Zone rurale)</button>
             </div>
         </div>
 
@@ -186,21 +186,21 @@
             <div class="question-header">
                 <div class="question-text">Quelle est la longueur d'extension nécessaire (en mètres) ?</div>
             </div>
-            <input type="number" id="extensionLength" placeholder="Entrez la longueur en mètres" min="0" onchange="handleExtensionInput()">
+            <input type="number" id="extensionLength" placeholder="Entrez la longueur en mètres" min="0" onchange="trackTool('input_length_extension');handleExtensionInput()">
         </div>
 
         <div id="qb4" class="question-block">
             <div class="question-header">
                 <div class="question-text">Quelle est la longueur du branchement (en mètres) ?</div>
             </div>
-            <input type="number" id="branchementLength" placeholder="Entrez la longueur en mètres" min="0" onchange="calculateResultB()">
+            <input type="number" id="branchementLength" placeholder="Entrez la longueur en mètres" min="0" onchange="trackTool('input_length_branchement');calculateResultB()">
         </div>
 
         <!-- Résultats -->
         <div id="result" class="result-box">
             <div class="result-title">Estimation du coût de raccordement</div>
             <div id="resultContent"></div>
-            <button class="reset-btn" onclick="reset()">Nouvelle estimation</button>
+            <button class="reset-btn" onclick="trackTool('click_reset_simulator');reset()">Nouvelle estimation</button>
         </div>
     </div>
 
@@ -468,6 +468,17 @@
             document.getElementById('branchementLength').value = '';
             document.getElementById('resultContent').innerHTML = '';
         }
+    </script>
+    <script>
+      // Fonction pour envoyer l'événement à la page parente (iframe)
+      function trackTool(actionName) {
+        const nom_du_tool = "tool-raccordement";
+        window.parent.postMessage({
+          'event': 'tool_interaction',
+          'tool_name': nom_du_tool, 
+          'tool_action': actionName
+        }, '*');
+      }
     </script>
 </body>
 </html>
