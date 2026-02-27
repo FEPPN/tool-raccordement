@@ -102,7 +102,7 @@
         <div id="q-initial" class="question-block active">
             <div class="question-header">
                 <div class="question-text">Connaissez-vous la Longueur du Branchement (LB) et la Longueur d'Extension nécessaire (LE) ?</div>
-                <div class="help-icon">?
+                <div class="help-icon" onclick="trackTool('click_help_tooltip')">?
                     <div class="tooltip">La LB est la longueur du câble entre le réseau public et votre compteur. La LE est la longueur de réseau à créer pour atteindre votre terrain.</div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
         <div id="qa2" class="question-block">
             <div class="question-header">
                 <div class="question-text">Votre terrain est-il viabilisé ?</div>
-                <div class="help-icon">?
+                <div class="help-icon" onclick="trackTool('click_help_tooltip')">?
                     <div class="tooltip">Un terrain viabilisé dispose déjà des réseaux d'eau, d'électricité et d'assainissement à proximité immédiate.</div>
                 </div>
             </div>
@@ -172,7 +172,7 @@
         <div id="qb2" class="question-block">
             <div class="question-header">
                 <div class="question-text">Quelle est votre zone de facturation ?</div>
-                <div class="help-icon">?
+                <div class="help-icon" onclick="trackTool('click_help_tooltip')">?
                     <div class="tooltip">ZFA correspond aux zones urbaines denses. ZFB correspond aux zones rurales ou moins densément peuplées.</div>
                 </div>
             </div>
@@ -263,6 +263,7 @@
         }
 
         function showResultA(type) {
+            trackTool('view_result_path_A');
             let content = '';
 
             if (type === 'devis') {
@@ -340,6 +341,7 @@
         }
 
         function calculateResultB() {
+            trackTool('view_result_path_B');
             if (userData.powerB === 'medium') {
                 userData.branchementLength = parseFloat(document.getElementById('branchementLength').value) || 0;
             }
@@ -479,6 +481,16 @@
           'tool_action': actionName
         }, '*');
       }
+    // --- AJOUT : TRACKING VISIBILITÉ ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                trackTool('tool_visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    observer.observe(document.querySelector('.container'));
     </script>
 </body>
 </html>
