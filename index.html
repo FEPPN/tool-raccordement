@@ -470,6 +470,36 @@
             document.getElementById('branchementLength').value = '';
             document.getElementById('resultContent').innerHTML = '';
         }
+        // Fonction pour envoyer la hauteur réelle au site parent
+function sendHeight() {
+    // On laisse un minuscule délai pour que l'animation de fondu soit finie
+    setTimeout(() => {
+        const height = document.querySelector('.container').scrollHeight + 100; // +100 pour la marge
+        window.parent.postMessage({
+            type: 'resize',
+            height: height
+        }, '*');
+    }, 100);
+}
+
+// On appelle sendHeight au chargement initial
+window.addEventListener('load', sendHeight);
+
+// On modifie vos fonctions existantes pour qu'elles appellent sendHeight à chaque changement de vue
+const originalStartPath = startPath;
+startPath = function(path) { originalStartPath(path); sendHeight(); };
+
+const originalAnswerA1 = answerA1;
+answerA1 = function(power) { originalAnswerA1(power); sendHeight(); };
+
+const originalShowResultA = showResultA;
+showResultA = function(type) { originalShowResultA(type); sendHeight(); };
+
+const originalCalculateResultB = calculateResultB;
+calculateResultB = function() { originalCalculateResultB(); sendHeight(); };
+
+const originalReset = reset;
+reset = function() { originalReset(); sendHeight(); };
     </script>
     <script>
       // Fonction pour envoyer l'événement à la page parente (iframe)
