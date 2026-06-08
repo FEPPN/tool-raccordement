@@ -533,9 +533,9 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
     </script>
     <script>
         function trackTool(actionName, customParams = {}) {
-            const nom_du_tool = "tool-raccordement";
+            const nom_du_tool = "tool-raccordement"; // Sera event_component
             
-            // 1. Détermination dynamique de l'événement GTM principal
+            // 1. Détermination de l'événement GTM principal
             let gtmEvent = "click";
             if (actionName === "tool_visible") {
                 gtmEvent = "impression";
@@ -545,21 +545,21 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
                 gtmEvent = "click_cta";
             }
 
-            // 2. Attribution automatique de la catégorie (Règle Métier papernest)
+            // 2. Attribution de la catégorie (Règle Métier papernest)
             let eventCategory = "interaction";
             if (gtmEvent === "click_cta" || customParams.is_cta === true) {
                 eventCategory = "conversion";
             }
 
-            // 3. Envoi du payload complet et structuré au site parent
+            // 3. Envoi du payload direct (Zéro traduction nécessaire dans GTM)
             window.parent.postMessage({
                 'event_system': 'papernest_tool',
-                'gtm_event_name': gtmEvent,
-                'tool_name': nom_du_tool,
-                'tool_action': actionName,
-                'is_cta': customParams.is_cta || false,
-                'event_type': customParams.event_type || 'interaction',
-                'event_category': eventCategory
+                'event': gtmEvent,                                     // click, impression, form, click_cta
+                'event_component': nom_du_tool,                        // Le nom du tool
+                'event_step': actionName,                              // L'action précise (ex: select_power_low)
+                'event_category': eventCategory,                       // interaction ou conversion
+                'event_type': customParams.event_type || 'interaction',// interaction, link, etc.
+                'event_position': 'content'                            // Fixe pour tous les outils
             }, '*');
         }
     </script>
