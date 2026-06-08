@@ -117,45 +117,45 @@
             </div>
 
             <div class="options">
-                <button class="option-btn" onclick="trackTool('select_path_unknown_lengths');startPath('A')">Non, je ne connais pas ces longueurs</button>
-                <button class="option-btn" onclick="trackTool('select_path_known_lengths');startPath('B')">Oui, je connais ces longueurs</button>
+                <button class="option-btn" onclick="startPath('A')">Non, je ne connais pas ces longueurs</button>
+                <button class="option-btn" onclick="startPath('B')">Oui, je connais ces longueurs</button>
             </div>
         </div>
 
         <!-- PARCOURS A -->
         <div id="qa1" class="question-block">
-            <div class="question-header">
-                <div class="question-text">Quelle est votre puissance nécessaire ?</div>
-            </div>
-            <div class="options">
-                <button class="option-btn" onclick="trackTool('select_power_low');answerA1('low')">Inférieure ou égale à 36 kVA</button>
-                <button class="option-btn" onclick="trackTool('select_power_high');answerA1('high')">Supérieure à 36 kVA</button>
-            </div>
-        </div>
+    <div class="question-header">
+        <div class="question-text">Quelle est votre puissance nécessaire ?</div>
+    </div>
+    <div class="options">
+        <button class="option-btn" onclick="answerA1('low')">Inférieure ou égale à 36 kVA</button>
+        <button class="option-btn" onclick="answerA1('high')">Supérieure à 36 kVA</button>
+    </div>
+</div>
 
-        <div id="qa2" class="question-block">
-            <div class="question-header">
-                <div class="question-text">Votre terrain est-il viabilisé ?</div>
-                <div class="help-icon" onclick="trackTool('click_help_tooltip')">?
-                    <div class="tooltip">Un terrain viabilisé dispose déjà des réseaux d'eau, d'électricité et d'assainissement à proximité immédiate.</div>
-                </div>
-            </div>
-            <div class="options">
-                <button class="option-btn" onclick="trackTool('select_viabilisation_yes');answerA2('yes')">Oui</button>
-                <button class="option-btn" onclick="trackTool('select_viabilisation_no');answerA2('no')">Non</button>
-            </div>
+<div id="qa2" class="question-block">
+    <div class="question-header">
+        <div class="question-text">Votre terrain est-il viabilisé ?</div>
+        <div class="help-icon" onclick="trackTool('click_help_tooltip')">?
+            <div class="tooltip">Un terrain viabilisé dispose déjà des réseaux d'eau, d'électricité et d'assainissement à proximité immédiate.</div>
         </div>
+    </div>
+    <div class="options">
+        <button class="option-btn" onclick="answerA2('yes')">Oui</button>
+        <button class="option-btn" onclick="answerA2('no')">Non</button>
+    </div>
+</div>
 
-        <div id="qa3" class="question-block">
-            <div class="question-header">
-                <div class="question-text">Votre rue est-elle desservie par le réseau électrique ?</div>
-            </div>
-            <div class="options">
-                <button class="option-btn" onclick="trackTool('select_street_coverage_full');answerA3('full')">Ma rue est totalement desservie en électricité</button>
-                <button class="option-btn" onclick="trackTool('select_street_coverage_partial');answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
-                <button class="option-btn" onclick="trackTool('select_street_coverage_none');answerA3('none')">Ma rue n'est pas desservie en électricité</button>
-            </div>
-        </div>
+<div id="qa3" class="question-block">
+    <div class="question-header">
+        <div class="question-text">Votre rue est-elle desservie par le réseau électrique ?</div>
+    </div>
+    <div class="options">
+        <button class="option-btn" onclick="answerA3('full')">Ma rue est totalement desservie en électricité</button>
+        <button class="option-btn" onclick="answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
+        <button class="option-btn" onclick="answerA3('none')">Ma rue n'est pas desservie en électricité</button>
+    </div>
+</div>
 
         <!-- PARCOURS B -->
         <div id="qb1" class="question-block">
@@ -163,9 +163,9 @@
                 <div class="question-text">Quelle est votre puissance nécessaire ?</div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="trackTool('select_power_low');answerB1('low')">Inférieure ou égale à 36 kVA</button>
-                <button class="option-btn" onclick="trackTool('select_power_medium');answerB1('medium')">Entre 36 kVA et 250 kVA</button>
-                <button class="option-btn" onclick="trackTool('select_power_high');answerB1('high')">Supérieure à 250 kVA</button>
+                <button class="option-btn" onclick="answerB1('low')">Inférieure ou égale à 36 kVA</button>
+                <button class="option-btn" onclick="answerB1('medium')">Entre 36 kVA et 250 kVA</button>
+                <button class="option-btn" onclick="answerB1('high')">Supérieure à 250 kVA</button>
             </div>
         </div>
 
@@ -177,8 +177,8 @@
                 </div>
             </div>
             <div class="options">
-                <button class="option-btn" onclick="trackTool('select_zone_ZFA');answerB2('ZFA')">ZFA (Zone urbaine)</button>
-                <button class="option-btn" onclick="trackTool('select_zone_ZFB');answerB2('ZFB')">ZFB (Zone rurale)</button>
+                <button class="option-btn" onclick="answerB2('ZFA')">ZFA (Zone urbaine)</button>
+                <button class="option-btn" onclick="answerB2('ZFB')">ZFB (Zone rurale)</button>
             </div>
         </div>
 
@@ -186,21 +186,20 @@
             <div class="question-header">
                 <div class="question-text">Quelle est la longueur d'extension nécessaire (en mètres) ?</div>
             </div>
-            <input type="number" id="extensionLength" placeholder="Entrez la longueur en mètres" min="0" onchange="trackTool('input_length_extension');handleExtensionInput()">
+            <input type="number" id="extensionLength" placeholder="Entrez la longueur en mètres" min="0" onchange="handleExtensionInput()">
         </div>
 
         <div id="qb4" class="question-block">
             <div class="question-header">
                 <div class="question-text">Quelle est la longueur du branchement (en mètres) ?</div>
             </div>
-            <input type="number" id="branchementLength" placeholder="Entrez la longueur en mètres" min="0" onchange="trackTool('input_length_branchement');calculateResultB()">
+            <input type="number" id="branchementLength" placeholder="Entrez la longueur en mètres" min="0" onchange="calculateResultB()">
         </div>
 
-        <!-- Résultats -->
         <div id="result" class="result-box">
             <div class="result-title">Estimation du coût de raccordement</div>
             <div id="resultContent"></div>
-            <button class="reset-btn" onclick="trackTool('click_reset_simulator');reset()">Nouvelle estimation</button>
+            <button class="reset-btn" onclick="handleReset()">Nouvelle estimation</button>
         </div>
     </div>
 
@@ -216,21 +215,33 @@
             branchementLength: 0
         };
 
-        function startPath(path) {
-            userData.path = path;
-            document.getElementById('q-initial').classList.remove('active');
-            if (path === 'A') {
-                document.getElementById('qa1').classList.add('active');
-            } else {
-                document.getElementById('qb1').classList.add('active');
-            }
-        }
+        // APRÈS
+function startPath(path) {
+    userData.path = path;
+    
+    // On détermine l'action exacte à tracker
+    const actionName = (path === 'A') ? 'select_path_unknown_lengths' : 'select_path_known_lengths';
+    
+    // Déclenchement automatique du tracking standardisé
+    trackTool(actionName, { 'event_type': 'interaction' });
 
-        /* ---------- Parcours A ---------- */
+    document.getElementById('q-initial').classList.remove('active');
+    if (path === 'A') {
+        document.getElementById('qa1').classList.add('active');
+    } else {
+        document.getElementById('qb1').classList.add('active');
+    }
+}
+
+/* ---------- Parcours A ---------- */
         function answerA1(power) {
             userData.powerA = power;
-            document.getElementById('qa1').classList.remove('active');
+            
+            // Conservation stricte de tes steps d'origine
+            const actionName = (power === 'low') ? 'select_power_low' : 'select_power_high';
+            trackTool(actionName);
 
+            document.getElementById('qa1').classList.remove('active');
             if (power === 'high') {
                 showResultA('devis');
             } else {
@@ -240,8 +251,12 @@
 
         function answerA2(viabilise) {
             userData.viabilise = viabilise;
-            document.getElementById('qa2').classList.remove('active');
+            
+            // Conservation stricte de tes steps d'origine
+            const actionName = (viabilise === 'yes') ? 'select_viabilisation_yes' : 'select_viabilisation_no';
+            trackTool(actionName);
 
+            document.getElementById('qa2').classList.remove('active');
             if (viabilise === 'yes') {
                 showResultA('430');
             } else {
@@ -251,8 +266,12 @@
 
         function answerA3(street) {
             userData.street = street;
-            document.getElementById('qa3').classList.remove('active');
+            
+            // Conservation stricte de tes steps d'origine
+            const actionName = 'select_street_coverage_' + street;
+            trackTool(actionName);
 
+            document.getElementById('qa3').classList.remove('active');
             if (street === 'full') {
                 showResultA('1690');
             } else if (street === 'partial') {
@@ -302,7 +321,7 @@
                     <strong>ℹ️ Précision importante</strong><br>
                     Ces estimations sont issues du simulateur officiel d’Enedis. 
                     Le montant réel du raccordement peut varier en fonction de la longueur du branchement, 
-                    de la zone tarifaire (ZFA/ZFB) et de l’extension éventuellement nécessaire. 
+                    de la zone tarifaire (ZFA/ZFB) and de l’extension éventuellement nécessaire. 
                     Une étude et un devis Enedis sont indispensables pour déterminer le coût exact de votre raccordement.
                 </div>
             `;
@@ -310,12 +329,17 @@
             document.getElementById('resultContent').innerHTML = content;
             document.getElementById('result').classList.add('show');
         }
-
         /* ---------- Parcours B ---------- */
         function answerB1(power) {
             userData.powerB = power;
-            document.getElementById('qb1').classList.remove('active');
+            
+            // Mapping exact de tes steps d'origine selon la puissance
+            let actionName = 'select_power_low';
+            if (power === 'medium') actionName = 'select_power_medium';
+            if (power === 'high') actionName = 'select_power_high';
+            trackTool(actionName);
 
+            document.getElementById('qb1').classList.remove('active');
             if (power === 'high') {
                 showResultB('devis');
             } else {
@@ -325,12 +349,20 @@
 
         function answerB2(zone) {
             userData.zone = zone;
+            
+            // Mapping de tes steps d'origine
+            const actionName = (zone === 'ZFA') ? 'select_zone_ZFA' : 'select_zone_ZFB';
+            trackTool(actionName);
+
             document.getElementById('qb2').classList.remove('active');
             document.getElementById('qb3').classList.add('active');
         }
 
         function handleExtensionInput() {
             userData.extensionLength = parseFloat(document.getElementById('extensionLength').value) || 0;
+            
+            // Déclenchement automatique de ton step de formulaire d'origine
+            trackTool('input_length_extension');
 
             if (userData.powerB === 'medium') {
                 document.getElementById('qb3').classList.remove('active');
@@ -341,10 +373,13 @@
         }
 
         function calculateResultB() {
-            trackTool('view_result_path_B');
+            // Déclenchement automatique de ton step lors de la validation du branchement
             if (userData.powerB === 'medium') {
                 userData.branchementLength = parseFloat(document.getElementById('branchementLength').value) || 0;
+                trackTool('input_length_branchement');
             }
+
+            trackTool('view_result_path_B');
 
             if (userData.powerB === 'devis') {
                 showResultB('devis');
@@ -360,7 +395,6 @@
 
             // Cas 1 et 2 : ≤ 36 kVA
             if (userData.powerB === 'low') {
-                // Part branchement fixe HT = 2340
                 HT_branchement = 2340.00;
 
                 if (LE === 0) {
@@ -368,10 +402,8 @@
                     HT = HT_branchement;
                 } else {
                     if (userData.zone === 'ZFA') {
-                        // 2340 + 2549 + LE * 105
                         HT_extension = 2549.00 + (LE * 105.00);
                     } else {
-                        // ZFB: 2340 + 3296.20 + LE * 138.60
                         HT_extension = 3296.20 + (LE * 138.60);
                     }
                     HT = HT_branchement + HT_extension;
@@ -385,14 +417,11 @@
                     HT_extension = 0;
                     HT = 4255.00;
                 } else {
-                    // branchement = 4255 + LB * 151
                     HT_branchement = 4255.00 + (LB * 151.00);
 
                     if (userData.zone === 'ZFA') {
-                        // extension : 2587 + LE * 129
                         HT_extension = 2587.00 + (LE * 129.00);
                     } else {
-                        // ZFB : 4039.20 + LE * 198
                         HT_extension = 4039.20 + (LE * 198.00);
                     }
 
@@ -400,15 +429,11 @@
                 }
             }
 
-            // Cas > 250 kVA (traité précédemment), ici on ne devrait pas être
-            // Calcul de la réfaction et du TTC réel
-            const HT_refaction = HT * 0.60;          // HT après réfaction (ce que facture Enedis HT)
-            const TTC_client = HT_refaction * 1.20;  // TTC réellement payé par le client
+            const HT_refaction = HT * 0.60;
+            const TTC_client = HT_refaction * 1.20;
 
-            // Formatage FR
             const fmt = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            // Construction du rendu : HT, HT après réfaction, TTC réel + deux blocs d'info
             let content = `
                 <div class="price">${fmt(HT)} € HT</div>
                 <div class="price-refaction">Après réfaction 40% : ${fmt(HT_refaction)} € HT</div>
@@ -433,6 +458,7 @@
         }
 
         function showResultB(type) {
+            trackTool('view_result_path_B');
             let content = '';
 
             if (type === 'devis') {
@@ -470,6 +496,10 @@
             document.getElementById('branchementLength').value = '';
             document.getElementById('resultContent').innerHTML = '';
         }
+        function handleReset() {
+            trackTool('click_reset_simulator', { 'is_cta': true });
+            reset();
+        }
         // Fonction pour envoyer la hauteur réelle au site parent
 function sendHeight() {
     // On laisse un minuscule délai pour que l'animation de fondu soit finie
@@ -498,29 +528,60 @@ showResultA = function(type) { originalShowResultA(type); sendHeight(); };
 const originalCalculateResultB = calculateResultB;
 calculateResultB = function() { originalCalculateResultB(); sendHeight(); };
 
-const originalReset = reset;
-reset = function() { originalReset(); sendHeight(); };
+const originalHandleReset = handleReset;
+handleReset = function() { originalHandleReset(); sendHeight(); };
     </script>
     <script>
-      // Fonction pour envoyer l'événement à la page parente (iframe)
-      function trackTool(actionName) {
-        const nom_du_tool = "tool-raccordement";
-        window.parent.postMessage({
-          'event': 'tool_interaction',
-          'tool_name': nom_du_tool, 
-          'tool_action': actionName
-        }, '*');
-      }
-    // --- AJOUT : TRACKING VISIBILITÉ ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                trackTool('tool_visible');
-                observer.unobserve(entry.target);
+        function trackTool(actionName, customParams = {}) {
+            const nom_du_tool = "tool-raccordement";
+            
+            // 1. Détermination dynamique de l'événement GTM principal
+            let gtmEvent = "click";
+            if (actionName === "tool_visible") {
+                gtmEvent = "impression";
+            } else if (actionName.includes("form") || actionName.includes("saisie") || actionName.includes("input") || actionName.includes("length")) {
+                gtmEvent = "form";
+            } else if (customParams.is_cta) {
+                gtmEvent = "click_cta";
             }
-        });
-    }, { threshold: 0.5 });
-    observer.observe(document.querySelector('.container'));
+
+            // 2. Attribution automatique de la catégorie (Règle Métier papernest)
+            let eventCategory = "interaction";
+            if (gtmEvent === "click_cta" || customParams.is_cta === true) {
+                eventCategory = "conversion";
+            }
+
+            // 3. Envoi du payload complet et structuré au site parent
+            window.parent.postMessage({
+                'event_system': 'papernest_tool',
+                'gtm_event_name': gtmEvent,
+                'tool_name': nom_du_tool,
+                'tool_action': actionName,
+                'is_cta': customParams.is_cta || false,
+                'event_type': customParams.event_type || 'interaction',
+                'event_category': eventCategory
+            }, '*');
+        }
     </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Remplacez '.container' par la classe ou l'ID principal de votre outil
+    const toolContainer = document.querySelector('.container'); 
+    
+    if (toolContainer) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Déclenche l'événement 'impression'
+            trackTool('tool_visible', { 'event_type': 'interaction' });
+            observer.unobserve(entry.target); // S'exécute une seule fois
+          }
+        });
+      }, { threshold: 0.5 }); // Se déclenche quand 50% de l'outil est visible
+      
+      observer.observe(toolContainer);
+    }
+  });
+</script>
 </body>
 </html>
