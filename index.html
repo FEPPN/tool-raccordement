@@ -539,27 +539,35 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
             let gtmEvent = "click";
             if (actionName === "tool_visible") {
                 gtmEvent = "impression";
-            } else if (actionName.includes("form") || actionName.includes("saisie") || actionName.includes("input") || actionName.includes("length")) {
+            } 
+            else if (actionName.includes("view_result")) {
+                gtmEvent = "form"; // Transformé en form pour éviter le double clic
+            } 
+            else if (actionName.includes("form") || actionName.includes("saisie") || actionName.includes("input") || actionName.includes("length")) {
                 gtmEvent = "form";
-            } else if (customParams.is_cta) {
+            } 
+            else if (customParams.is_cta) {
                 gtmEvent = "click_cta";
             }
 
-            // 2. Attribution de la catégorie (Règle Métier papernest)
-            let eventCategory = "interaction";
-            if (gtmEvent === "click_cta" || customParams.is_cta === true) {
-                eventCategory = "conversion";
+            // 2. Catégorie unique pour l'ensemble du tool (Engagement pur)
+            let eventCategory = "engagement";
+
+            // 3. Détermination de l'event_type exact
+            let eventType = customParams.event_type || 'interaction';
+            if (actionName.includes("view_result")) {
+                eventType = "impression"; // Spécification d'affichage du bloc résultat
             }
 
-            // 3. Envoi du payload direct (Zéro traduction nécessaire dans GTM)
+            // 4. Envoi du payload direct (Zéro traduction nécessaire dans GTM)
             window.parent.postMessage({
                 'event_system': 'papernest_tool',
-                'event': gtmEvent,                                     // click, impression, form, click_cta
-                'event_component': nom_du_tool,                        // Le nom du tool
-                'event_step': actionName,                              // L'action précise (ex: select_power_low)
-                'event_category': eventCategory,                       // interaction ou conversion
-                'event_type': customParams.event_type || 'interaction',// interaction, link, etc.
-                'event_position': 'content'                            // Fixe pour tous les outils
+                'event': gtmEvent,                                      // click, impression, form, click_cta
+                'event_component': nom_du_tool,                         // Le nom du tool
+                'event_step': actionName,                               // L'action précise
+                'event_category': eventCategory,                        // Toujours "engagement"
+                'event_type': eventType,                                // interaction ou impression
+                'event_position': 'content'                             // Fixe pour tous les outils
             }, '*');
         }
     </script>
