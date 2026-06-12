@@ -531,23 +531,18 @@ calculateResultB = function() { originalCalculateResultB(); sendHeight(); };
 const originalHandleReset = handleReset;
 handleReset = function() { originalHandleReset(); sendHeight(); };
     </script>
-    <script>
+<script>
         function trackTool(actionName, customParams = {}) {
             const nom_du_tool = "tool-raccordement"; // Sera event_component
             
             // 1. Détermination de l'événement GTM principal
-            let gtmEvent = "click";
+            let gtmEvent = "form"; // Par défaut, TOUT le tunnel est un événement 'form'
+            
             if (actionName === "tool_visible") {
-                gtmEvent = "impression";
-            } 
-            else if (actionName.includes("view_result")) {
-                gtmEvent = "form"; // Transformé en form pour éviter le double clic
-            } 
-            else if (actionName.includes("form") || actionName.includes("saisie") || actionName.includes("input") || actionName.includes("length")) {
-                gtmEvent = "form";
+                gtmEvent = "impression"; // L'impression globale reste à part
             } 
             else if (customParams.is_cta) {
-                gtmEvent = "click_cta";
+                gtmEvent = "click_cta"; // Le bouton reset passe bien en 'click_cta'
             }
 
             // 2. Catégorie unique pour l'ensemble du tool (Engagement pur)
@@ -556,30 +551,30 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
             // 3. Détermination de l'event_type exact
             let eventType = customParams.event_type || 'interaction';
             if (actionName === "tool_visible" || actionName.includes("view_result")) {
-                eventType = "impression";
+                eventType = "impression"; // Type impression pour l'apparition (visibilité et résultat)
             }
 
             // 4. Construction du payload de base
             let payload = {
                 'event_system': 'papernest_tool',
-                'event': gtmEvent,                                      // click, impression, form, click_cta
+                'event': gtmEvent,                                      // form, impression, click_cta
                 'event_component': nom_du_tool,                         // Le nom du tool
                 'event_category': eventCategory,                        // Toujours "engagement"
                 'event_type': eventType,                                // impression ou interaction
                 'event_position': 'content'                             // Fixe pour tous les outils
             };
 
-            // 5. Condition pour event_step
+            // 5. Condition pour event_step (Absent uniquement à l'impression globale)
             if (actionName !== "tool_visible") {
                 payload.event_step = actionName;
             }
 
-            // 6. AJOUT DU PARAMÈTRE DYNAMIQUE : event_form_type (Uniquement pour les événements de type 'form')
+            // 6. Ajout du paramètre event_form_type (Uniquement pour les événements de type 'form')
             if (gtmEvent === "form") {
                 if (actionName.includes("input") || actionName.includes("length")) {
-                    payload.event_form_type = "text";   // Pour les champs écrits par le user
+                    payload.event_form_type = "text";   // Pour les champs écrits au clavier
                 } else {
-                    payload.event_form_type = "select"; // Pour les boutons de choix (clics intermédiaires et résultats)
+                    payload.event_form_type = "select"; // Pour TOUS les boutons de choix du tunnel et l'écran résultat
                 }
             }
 
