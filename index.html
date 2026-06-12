@@ -541,7 +541,7 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
                 gtmEvent = "impression";
             } 
             else if (actionName.includes("view_result")) {
-                gtmEvent = "form"; // Transformé en form pour éviter le double clic
+                gtmEvent = "form"; 
             } 
             else if (actionName.includes("form") || actionName.includes("saisie") || actionName.includes("input") || actionName.includes("length")) {
                 gtmEvent = "form";
@@ -555,20 +555,27 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
 
             // 3. Détermination de l'event_type exact
             let eventType = customParams.event_type || 'interaction';
-            if (actionName.includes("view_result")) {
-                eventType = "impression"; // Spécification d'affichage du bloc résultat
+            if (actionName === "tool_visible" || actionName.includes("view_result")) {
+                eventType = "impression"; // Aligné sur tes specs : type impression pour l'apparition
             }
 
-            // 4. Envoi du payload direct (Zéro traduction nécessaire dans GTM)
-            window.parent.postMessage({
+            // 4. Construction du payload de base
+            let payload = {
                 'event_system': 'papernest_tool',
                 'event': gtmEvent,                                      // click, impression, form, click_cta
                 'event_component': nom_du_tool,                         // Le nom du tool
-                'event_step': actionName,                               // L'action précise
                 'event_category': eventCategory,                        // Toujours "engagement"
-                'event_type': eventType,                                // interaction ou impression
+                'event_type': eventType,                                // impression ou interaction
                 'event_position': 'content'                             // Fixe pour tous les outils
-            }, '*');
+            };
+
+            // 5. Condition pour event_step : On NE l'ajoute PAS si c'est l'impression globale du tool
+            if (actionName !== "tool_visible") {
+                payload.event_step = actionName;
+            }
+
+            // 6. Envoi du payload direct
+            window.parent.postMessage(payload, '*');
         }
     </script>
 <script>
