@@ -561,7 +561,8 @@ handleReset = function() { originalHandleReset(); sendHeight(); };
 
             // 4. Construction du payload de base
             let payload = {
-                'event': gtmEvent,                                      
+                'event': gtmEvent,
+                'event_system': 'papernest_tool',
                 'event_component': nom_du_tool,                         
                 'event_category': eventCategory,                        
                 'event_type': eventType,                                
