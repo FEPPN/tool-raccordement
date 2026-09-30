@@ -55,18 +55,24 @@
 }
 .rac-continue-btn{background:#5A52FF !important;color:#ffffff !important;border:none;padding:14px 24px;border-radius:12px !important;cursor:pointer;font-size:15px;font-weight:700;margin-top:14px;width:100%;transition:all 0.2s ease;font-family:inherit;}
 .rac-continue-btn:hover{background:#4842CC !important;}
+.rac-link-btn{display:block;background:none !important;border:none !important;color:#5A52FF !important;font-size:13px;font-weight:600;cursor:pointer;margin:12px auto 0;padding:4px !important;font-family:inherit;text-decoration:underline;}
 .rac-input-hint{font-size:12px;color:#6B7280;margin-top:8px;}
+.rac-price-label{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.3px;display:block;}
+.rac-price-after{background:#EEEDFF;border-radius:12px !important;padding:12px 14px;margin:10px 0 14px;}
+.rac-price-after .rac-price-label{color:#4842CC;}
+.rac-price-after-value{font-size:18px;font-weight:800;color:#1A1A2E;display:block;}
 .rac-detail-row{display:flex !important;justify-content:space-between;gap:12px;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
-   Montants HT hors réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
+   Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
    chapitre 20 : ZFA = commune/unité urbaine &lt; 100 000 hab., ZFB = &gt; 100 000 hab. ou Paris. */
 var RAC_BAREME={
   low:{branchement:2340.00,liaisonPrivee:592.00,ext:{ZFA:{fixe:2549.00,metre:105.00},ZFB:{fixe:3296.00,metre:138.00}}},
   medium:{branchement:4255.00,branchementMetre:151.00,ext:{ZFA:{fixe:2587.00,metre:129.00},ZFB:{fixe:3366.00,metre:165.00}}}
 };
-var RAC_COEF_CLIENT=(1-0.40)*1.20; /* réfaction 40 % puis TVA 20 % */
-var racData={path:null,powerA:null,viabilise:null,street:null,powerB:null,zone:null,extensionLength:0,branchementLength:0};
+var RAC_TVA=1.20,RAC_REFACTION=0.40;
+function racNewData(){return {power:null,powerUnknown:false,viab:null,ext:null,le:null,zone:null,lb:null};}
+var racData=racNewData();
 var racHistory=[];
 function racSendHeight(){setTimeout(function(){var h=document.body.offsetHeight||document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
 function racCurrentScreenId(){var active=document.querySelector(&#x27;.rac-question-block.rac-active&#x27;);if(active)return active.id;var shown=document.getElementById(&#x27;rac-result&#x27;);if(shown&amp;&amp;shown.classList.contains(&#x27;rac-show&#x27;))return &#x27;rac-result&#x27;;return null;}
@@ -83,235 +89,192 @@ window.racGoBack=function(){if(racHistory.length===0)return;var prev=racHistory.
 function racTrack(actionName,customParams){customParams=customParams||{};var gtmEvent=&#x27;form&#x27;;if(actionName===&#x27;tool_visible&#x27;){gtmEvent=&#x27;impression&#x27;;}else if(customParams.is_contact||actionName.indexOf(&#x27;contact&#x27;)&gt;-1||actionName.indexOf(&#x27;telephone&#x27;)&gt;-1){gtmEvent=&#x27;click_cta&#x27;;}else if(actionName.indexOf(&#x27;reset&#x27;)&gt;-1){gtmEvent=&#x27;click&#x27;;}var eventType=customParams.event_type||&#x27;interaction&#x27;;if(actionName===&#x27;tool_visible&#x27;||actionName.indexOf(&#x27;view_result&#x27;)&gt;-1){eventType=&#x27;impression&#x27;;}var payload={event:gtmEvent,event_system:&#x27;papernest_tool&#x27;,event_component:&#x27;tool-raccordement&#x27;,event_category:&#x27;engagement&#x27;,event_type:eventType,event_position:&#x27;content&#x27;};if(actionName!==&#x27;tool_visible&#x27;){payload.event_step=actionName;}if(gtmEvent===&#x27;form&#x27;){if(actionName.indexOf(&#x27;view_result&#x27;)&gt;-1||actionName.indexOf(&#x27;tooltip&#x27;)&gt;-1||actionName.indexOf(&#x27;help&#x27;)&gt;-1){}else if(actionName.indexOf(&#x27;input_&#x27;)===0){payload.event_form_type=&#x27;text&#x27;;}else{payload.event_form_type=&#x27;select&#x27;;}}window.dataLayer=window.dataLayer||[];window.dataLayer.push(payload);}
 window.racToggleTooltip=function(el){el.classList.toggle(&#x27;rac-tooltip-open&#x27;);setTimeout(racSendHeight,200);};
 document.addEventListener(&#x27;click&#x27;,function(e){var opened=document.querySelectorAll(&#x27;.rac-help-icon.rac-tooltip-open&#x27;);for(var i=0;i&lt;opened.length;i++){if(!opened[i].contains(e.target)){opened[i].classList.remove(&#x27;rac-tooltip-open&#x27;);setTimeout(racSendHeight,200);}}});
+window.racInputKey=function(e,fn,arg){if(e.key===&#x27;Enter&#x27;){e.preventDefault();window[fn](arg);}};
+
+/* Enchaînement des questions : seules les questions utiles sont posées. */
+function racNext(){
+  var d=racData;
+  if(d.power===null)return &#x27;rac-q-power&#x27;;
+  if(d.power===&#x27;high&#x27;)return &#x27;rac-result&#x27;;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===null)return &#x27;rac-q-viab&#x27;;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;)return &#x27;rac-result&#x27;;
+  if(d.ext===null)return &#x27;rac-q-ext&#x27;;
+  if(d.ext===&#x27;yes&#x27;&amp;&amp;d.le===null)return &#x27;rac-q-extlen&#x27;;
+  if(d.ext===&#x27;yes&#x27;&amp;&amp;d.zone===null)return &#x27;rac-q-zone&#x27;;
+  if(d.power===&#x27;medium&#x27;&amp;&amp;d.lb===null)return &#x27;rac-q-brlen&#x27;;
+  return &#x27;rac-result&#x27;;
+}
+function racAdvance(){var id=racNext();if(id===&#x27;rac-result&#x27;){racShowResult();}else{racGoTo(id);}}
+/* En revenant en arrière puis en changeant une réponse, on efface les réponses qui en dépendent. */
+function racClearFrom(key){var order=[&#x27;power&#x27;,&#x27;viab&#x27;,&#x27;ext&#x27;,&#x27;le&#x27;,&#x27;zone&#x27;,&#x27;lb&#x27;];var fresh=racNewData();for(var i=order.indexOf(key)+1;i&lt;order.length;i++){racData[order[i]]=fresh[order[i]];}}
+
+window.racAnswerPower=function(p){racClearFrom(&#x27;power&#x27;);racTrack(&#x27;select_power_&#x27;+p);racData.powerUnknown=(p===&#x27;unknown&#x27;);racData.power=(p===&#x27;unknown&#x27;)?&#x27;low&#x27;:p;racAdvance();};
+window.racAnswerViab=function(v){racClearFrom(&#x27;viab&#x27;);racTrack(&#x27;select_viabilisation_&#x27;+v);racData.viab=v;racAdvance();};
+window.racAnswerExt=function(v){racClearFrom(&#x27;ext&#x27;);racTrack(&#x27;select_extension_&#x27;+v);racData.ext=v;racAdvance();};
+window.racAnswerZone=function(z){racClearFrom(&#x27;zone&#x27;);racData.zone=z;racTrack(&#x27;select_zone_&#x27;+z);racAdvance();};
+window.racSubmitLength=function(which){
+  var input=document.getElementById(which===&#x27;le&#x27;?&#x27;rac-extension-length&#x27;:&#x27;rac-branchement-length&#x27;);
+  var v=parseFloat(input.value);
+  if(isNaN(v)||v&lt;0){input.focus();return;}
+  racClearFrom(which);racData[which]=v;racTrack(which===&#x27;le&#x27;?&#x27;input_length_extension&#x27;:&#x27;input_length_branchement&#x27;);racAdvance();
+};
+window.racUnknownLength=function(which){racClearFrom(which);racData[which]=-1;racTrack(which===&#x27;le&#x27;?&#x27;input_length_extension_unknown&#x27;:&#x27;input_length_branchement_unknown&#x27;);racAdvance();};
 
 function racFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDigits:2,maximumFractionDigits:2});}
-function racClient(ht){return ht*RAC_COEF_CLIENT;}
 function racRange(lo,hi){return (Math.abs(lo-hi)&lt;0.005)?racFmt(lo)+&#x27; €&#x27;:racFmt(lo)+&#x27; à &#x27;+racFmt(hi)+&#x27; €&#x27;;}
-var RAC_BOX_REFACTION=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Pourquoi 40 % de réduction ?&lt;/strong&gt;&lt;br&gt;Pour un raccordement au réseau, Enedis prend en charge 40 % du coût des travaux : c\&#x27;est ce qu\&#x27;on appelle la réfaction tarifaire. Le prix affiché tient déjà compte de cette réduction, c\&#x27;est bien le montant que vous payez.&lt;/div&gt;&#x27;;
-var RAC_BOX_SOURCE=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;À savoir&lt;/strong&gt;&lt;br&gt;Ces prix sont issus du barème officiel d\&#x27;Enedis (version 7.2, juillet 2025). Certains travaux restent à votre charge : la niche du coffret et, pour les puissances jusqu\&#x27;à 36 kVA, la tranchée et le fourreau sur votre terrain. Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
-var RAC_NOTE_RESEAU=&#x27;Si le réseau existant doit être renforcé (par exemple si le poste électrique le plus proche est loin ou saturé), Enedis ajoute ces travaux sur devis.&#x27;;
-function racRender(price,sub,paragraphs,detail){
-  var html=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;&#x27;+price+&#x27;&lt;/div&gt;&#x27;;
-  if(sub)html+=&#x27;&lt;div class=\&#x27;rac-price-secondary\&#x27;&gt;&#x27;+sub+&#x27;&lt;/div&gt;&#x27;;
-  for(var i=0;i&lt;paragraphs.length;i++)html+=&#x27;&lt;p&gt;&#x27;+paragraphs[i]+&#x27;&lt;/p&gt;&#x27;;
-  if(detail)html+=detail;
-  if(sub)html+=RAC_BOX_REFACTION;
-  html+=RAC_BOX_SOURCE;
+function racTtc(ht){return ht*RAC_TVA;}
+function racApres(ht){return ht*(1-RAC_REFACTION)*RAC_TVA;}
+function racRow(label,loHt,hiHt){return &#x27;&lt;div class=\&#x27;rac-detail-row\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+racRange(racTtc(loHt),racTtc(hiHt))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;}
+
+var RAC_BOX_REFACTION=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Qu\&#x27;est-ce que la réfaction ?&lt;/strong&gt;&lt;br&gt;C\&#x27;est la part du coût prise en charge par Enedis : 40 % pour un raccordement de consommation. Elle est financée par le tarif d\&#x27;utilisation du réseau (TURPE) payé par tous les consommateurs, et déduite automatiquement de votre facture.&lt;/div&gt;&#x27;;
+var RAC_BOX_SOURCE=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;À savoir&lt;/strong&gt;&lt;br&gt;Prix issus du barème officiel d\&#x27;Enedis (version 7.2, juillet 2025). Restent à votre charge : la niche du coffret et, jusqu\&#x27;à 36 kVA, la tranchée et le fourreau sur votre terrain. Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
+
+function racShowResult(){
+  racTrack(&#x27;view_result&#x27;);
+  var d=racData,html=&#x27;&#x27;;
+  if(d.power===&#x27;high&#x27;){
+    html=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;Prix sur devis&lt;/div&gt;&lt;p&gt;Au-delà de 250 kVA, le raccordement se fait en haute tension (HTA) : Enedis établit un devis personnalisé.&lt;/p&gt;&#x27;+RAC_BOX_SOURCE;
+    document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;racGoTo(&#x27;rac-result&#x27;);return;
+  }
+  var t=(d.power===&#x27;low&#x27;)?RAC_BAREME.low:RAC_BAREME.medium;
+  var notes=[],minimum=false;
+  /* Branchement */
+  var br;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;){br=t.liaisonPrivee;}
+  else{
+    br=t.branchement;
+    if(d.power===&#x27;medium&#x27;){
+      if(d.lb&gt;=0){br+=d.lb*t.branchementMetre;}
+      else{minimum=true;notes.push(&#x27;Branchement : ajoutez &#x27;+racFmt(racTtc(t.branchementMetre))+&#x27; € TTC par mètre (&#x27;+racFmt(racApres(t.branchementMetre))+&#x27; € après réfaction).&#x27;);}
+    }
+  }
+  /* Extension */
+  var zones=(d.zone===&#x27;ZFA&#x27;||d.zone===&#x27;ZFB&#x27;)?[d.zone]:[&#x27;ZFA&#x27;,&#x27;ZFB&#x27;];
+  var extLo=0,extHi=0;
+  if(d.ext===&#x27;yes&#x27;){
+    var eA=t.ext[zones[0]],eB=t.ext[zones[zones.length-1]];
+    if(d.le&gt;=0){extLo=eA.fixe+d.le*eA.metre;extHi=eB.fixe+d.le*eB.metre;}
+    else{extLo=eA.fixe;extHi=eB.fixe;minimum=true;notes.push(&#x27;Extension : ajoutez &#x27;+racRange(racTtc(eA.metre),racTtc(eB.metre))+&#x27; TTC par mètre de réseau créé (&#x27;+racRange(racApres(eA.metre),racApres(eB.metre))+&#x27; après réfaction).&#x27;);}
+    if(zones.length&gt;1)notes.push(&#x27;Le montant le plus bas correspond à une commune de moins de 100 000 habitants, le plus élevé à une grande agglomération.&#x27;);
+  }
+  var loHt=br+extLo,hiHt=br+extHi;
+  /* Textes selon la situation */
+  var intro;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;)intro=&#x27;Votre terrain est viabilisé : le coffret est déjà en limite de propriété. Il reste à le relier à votre compteur, à l\&#x27;intérieur de votre terrain.&#x27;;
+  else if(d.ext===&#x27;yes&#x27;)intro=&#x27;Ce montant comprend votre branchement et le prolongement du réseau jusqu\&#x27;à votre terrain.&#x27;;
+  else intro=&#x27;Ce montant correspond à votre branchement, sans prolongement du réseau.&#x27;;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;unknown&#x27;)notes.push(&#x27;Si votre terrain est déjà viabilisé, le coût tombe à &#x27;+racFmt(racTtc(t.liaisonPrivee))+&#x27; € TTC (&#x27;+racFmt(racApres(t.liaisonPrivee))+&#x27; € après réfaction).&#x27;);
+  if(d.ext===&#x27;unknown&#x27;){var xA=RAC_BAREME[d.power===&#x27;low&#x27;?&#x27;low&#x27;:&#x27;medium&#x27;].ext;notes.push(&#x27;S\&#x27;il faut prolonger le réseau, comptez en plus au moins &#x27;+racFmt(racTtc(xA.ZFA.fixe))+&#x27; € TTC, puis &#x27;+racRange(racTtc(xA.ZFA.metre),racTtc(xA.ZFB.metre))+&#x27; TTC par mètre (avant réfaction).&#x27;);}
+  if(d.power===&#x27;medium120&#x27;)notes.push(&#x27;Au-delà de 120 kVA, seule la part fixe du branchement est facturée, quelle que soit sa longueur.&#x27;);
+  if(d.powerUnknown)notes.push(&#x27;Nous avons retenu une puissance jusqu\&#x27;à 36 kVA, le cas de la quasi-totalité des maisons.&#x27;);
+  if(d.ext===&#x27;yes&#x27;)notes.push(&#x27;Si le poste électrique le plus proche est à plus de 250 m ou doit être renforcé, Enedis peut ajouter ces travaux sur devis.&#x27;);
+  /* Longueur inconnue : on affiche le minimum ; le détail par mètre est donné dans les notes. */
+  var fmtPrice=function(f){return minimum?&#x27;À partir de &#x27;+racFmt(f(loHt))+&#x27; €&#x27;:racRange(f(loHt),f(hiHt));};
+  html+=&#x27;&lt;span class=\&#x27;rac-price-label\&#x27;&gt;Coût des travaux, avant réfaction&lt;/span&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;&#x27;+fmtPrice(racTtc)+&#x27; TTC&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-price-after\&#x27;&gt;&lt;span class=\&#x27;rac-price-label\&#x27;&gt;Ce que vous payez, après réfaction de 40 %&lt;/span&gt;&lt;span class=\&#x27;rac-price-after-value\&#x27;&gt;&#x27;+fmtPrice(racApres)+&#x27; TTC&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;p&gt;&#x27;+intro+&#x27;&lt;/p&gt;&#x27;;
+  if(d.ext===&#x27;yes&#x27;||d.power!==&#x27;low&#x27;){
+    html+=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Détail avant réfaction (TTC)&lt;/strong&gt;&lt;br&gt;&#x27;+racRow(&#x27;Branchement&#x27;,br,br)+(d.ext===&#x27;yes&#x27;?racRow(&#x27;Extension du réseau&#x27;,extLo,extHi):&#x27;&#x27;)+&#x27;&lt;/div&gt;&#x27;;
+  }
+  for(var i=0;i&lt;notes.length;i++)html+=&#x27;&lt;p&gt;&#x27;+notes[i]+&#x27;&lt;/p&gt;&#x27;;
+  html+=RAC_BOX_REFACTION+RAC_BOX_SOURCE;
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
   racGoTo(&#x27;rac-result&#x27;);
 }
-function racDevisHTA(){
-  racRender(&#x27;Prix sur devis&#x27;,&#x27;&#x27;,[&#x27;Au-delà de 250 kVA, le raccordement se fait en haute tension (HTA) : Enedis établit un devis personnalisé.&#x27;],&#x27;&#x27;);
-}
 
-/* Parcours A : longueurs inconnues */
-window.racStartPath=function(path){racData.path=path;var actionName=(path===&#x27;A&#x27;)?&#x27;select_path_unknown_lengths&#x27;:&#x27;select_path_known_lengths&#x27;;racTrack(actionName,{event_type:&#x27;interaction&#x27;});if(path===&#x27;A&#x27;){racGoTo(&#x27;rac-qa1&#x27;);}else{racGoTo(&#x27;rac-qb1&#x27;);}};
-window.racAnswerA1=function(power){
-  racData.powerA=power;racTrack(&#x27;select_power_&#x27;+power);
-  if(power===&#x27;low&#x27;){racGoTo(&#x27;rac-qa2&#x27;);return;}
-  racTrack(&#x27;view_result_path_A&#x27;);
-  if(power===&#x27;high&#x27;){racDevisHTA();return;}
-  var min=racClient(RAC_BAREME.medium.branchement);
-  racRender(&#x27;À partir de &#x27;+racFmt(min)+&#x27; € TTC&#x27;,&#x27;Réduction de 40 % déjà déduite&#x27;,[
-    &#x27;Entre 36 et 250 kVA, ce montant correspond à la part fixe du branchement. S\&#x27;y ajoutent, selon votre situation, &#x27;+racFmt(racClient(RAC_BAREME.medium.branchementMetre))+&#x27; € TTC par mètre de branchement (jusqu\&#x27;à 120 kVA) et, si le réseau doit être prolongé, une extension facturée à partir de &#x27;+racFmt(racClient(RAC_BAREME.medium.ext.ZFA.fixe))+&#x27; € TTC.&#x27;,
-    &#x27;Si vous connaissez les longueurs, relancez une estimation en répondant « Oui » à la première question pour obtenir un prix précis.&#x27;],&#x27;&#x27;);
-};
-window.racAnswerA2=function(v){
-  racData.viabilise=v;racTrack(&#x27;select_viabilisation_&#x27;+v);
-  if(v===&#x27;yes&#x27;){
-    racTrack(&#x27;view_result_path_A&#x27;);
-    racRender(racFmt(racClient(RAC_BAREME.low.liaisonPrivee))+&#x27; € TTC&#x27;,&#x27;Réduction de 40 % déjà déduite&#x27;,[
-      &#x27;Votre terrain est viabilisé : le coffret électrique est déjà installé en limite de propriété. Il reste à relier ce coffret à votre compteur, dans votre terrain.&#x27;],&#x27;&#x27;);
-    return;
-  }
-  racGoTo(&#x27;rac-qa3&#x27;);
-};
-window.racAnswerA3=function(street){
-  racData.street=street;racTrack(&#x27;select_street_coverage_&#x27;+street);racTrack(&#x27;view_result_path_A&#x27;);
-  var base=racClient(RAC_BAREME.low.branchement);
-  var notes=[];
-  if(racData.viabilise===&#x27;unknown&#x27;)notes.push(&#x27;Si votre terrain est en fait déjà viabilisé (coffret électrique en limite de propriété), le prix descend à &#x27;+racFmt(racClient(RAC_BAREME.low.liaisonPrivee))+&#x27; € TTC.&#x27;);
-  if(street===&#x27;full&#x27;){
-    racRender(racFmt(base)+&#x27; € TTC&#x27;,&#x27;Réduction de 40 % déjà déduite&#x27;,[&#x27;Le réseau passe devant votre terrain : ce forfait couvre la création complète de votre branchement, du réseau jusqu\&#x27;au compteur.&#x27;].concat(notes),&#x27;&#x27;);
-    return;
-  }
-  var eA=RAC_BAREME.low.ext.ZFA,eB=RAC_BAREME.low.ext.ZFB;
-  var detail=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Comment le prix est calculé&lt;/strong&gt;&lt;br&gt;Branchement : &#x27;+racFmt(base)+&#x27; € TTC&lt;br&gt;Extension du réseau : &#x27;+racRange(racClient(eA.fixe),racClient(eB.fixe))+&#x27; TTC, plus &#x27;+racRange(racClient(eA.metre),racClient(eB.metre))+&#x27; TTC par mètre de réseau à créer, selon votre zone.&lt;/div&gt;&#x27;;
-  var intro=(street===&#x27;unknown&#x27;)?&#x27;Si le réseau passe devant votre terrain, le prix est de &#x27;+racFmt(base)+&#x27; € TTC. S\&#x27;il faut le prolonger jusqu\&#x27;à chez vous, une extension s\&#x27;ajoute.&#x27;:&#x27;Le réseau doit être prolongé jusqu\&#x27;à votre terrain : au prix du branchement s\&#x27;ajoute une extension, dont le coût dépend de la longueur à créer.&#x27;;
-  var price=(street===&#x27;unknown&#x27;)?&#x27;À partir de &#x27;+racFmt(base)+&#x27; € TTC&#x27;:&#x27;À partir de &#x27;+racFmt(base+racClient(eA.fixe))+&#x27; € TTC&#x27;;
-  racRender(price,&#x27;Réduction de 40 % déjà déduite&#x27;,[intro].concat(notes),detail);
-};
-
-/* Parcours B : longueurs connues */
-window.racAnswerB1=function(power){
-  racData.powerB=power;var actionName=&#x27;select_power_low&#x27;;if(power===&#x27;medium&#x27;)actionName=&#x27;select_power_medium&#x27;;if(power===&#x27;medium120&#x27;)actionName=&#x27;select_power_medium_120&#x27;;if(power===&#x27;high&#x27;)actionName=&#x27;select_power_high&#x27;;racTrack(actionName);
-  if(power===&#x27;high&#x27;){racTrack(&#x27;view_result_path_B&#x27;);racDevisHTA();}else{racGoTo(&#x27;rac-qb2&#x27;);}
-};
-window.racAnswerB2=function(zone){racData.zone=zone;racTrack(&#x27;select_zone_&#x27;+zone);racGoTo(&#x27;rac-qb3&#x27;);};
-window.racHandleExtensionInput=function(){
-  racData.extensionLength=Math.max(0,parseFloat(document.getElementById(&#x27;rac-extension-length&#x27;).value)||0);
-  racTrack(&#x27;input_length_extension&#x27;);
-  if(racData.powerB===&#x27;medium&#x27;){racGoTo(&#x27;rac-qb4&#x27;);}else{racCalculateResultB();}
-};
-window.racHandleBranchementInput=function(){
-  racData.branchementLength=Math.max(0,parseFloat(document.getElementById(&#x27;rac-branchement-length&#x27;).value)||0);
-  racTrack(&#x27;input_length_branchement&#x27;);
-  racCalculateResultB();
-};
-function racCostHT(zone){
-  var LE=racData.extensionLength,LB=racData.branchementLength;
-  var t=(racData.powerB===&#x27;low&#x27;)?RAC_BAREME.low:RAC_BAREME.medium;
-  var br=t.branchement;
-  if(racData.powerB===&#x27;medium&#x27;)br+=LB*t.branchementMetre; /* au-delà de 120 kVA, seule la part fixe (§ 6.5.1) */
-  var ext=(LE&gt;0)?t.ext[zone].fixe+LE*t.ext[zone].metre:0;
-  return {branchement:br,extension:ext};
-}
-window.racCalculateResultB=function(){
-  racTrack(&#x27;view_result_path_B&#x27;);
-  var zones=(racData.zone===&#x27;unknown&#x27;)?[&#x27;ZFA&#x27;,&#x27;ZFB&#x27;]:[racData.zone];
-  var a=racCostHT(zones[0]),b=racCostHT(zones[zones.length-1]);
-  var totA=racClient(a.branchement+a.extension),totB=racClient(b.branchement+b.extension);
-  var price=(Math.abs(totA-totB)&lt;0.005)?racFmt(totA)+&#x27; € TTC&#x27;:&#x27;De &#x27;+racFmt(totA)+&#x27; à &#x27;+racFmt(totB)+&#x27; € TTC&#x27;;
-  var detail=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Détail (TTC, réduction déduite)&lt;/strong&gt;&lt;br&gt;&#x27;
-    +&#x27;&lt;div class=\&#x27;rac-detail-row\&#x27;&gt;&lt;span&gt;Branchement&lt;/span&gt;&lt;span&gt;&#x27;+racFmt(racClient(a.branchement))+&#x27; €&lt;/span&gt;&lt;/div&gt;&#x27;
-    +&#x27;&lt;div class=\&#x27;rac-detail-row\&#x27;&gt;&lt;span&gt;Extension du réseau&lt;/span&gt;&lt;span&gt;&#x27;+((b.extension&gt;0)?racRange(racClient(a.extension),racClient(b.extension)):&#x27;aucune&#x27;)+&#x27;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&#x27;;
-  var notes=[];
-  if(racData.zone===&#x27;unknown&#x27;&amp;&amp;racData.extensionLength&gt;0)notes.push(&#x27;Le prix le plus bas correspond à une commune de moins de 100 000 habitants (ZFA), le plus élevé à une grande agglomération (ZFB).&#x27;);
-  if(racData.powerB===&#x27;medium120&#x27;)notes.push(&#x27;Au-delà de 120 kVA, seule la part fixe du branchement est facturée, quelle que soit sa longueur.&#x27;);
-  if(racData.extensionLength&gt;0)notes.push(RAC_NOTE_RESEAU);
-  racRender(price,&#x27;Réduction de 40 % déjà déduite&#x27;,notes,detail);
-};
-window.racInputKey=function(e,fn){if(e.key===&#x27;Enter&#x27;){e.preventDefault();window[fn]();}};
-
-window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData={path:null,powerA:null,viabilise:null,street:null,powerB:null,zone:null,extensionLength:0,branchementLength:0};racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;racGoTo(&#x27;rac-q-initial&#x27;,true);};
+window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;racGoTo(&#x27;rac-q-power&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
 window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
 "></svg>
   <div class="rac-card">
     <div class="rac-title">Estimez le coût de votre raccordement électrique</div>
 
-    <div id="rac-q-initial" class="rac-question-block rac-active">
-      <div class="rac-step-label"><span class="rac-step-dot"></span>Informations de départ</div>
-      <div class="rac-question-header">
-        <div class="rac-question-text">Connaissez-vous les longueurs de câble à poser pour votre raccordement ?</div>
-        <div class="rac-help-icon" onclick="racToggleTooltip(this)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          <div class="rac-tooltip">Ces longueurs figurent en général dans la proposition de raccordement d'Enedis ou dans l'étude de votre électricien ou constructeur.</div>
-        </div>
-      </div>
-      <div class="rac-definition">
-        <strong>Longueur d'extension :</strong> longueur de réseau qu'Enedis doit créer dans la rue pour atteindre votre terrain.<br>
-        <strong>Longueur de branchement :</strong> distance entre le réseau et votre coffret électrique (utile seulement au-delà de 36 kVA).
-      </div>
-      <div class="rac-note-box"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rac-note-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg><span>Sans ces longueurs, l'estimation sera moins précise.</span></div>
-      <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racStartPath('A')">Non, je ne connais pas ces longueurs</button>
-        <button type="button" class="rac-option-btn" onclick="racStartPath('B')">Oui, je connais ces longueurs</button>
-      </div>
-    </div>
-
-    <div id="rac-qa1" class="rac-question-block">
-      <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+    <div id="rac-q-power" class="rac-question-block rac-active">
       <div class="rac-step-label"><span class="rac-step-dot"></span>Puissance</div>
       <div class="rac-question-header">
-        <div class="rac-question-text">Quelle est votre puissance nécessaire ?</div>
-        <div class="rac-help-icon" onclick="racToggleTooltip(this)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          <div class="rac-tooltip">Une maison individuelle se raccorde presque toujours jusqu'à 36 kVA. Au-delà, il s'agit de locaux professionnels, d'immeubles ou d'installations importantes.</div>
-        </div>
+        <div class="rac-question-text">Quelle puissance électrique vous faut-il ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Le kVA mesure la quantité d'électricité disponible en même temps. Une maison se raccorde en 12 kVA (monophasé) ou 36 kVA (triphasé). Au-delà, il s'agit de commerces, d'immeubles ou de bâtiments professionnels.</div></div>
       </div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerA1('low')">Jusqu'à 36 kVA (maison, petit local)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA1('medium')">Entre 36 kVA et 250 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA1('high')">Plus de 250 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')">Jusqu'à 36 kVA (maison, petit local)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">Entre 36 et 120 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">Entre 120 et 250 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Plus de 250 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('unknown')">Je ne sais pas</button>
       </div>
     </div>
 
-    <div id="rac-qa2" class="rac-question-block">
+    <div id="rac-q-viab" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
-      <div class="rac-step-label"><span class="rac-step-dot"></span>Viabilisation</div>
+      <div class="rac-step-label"><span class="rac-step-dot"></span>Terrain</div>
       <div class="rac-question-header">
-        <div class="rac-question-text">Votre terrain est-il viabilisé pour l'électricité ?</div>
-        <div class="rac-help-icon" onclick="racToggleTooltip(this)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          <div class="rac-tooltip">Un terrain viabilisé dispose déjà d'un coffret électrique Enedis en limite de propriété, souvent sur un muret ou un poteau en bordure de rue.</div>
-        </div>
+        <div class="rac-question-text">Votre terrain est-il déjà viabilisé en électricité ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Viabilisé : un coffret électrique Enedis est déjà installé en limite de votre terrain, souvent dans un muret ou sur un poteau côté rue.</div></div>
       </div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerA2('yes')">Oui, il y a déjà un coffret en limite de terrain</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA2('no')">Non</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA2('unknown')">Je ne sais pas</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('yes')">Oui, il y a déjà un coffret en limite de terrain</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('no')">Non</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('unknown')">Je ne sais pas</button>
       </div>
     </div>
 
-    <div id="rac-qa3" class="rac-question-block">
+    <div id="rac-q-ext" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
-      <div class="rac-step-label"><span class="rac-step-dot"></span>Réseau de la rue</div>
-      <div class="rac-question-header"><div class="rac-question-text">Le réseau électrique passe-t-il devant votre terrain ?</div></div>
-      <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerA3('full')">Oui, le réseau passe devant mon terrain</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA3('partial')">Le réseau s'arrête avant mon terrain</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA3('none')">Il n'y a pas de réseau dans ma rue</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerA3('unknown')">Je ne sais pas</button>
-      </div>
-    </div>
-
-    <div id="rac-qb1" class="rac-question-block">
-      <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
-      <div class="rac-step-label"><span class="rac-step-dot"></span>Puissance</div>
+      <div class="rac-step-label"><span class="rac-step-dot"></span>Réseau électrique</div>
       <div class="rac-question-header">
-        <div class="rac-question-text">Quelle est votre puissance nécessaire ?</div>
-        <div class="rac-help-icon" onclick="racToggleTooltip(this)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          <div class="rac-tooltip">Une maison individuelle se raccorde presque toujours jusqu'à 36 kVA. Au-delà, il s'agit de locaux professionnels, d'immeubles ou d'installations importantes.</div>
-        </div>
+        <div class="rac-question-text">Faut-il prolonger le réseau électrique jusqu'à votre terrain ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Si les câbles Enedis passent déjà devant votre terrain, pas besoin de prolonger le réseau. Sinon, Enedis doit créer un morceau de réseau jusqu'à chez vous : c'est l'« extension ».</div></div>
       </div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerB1('low')">Jusqu'à 36 kVA (maison, petit local)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerB1('medium')">Entre 36 kVA et 120 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerB1('medium120')">Entre 120 kVA et 250 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerB1('high')">Plus de 250 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('no')">Non, le réseau passe devant mon terrain</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('yes')">Oui, il faut le prolonger</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('unknown')">Je ne sais pas</button>
       </div>
     </div>
 
-    <div id="rac-qb2" class="rac-question-block">
-      <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
-      <div class="rac-step-label"><span class="rac-step-dot"></span>Zone tarifaire</div>
-      <div class="rac-question-header">
-        <div class="rac-question-text">Combien d'habitants compte votre commune (ou son agglomération) ?</div>
-        <div class="rac-help-icon" onclick="racToggleTooltip(this)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          <div class="rac-tooltip">Enedis applique deux zones de prix selon la population de l'unité urbaine INSEE : ZFA en dessous de 100 000 habitants, ZFB au-dessus (et Paris). Les travaux coûtent plus cher par mètre en grande agglomération.</div>
-        </div>
-      </div>
-      <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerB2('ZFA')">Moins de 100 000 habitants (zone ZFA)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerB2('ZFB')">Plus de 100 000 habitants ou Paris (zone ZFB)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerB2('unknown')">Je ne sais pas</button>
-      </div>
-    </div>
-
-    <div id="rac-qb3" class="rac-question-block">
+    <div id="rac-q-extlen" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Longueur d'extension</div>
-      <div class="rac-question-header"><div class="rac-question-text">Quelle longueur de réseau Enedis doit-il créer pour atteindre votre terrain ?</div></div>
+      <div class="rac-question-header">
+        <div class="rac-question-text">Sur combien de mètres faut-il prolonger le réseau ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Distance entre la fin du réseau existant et votre terrain. Elle figure dans la proposition de raccordement d'Enedis, ou votre électricien peut l'estimer.</div></div>
+      </div>
       <div class="rac-input-wrap">
-        <input type="number" id="rac-extension-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racHandleExtensionInput')">
+        <input type="number" id="rac-extension-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','le')">
         <span class="rac-input-suffix">mètres</span>
       </div>
-      <div class="rac-input-hint">Indiquez 0 si le réseau passe déjà devant votre terrain.</div>
-      <button type="button" class="rac-continue-btn" onclick="racHandleExtensionInput()">Continuer</button>
+      <button type="button" class="rac-continue-btn" onclick="racSubmitLength('le')">Continuer</button>
+      <button type="button" class="rac-link-btn" onclick="racUnknownLength('le')">Je ne connais pas la longueur</button>
     </div>
 
-    <div id="rac-qb4" class="rac-question-block">
+    <div id="rac-q-zone" class="rac-question-block">
+      <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rac-step-label"><span class="rac-step-dot"></span>Commune</div>
+      <div class="rac-question-header">
+        <div class="rac-question-text">Combien d'habitants compte votre commune, ou son agglomération ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Le prix du mètre de réseau dépend de la zone : ZFA en dessous de 100 000 habitants, ZFB au-dessus (et Paris). Les travaux coûtent plus cher en grande agglomération (chaussée à refaire, sous-sol encombré).</div></div>
+      </div>
+      <div class="rac-options">
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFA')">Moins de 100 000 habitants</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFB')">Plus de 100 000 habitants, ou Paris</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('unknown')">Je ne sais pas</button>
+      </div>
+    </div>
+
+    <div id="rac-q-brlen" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Longueur de branchement</div>
-      <div class="rac-question-header"><div class="rac-question-text">Quelle est la longueur du branchement, entre le réseau et votre coffret ?</div></div>
+      <div class="rac-question-header">
+        <div class="rac-question-text">Quelle est la longueur du branchement ?</div>
+        <div class="rac-help-icon" onclick="racToggleTooltip(this)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="rac-tooltip">Le branchement est le câble qui relie le réseau de la rue à votre coffret électrique. Entre 36 et 120 kVA, il est facturé au mètre.</div></div>
+      </div>
       <div class="rac-input-wrap">
-        <input type="number" id="rac-branchement-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racHandleBranchementInput')">
+        <input type="number" id="rac-branchement-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','lb')">
         <span class="rac-input-suffix">mètres</span>
       </div>
-      <button type="button" class="rac-continue-btn" onclick="racHandleBranchementInput()">Voir l'estimation</button>
+      <button type="button" class="rac-continue-btn" onclick="racSubmitLength('lb')">Voir l'estimation</button>
+      <button type="button" class="rac-link-btn" onclick="racUnknownLength('lb')">Je ne connais pas la longueur</button>
     </div>
 
     <div id="rac-result" class="rac-result-box">
