@@ -66,16 +66,17 @@
 .rac-term:focus{outline:2px solid rgba(90,82,255,0.35);outline-offset:2px;border-radius:2px;}
 .rac-term-tip{box-sizing:border-box;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 .rac-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
+.rac-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
    chapitre 20 : ZFA = commune/unité urbaine &lt; 100 000 hab., ZFB = &gt; 100 000 hab. ou Paris. */
 var RAC_BAREME={
-  low:{branchement:2340.00,liaisonPrivee:592.00,ext:{ZFA:{fixe:2549.00,metre:105.00},ZFB:{fixe:3296.00,metre:138.00}}},
+  low:{branchement:2340.00,liaisonPublique:1954.00,liaisonPrivee:592.00,ext:{ZFA:{fixe:2549.00,metre:105.00},ZFB:{fixe:3296.00,metre:138.00}}},
   medium:{branchement:4255.00,branchementMetre:151.00,ext:{ZFA:{fixe:2587.00,metre:129.00},ZFB:{fixe:3366.00,metre:165.00}}}
 };
 var RAC_TVA=1.20,RAC_REFACTION=0.40;
-function racNewData(){return {power:null,powerUnknown:false,viab:null,ext:null,le:null,zone:null,lb:null};}
+function racNewData(){return {power:null,powerUnknown:false,terrain:false,viab:null,ext:null,le:null,zone:null,lb:null};}
 var racData=racNewData();
 var racHistory=[];
 function racSendHeight(){setTimeout(function(){var h=document.body.offsetHeight||document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
@@ -128,7 +129,7 @@ window.racInputKey=function(e,fn,arg){if(e.key===&#x27;Enter&#x27;){e.preventDef
 function racNext(){
   var d=racData;
   if(d.power===null)return &#x27;rac-q-power&#x27;;
-  if(d.power===&#x27;high&#x27;)return &#x27;rac-result&#x27;;
+  if(d.power===&#x27;high&#x27;||d.power===&#x27;collectif&#x27;)return &#x27;rac-result&#x27;;
   if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===null)return &#x27;rac-q-viab&#x27;;
   if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;)return &#x27;rac-result&#x27;;
   if(d.ext===null)return &#x27;rac-q-ext&#x27;;
@@ -141,14 +142,22 @@ function racAdvance(){var id=racNext();if(id===&#x27;rac-result&#x27;){racShowRe
 /* En revenant en arrière puis en changeant une réponse, on efface les réponses qui en dépendent. */
 function racClearFrom(key){var order=[&#x27;power&#x27;,&#x27;viab&#x27;,&#x27;ext&#x27;,&#x27;le&#x27;,&#x27;zone&#x27;,&#x27;lb&#x27;];var fresh=racNewData();for(var i=order.indexOf(key)+1;i&lt;order.length;i++){racData[order[i]]=fresh[order[i]];}}
 
-window.racAnswerPower=function(p){racClearFrom(&#x27;power&#x27;);racTrack(&#x27;select_power_&#x27;+p);racData.powerUnknown=(p===&#x27;unknown&#x27;);racData.power=(p===&#x27;unknown&#x27;)?&#x27;low&#x27;:p;racAdvance();};
+window.racAnswerPower=function(p){
+  racClearFrom(&#x27;power&#x27;);racTrack(&#x27;select_power_&#x27;+p);
+  racData.powerUnknown=(p===&#x27;unknown&#x27;);racData.terrain=(p===&#x27;terrain&#x27;);
+  racData.power=(p===&#x27;unknown&#x27;||p===&#x27;terrain&#x27;)?&#x27;low&#x27;:p;
+  if(p===&#x27;terrain&#x27;)racData.viab=&#x27;no&#x27;; /* viabiliser un terrain nu : pas de question sur le coffret */
+  racAdvance();
+};
 window.racAnswerViab=function(v){racClearFrom(&#x27;viab&#x27;);racTrack(&#x27;select_viabilisation_&#x27;+v);racData.viab=v;racAdvance();};
 window.racAnswerExt=function(v){racClearFrom(&#x27;ext&#x27;);racTrack(&#x27;select_extension_&#x27;+v);racData.ext=v;racAdvance();};
 window.racAnswerZone=function(z){racClearFrom(&#x27;zone&#x27;);racData.zone=z;racTrack(&#x27;select_zone_&#x27;+z);racAdvance();};
 window.racSubmitLength=function(which){
   var input=document.getElementById(which===&#x27;le&#x27;?&#x27;rac-extension-length&#x27;:&#x27;rac-branchement-length&#x27;);
   var v=parseFloat(input.value);
-  if(isNaN(v)||v&lt;0){input.focus();return;}
+  var err=document.getElementById(which===&#x27;le&#x27;?&#x27;rac-err-le&#x27;:&#x27;rac-err-lb&#x27;);
+  if(isNaN(v)||v&lt;0){err.style.display=&#x27;block&#x27;;input.focus();racSendHeight();return;}
+  err.style.display=&#x27;none&#x27;;
   racClearFrom(which);racData[which]=v;racTrack(which===&#x27;le&#x27;?&#x27;input_length_extension&#x27;:&#x27;input_length_branchement&#x27;);racAdvance();
 };
 window.racUnknownLength=function(which){racClearFrom(which);racData[which]=-1;racTrack(which===&#x27;le&#x27;?&#x27;input_length_extension_unknown&#x27;:&#x27;input_length_branchement_unknown&#x27;);racAdvance();};
@@ -165,8 +174,9 @@ var RAC_BOX_SOURCE=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&
 function racShowResult(){
   racTrack(&#x27;view_result&#x27;);
   var d=racData,html=&#x27;&#x27;;
-  if(d.power===&#x27;high&#x27;){
-    html=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;Prix sur devis&lt;/div&gt;&lt;p&gt;Au-delà de 250 kVA, le raccordement se fait en haute tension (HTA) : Enedis établit un devis personnalisé.&lt;/p&gt;&#x27;+RAC_BOX_SOURCE;
+  if(d.power===&#x27;high&#x27;||d.power===&#x27;collectif&#x27;){
+    var why=(d.power===&#x27;high&#x27;)?&#x27;Au-delà de 250 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le raccordement se fait en haute tension : Enedis établit un devis personnalisé.&#x27;:&#x27;Pour un immeuble ou un lotissement, le raccordement est collectif : Enedis établit un devis selon le nombre de logements et les travaux nécessaires.&#x27;;
+    html=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;Prix sur devis&lt;/div&gt;&lt;p&gt;&#x27;+why+&#x27;&lt;/p&gt;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Comment faire ?&lt;/strong&gt;&lt;br&gt;Faites votre demande de raccordement auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/div&gt;&#x27;;
     document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;racGoTo(&#x27;rac-result&#x27;);return;
   }
   var t=(d.power===&#x27;low&#x27;)?RAC_BAREME.low:RAC_BAREME.medium;
@@ -174,6 +184,7 @@ function racShowResult(){
   /* Branchement */
   var br;
   if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;){br=t.liaisonPrivee;}
+  else if(d.terrain){br=t.liaisonPublique;}
   else{
     br=t.branchement;
     if(d.power===&#x27;medium&#x27;){
@@ -193,10 +204,11 @@ function racShowResult(){
   var loHt=br+extLo,hiHt=br+extHi;
   /* Textes selon la situation */
   var intro;
-  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;)intro=&#x27;Le &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; est déjà en bordure de votre terrain : il reste seulement à le relier à votre compteur.&#x27;;
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;yes&#x27;){intro=&#x27;Le &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; est déjà en bordure de votre terrain : il reste à le relier à votre compteur, dans votre maison.&#x27;;notes.push(&#x27;Si votre compteur est installé directement dans ce coffret, Enedis n\&#x27;a en général pas de travaux à facturer : seule la mise en service est payante.&#x27;);}
+  else if(d.terrain)intro=&#x27;Ce montant correspond à la pose du &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; en bordure de votre terrain&#x27;+(d.ext===&#x27;yes&#x27;?&#x27; et à l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension du réseau&#x27;)+&#x27; jusqu\&#x27;à lui&#x27;:&#x27;&#x27;)+&#x27;. Le raccordement de la future maison au coffret sera facturé plus tard.&#x27;;
   else if(d.ext===&#x27;yes&#x27;)intro=&#x27;Ce montant comprend votre &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27; et l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension du réseau&#x27;)+&#x27; jusqu\&#x27;à votre terrain.&#x27;;
   else intro=&#x27;Ce montant correspond à votre &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27;.&#x27;;
-  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;unknown&#x27;)notes.push(&#x27;S\&#x27;il y a déjà un coffret en bordure de votre terrain, le coût tombe à &#x27;+racFmt(racTtc(t.liaisonPrivee))+&#x27; € TTC (&#x27;+racFmt(racApres(t.liaisonPrivee))+&#x27; € après réfaction).&#x27;);
+  if(d.power===&#x27;low&#x27;&amp;&amp;d.viab===&#x27;unknown&#x27;&amp;&amp;!d.terrain)notes.push(&#x27;S\&#x27;il y a déjà un coffret en bordure de votre terrain, le coût tombe à &#x27;+racFmt(racTtc(t.liaisonPrivee))+&#x27; € TTC (&#x27;+racFmt(racApres(t.liaisonPrivee))+&#x27; € après réfaction).&#x27;);
   if(d.ext===&#x27;unknown&#x27;){var xA=RAC_BAREME[d.power===&#x27;low&#x27;?&#x27;low&#x27;:&#x27;medium&#x27;].ext;notes.push(&#x27;Si le réseau ne passe pas devant votre terrain, comptez en plus au moins &#x27;+racFmt(racTtc(xA.ZFA.fixe))+&#x27; € TTC, puis &#x27;+racRange(racTtc(xA.ZFA.metre),racTtc(xA.ZFB.metre))+&#x27; TTC par mètre (avant réfaction).&#x27;);}
   if(d.power===&#x27;medium120&#x27;)notes.push(&#x27;Au-delà de 120 kVA, seule la part fixe du branchement est facturée, quelle que soit sa longueur.&#x27;);
   if(d.powerUnknown)notes.push(&#x27;Nous avons retenu une puissance jusqu\&#x27;à 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le cas de la quasi-totalité des maisons.&#x27;);
@@ -216,7 +228,7 @@ function racShowResult(){
   racGoTo(&#x27;rac-result&#x27;);
 }
 
-window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;racGoTo(&#x27;rac-q-power&#x27;,true);};
+window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;document.getElementById(&#x27;rac-err-le&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-lb&#x27;).style.display=&#x27;none&#x27;;racGoTo(&#x27;rac-q-power&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
 window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
 "></svg>
@@ -229,9 +241,11 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <div class="rac-question-sub">La puissance se mesure en <span class="rac-term" tabindex="0" data-term="kva">kVA</span>.</div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')">Une maison ou un petit local (jusqu'à 36 kVA)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">Un commerce ou un petit immeuble (36 à 120 kVA)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">Un grand bâtiment (120 à 250 kVA)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Un très gros site (plus de 250 kVA)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('terrain')">Un terrain à viabiliser, sans construire tout de suite</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">Un local professionnel : commerce, atelier… (36 à 120 kVA)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">Un grand bâtiment professionnel (120 à 250 kVA)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('collectif')">Un immeuble ou un lotissement (plusieurs logements)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Un site industriel (plus de 250 kVA)</button>
         <button type="button" class="rac-option-btn" onclick="racAnswerPower('unknown')">Je ne sais pas</button>
       </div>
     </div>
@@ -269,6 +283,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
         <input type="number" id="rac-extension-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','le')">
         <span class="rac-input-suffix">mètres</span>
       </div>
+      <div class="rac-input-error" id="rac-err-le">Indiquez une distance en mètres, ou choisissez « Je ne connais pas la distance ».</div>
       <button type="button" class="rac-continue-btn" onclick="racSubmitLength('le')">Continuer</button>
       <button type="button" class="rac-link-btn" onclick="racUnknownLength('le')">Je ne connais pas la distance</button>
     </div>
@@ -294,6 +309,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
         <input type="number" id="rac-branchement-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','lb')">
         <span class="rac-input-suffix">mètres</span>
       </div>
+      <div class="rac-input-error" id="rac-err-lb">Indiquez une longueur en mètres, ou choisissez « Je ne connais pas la longueur ».</div>
       <button type="button" class="rac-continue-btn" onclick="racSubmitLength('lb')">Voir l'estimation</button>
       <button type="button" class="rac-link-btn" onclick="racUnknownLength('lb')">Je ne connais pas la longueur</button>
     </div>
