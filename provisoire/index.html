@@ -257,7 +257,7 @@ function rpvShowResult(){
   html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+&#x27;&lt;span class=\&#x27;rpv-amount\&#x27; data-v=\&#x27;&#x27;+price+&#x27;\&#x27;&gt;&#x27;+rpvEur(price)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-source\&#x27;&gt;&#x27;+rpvTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; de 40 % déjà incluse. Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rpv-plus\&#x27;&gt;&lt;span class=\&#x27;rpv-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&#x27;;
   html+=(d.usage===&#x27;chantier&#x27;)?&#x27;&lt;li&gt;le &#x27;+rpvTerm(&#x27;coffretchantier&#x27;,&#x27;coffret de chantier&#x27;)+&#x27; équipé et le câble, à fournir par vous (achat ou location) ;&lt;/li&gt;&#x27;:&#x27;&lt;li&gt;le coffret équipé et le câble, à fournir par vous, ainsi que l\&#x27;équipement de votre stand ou événement ;&lt;/li&gt;&#x27;;
