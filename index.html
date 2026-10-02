@@ -68,11 +68,11 @@
 .rac-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
 .rac-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
 .rac-bill{margin-bottom:4px;}
-.rac-line{display:flex !important;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed #E5E5E8;font-size:13.5px;color:#1A1A2E;}
+.rac-line{display:flex !important;justify-content:space-between;gap:12px;padding:6px 0;font-size:13.5px;color:#1A1A2E;}
 .rac-line > span:last-child{font-weight:700;white-space:nowrap;}
 .rac-line-sub{color:#6B7280;}
 .rac-line-sub > span:last-child{color:#6B7280;}
-.rac-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px;font-size:14px;}
+.rac-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid #E5E5E8;font-size:14px;}
 .rac-total > span:first-child{font-weight:700;}
 .rac-total-value{font-size:23px;font-weight:800;color:#5A52FF;letter-spacing:-0.3px;text-align:right;}
 .rac-total-value small{font-size:11px;color:#6B7280;font-weight:600;}
@@ -84,12 +84,13 @@
 .rac-devis-note{margin-top:10px;font-size:12.5px;color:#4B5563;}
 .rac-noninclus ul{margin:4px 0 4px 18px;padding:0;}
 .rac-noninclus li{margin:2px 0;}
-.rac-foot{margin-top:4px;font-size:11.5px;color:#6B7280;line-height:1.5;}
+.rac-foot{margin-top:4px;font-size:11px;color:#6B7280;line-height:1.5;}
 .rac-foot strong{color:#4B5563;font-weight:600;}
 .rac-devis{font-size:24px;font-weight:800;color:#5A52FF;margin:2px 0 8px;}
 .rac-source{text-align:right;font-size:11px;color:#9CA3AF;margin-top:2px;}
 .rac-foot ul{margin:3px 0 6px 16px;padding:0;}
 .rac-foot li{margin:1px 0;}
+.rac-from{font-size:0.62em;font-weight:600;color:#6B7280;letter-spacing:0;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -223,7 +224,7 @@ function racDevis(why){
 }
 /* Ligne de facture : libellé, montant TTC avant réfaction (fourchette possible), « dès » si minimum. */
 function racLine(label,loHt,hiHt,des,cls){
-  return &#x27;&lt;div class=\&#x27;rac-line&#x27;+(cls?&#x27; &#x27;+cls:&#x27;&#x27;)+&#x27;\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+(des?&#x27;dès &#x27;+racEur(racTtc(loHt)):racRange(racTtc(loHt),racTtc(hiHt)))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  return &#x27;&lt;div class=\&#x27;rac-line&#x27;+(cls?&#x27; &#x27;+cls:&#x27;&#x27;)+&#x27;\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+(des?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racTtc(loHt)):racRange(racTtc(loHt),racTtc(hiHt)))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
 }
 function racShowResult(){
   racTrack(&#x27;view_result&#x27;);
@@ -272,7 +273,7 @@ function racShowResult(){
   if(d.ext===&#x27;yes&#x27;)html+=racLine(extLabel,extLo,extHi,extMin);
   if(d.ext===&#x27;yes&#x27;)html+=racLine(&#x27;Total des travaux&#x27;,loHt,hiHt,minimum,&#x27;rac-line-sub&#x27;);
   html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;−&#x27;+(minimum?racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;dès &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
   if(plus.length)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;strong&gt;+ Peut s\&#x27;ajouter&lt;/strong&gt;&lt;br&gt;&#x27;+plus.join(&#x27;&lt;br&gt;&#x27;)+&#x27;&lt;/div&gt;&#x27;;
