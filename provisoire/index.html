@@ -97,7 +97,7 @@
 .rpv-total{flex-wrap:wrap;row-gap:2px;}
 .rpv-total > span:first-child{white-space:nowrap;}
 /* --- Prototype moderne --- */
-.rpv-title{font-size:18px !important;color:#1A1A2E !important;font-weight:600 !important;margin-bottom:14px !important;letter-spacing:0;line-height:1.35;}
+.rpv-title{font-size:18px !important;color:#111118 !important;font-weight:700 !important;margin-bottom:14px !important;letter-spacing:0;line-height:1.35;}
 @media (max-width:600px){.rpv-wrap .rpv-title{font-size:16px !important;}}
 .rpv-question-text{font-size:17px !important;letter-spacing:-0.2px;}
 .rpv-progress{height:5px;background:#EEEDFF;border-radius:4px;overflow:hidden;margin:0 2px 12px;}
@@ -292,7 +292,6 @@ rpvSendHeight();
     <div id="rpv-q1" class="rpv-question-block rpv-active">
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Votre besoin</div>
       <div class="rpv-question-header"><div class="rpv-question-text">Pour quel usage avez-vous besoin d'électricité temporaire ?</div></div>
-      <div class="rpv-question-sub">Pour alimenter un lieu pendant une durée limitée, avant ou sans raccordement définitif.</div>
       <div class="rpv-options rpv-tiles">
         <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('chantier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9"/><path d="M4 9h16l-3-4H6z"/><path d="M14 9v5"/><rect x="12" y="14" width="4" height="3" rx=".5"/><path d="M2 21h8"/></svg>Un chantier<small>construction, rénovation</small></button>
         <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('evenement')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v17"/><path d="m9 20 3-6 3 6"/></svg>Un événement<small>marché, fête, salon, tournage…</small></button>
