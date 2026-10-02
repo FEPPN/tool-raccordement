@@ -62,23 +62,27 @@
 .rac-price-after .rac-price-label{color:#4842CC;}
 .rac-price-after-value{font-size:18px;font-weight:800;color:#1A1A2E;display:block;}
 .rac-detail-row{display:flex !important;justify-content:space-between;gap:12px;}
-.rac-term{border-bottom:1.5px dotted #5A52FF;cursor:help;color:inherit;}
+.rac-term{border-bottom:1.5px dotted #5A52FF;cursor:help;color:inherit;font-weight:inherit;}
 .rac-term:focus{outline:2px solid rgba(90,82,255,0.35);outline-offset:2px;border-radius:2px;}
 .rac-term-tip{box-sizing:border-box;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 .rac-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
 .rac-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
 .rac-bill{margin-bottom:4px;}
 .rac-line{display:flex !important;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed #E5E5E8;font-size:13.5px;color:#1A1A2E;}
-.rac-line span:last-child{font-weight:700;white-space:nowrap;}
+.rac-line > span:last-child{font-weight:700;white-space:nowrap;}
 .rac-line-sub{color:#6B7280;}
-.rac-line-sub span:last-child{color:#6B7280;}
-.rac-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px;font-weight:700;font-size:14px;}
+.rac-line-sub > span:last-child{color:#6B7280;}
+.rac-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px;font-size:14px;}
+.rac-total > span:first-child{font-weight:700;}
 .rac-total-value{font-size:23px;font-weight:800;color:#5A52FF;letter-spacing:-0.3px;text-align:right;}
 .rac-total-value small{font-size:11px;color:#6B7280;font-weight:600;}
 .rac-plus{margin-top:14px;background:#EEEDFF;border-radius:10px !important;padding:10px 12px;font-size:12.5px;color:#1A1A2E;line-height:1.55;}
 .rac-wrap p.rac-info{font-size:12.5px;color:#4B5563;margin:10px 0 0;}
-.rac-noninclus{margin-top:14px;font-size:12.5px;color:#1A1A2E;}
-.rac-foot{margin-top:8px;font-size:11.5px;color:#6B7280;}
+.rac-foot-block{margin-top:16px;padding-top:14px;border-top:1px solid #E5E5E8;}
+.rac-noninclus{font-size:12.5px;color:#4B5563;line-height:1.55;}
+.rac-noninclus strong{color:#1A1A2E;}
+.rac-devis-note{margin-top:10px;font-size:12.5px;color:#1A1A2E;font-weight:600;}
+.rac-foot{margin-top:4px;font-size:11.5px;color:#9CA3AF;}
 .rac-devis{font-size:24px;font-weight:800;color:#5A52FF;margin:2px 0 8px;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
@@ -205,7 +209,7 @@ function racRange(lo,hi){return (Math.abs(lo-hi)&lt;0.005)?racFmt(lo)+&#x27; €
 function racTtc(ht){return ht*RAC_TVA;}
 function racApres(ht){return ht*(1-RAC_REFACTION)*RAC_TVA;}
 function racEur(n){return racFmt(n)+&#x27; €&#x27;;}
-var RAC_FOOT=&#x27;&lt;div class=\&#x27;rac-noninclus\&#x27;&gt;&lt;strong&gt;Non inclus :&lt;/strong&gt; tranchée, gaine et muret du coffret sur votre terrain.&lt;/div&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis. Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
+var RAC_FOOT=&#x27;&lt;div class=\&#x27;rac-foot-block\&#x27;&gt;&lt;div class=\&#x27;rac-noninclus\&#x27;&gt;&lt;strong&gt;Non inclus&lt;/strong&gt;&lt;br&gt;Les travaux sur votre terrain : creuser la tranchée, poser la gaine du câble et construire le muret du coffret. Ils sont à faire par vous ou votre constructeur.&lt;/div&gt;&lt;div class=\&#x27;rac-devis-note\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&lt;/div&gt;&#x27;;
 
 function racDevis(why){
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&lt;div class=\&#x27;rac-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rac-devis\&#x27;&gt;Sur devis&lt;/div&gt;&lt;p&gt;&#x27;+why+&#x27;&lt;/p&gt;&lt;p&gt;Faites votre demande de raccordement auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/p&gt;&#x27;;
