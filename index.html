@@ -96,6 +96,33 @@
 .rac-total-value{white-space:nowrap;margin-left:auto;}
 .rac-total{flex-wrap:wrap;row-gap:2px;}
 .rac-total > span:first-child{white-space:nowrap;}
+/* --- Prototype moderne --- */
+.rac-title{font-size:14px !important;color:#6B7280 !important;font-weight:600 !important;margin-bottom:12px !important;}
+.rac-question-text{font-size:17px !important;letter-spacing:-0.2px;}
+.rac-progress{height:5px;background:#EEEDFF;border-radius:4px;overflow:hidden;margin:0 2px 12px;}
+#rac-progress-fill{height:100%;width:6%;background:#5A52FF;border-radius:4px;transition:width .4s ease;}
+@keyframes racSlideIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:translateX(0);}}
+@keyframes racSlideBack{from{opacity:0;transform:translateX(-28px);}to{opacity:1;transform:translateX(0);}}
+.rac-question-block.rac-active,.rac-result-box.rac-show{animation:racSlideIn .32s ease !important;}
+.rac-going-back .rac-question-block.rac-active,.rac-going-back .rac-result-box.rac-show{animation:racSlideBack .32s ease !important;}
+.rac-option-btn{transition:background .15s,border-color .15s;}
+.rac-option-btn.rac-selected{border-color:#5A52FF !important;background:#F4F3FF !important;}
+.rac-option-btn.rac-selected::before{border-color:#5A52FF !important;background:#5A52FF !important;box-shadow:inset 0 0 0 3px #fff;}
+.rac-option-btn.rac-selected::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#5A52FF;font-weight:800;}
+.rac-tiles{display:grid !important;grid-template-columns:1fr 1fr;gap:10px !important;}
+.rac-option-btn.rac-tile{text-align:center !important;padding:18px 10px !important;min-height:120px;line-height:1.3;}
+.rac-option-btn.rac-tile::before{display:none;}
+.rac-tile svg{width:38px;height:38px;display:block;margin:0 auto 10px;color:#5A52FF;}
+.rac-tile small{display:block;font-weight:500;color:#6B7280;font-size:11.5px;margin-top:4px;}
+.rac-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.rac-chip{border:1.5px solid #ECECF2;background:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;font-family:inherit;color:#1A1A2E;cursor:pointer;}
+.rac-chip.rac-chip-on{background:#5A52FF;border-color:#5A52FF;color:#fff;}
+details.rac-fold{margin-top:14px;padding-top:10px;border-top:1px solid #E5E5E8;}
+details.rac-fold summary{cursor:pointer;font-size:12.5px;font-weight:600;color:#4B5563;list-style:none;display:flex;justify-content:space-between;}
+details.rac-fold summary::-webkit-details-marker{display:none;}
+details.rac-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
+details.rac-fold[open] summary::after{content:'−';}
+.rac-devis-line{margin-top:8px !important;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -117,8 +144,29 @@ function racGoTo(id,skipHistory){
   for(var i=0;i&lt;blocks.length;i++){blocks[i].classList.remove(&#x27;rac-active&#x27;);}
   document.getElementById(&#x27;rac-result&#x27;).classList.remove(&#x27;rac-show&#x27;);
   var target=document.getElementById(id);
+  var wrap=document.querySelector(&#x27;.rac-card&#x27;);wrap.classList.toggle(&#x27;rac-going-back&#x27;,!!skipHistory);
+  var sel=document.querySelectorAll(&#x27;.rac-option-btn.rac-selected&#x27;);for(var k=0;k&lt;sel.length;k++)sel[k].classList.remove(&#x27;rac-selected&#x27;);
   if(id===&#x27;rac-result&#x27;){target.classList.add(&#x27;rac-show&#x27;);}else{target.classList.add(&#x27;rac-active&#x27;);}
+  racUpdateProgress(id);
   racSendHeight();
+}
+/* Progression : étapes déjà faites / (faites + reste estimé avec des réponses typiques). */
+function racRemaining(){
+  var save=JSON.stringify(racData),n=0,id;
+  var fill={type:&#x27;maison&#x27;,power:&#x27;medium&#x27;,viab:&#x27;no&#x27;,ext:&#x27;yes&#x27;,le:50,zone:&#x27;ZFA&#x27;,lb:10,n:2};
+  for(var guard=0;guard&lt;12;guard++){
+    id=racNext();if(id===&#x27;rac-result&#x27;)break;n++;
+    if(id===&#x27;rac-q-type&#x27;)racData.type=&#x27;maison&#x27;;else if(id===&#x27;rac-q-projet&#x27;)racData.type=&#x27;pro&#x27;;else if(id===&#x27;rac-q-nb&#x27;){racData.type=&#x27;petitcollectif&#x27;;racData.n=2;}
+    else if(id===&#x27;rac-q-power&#x27;)racData.power=&#x27;medium&#x27;;else if(id===&#x27;rac-q-viab&#x27;)racData.viab=&#x27;no&#x27;;else if(id===&#x27;rac-q-ext&#x27;)racData.ext=&#x27;yes&#x27;;
+    else if(id===&#x27;rac-q-extlen&#x27;||id===&#x27;rac-q-poste&#x27;)racData.le=50;else if(id===&#x27;rac-q-zone&#x27;)racData.zone=&#x27;ZFA&#x27;;else if(id===&#x27;rac-q-brlen&#x27;)racData.lb=10;
+  }
+  racData=JSON.parse(save);return n;
+}
+function racUpdateProgress(id){
+  var bar=document.getElementById(&#x27;rac-progress-fill&#x27;);if(!bar)return;
+  var done=racHistory.length,pct;
+  if(id===&#x27;rac-result&#x27;){pct=100;}else{var rest=racRemaining();pct=Math.round(100*(done+0.5)/(done+Math.max(rest,1)+0.5));}
+  bar.style.width=Math.max(6,pct)+&#x27;%&#x27;;
 }
 window.racGoBack=function(){if(racHistory.length===0)return;var prev=racHistory.pop();racGoTo(prev,true);};
 function racTrack(actionName,customParams){customParams=customParams||{};var gtmEvent=&#x27;form&#x27;;if(actionName===&#x27;tool_visible&#x27;){gtmEvent=&#x27;impression&#x27;;}else if(customParams.is_contact||actionName.indexOf(&#x27;contact&#x27;)&gt;-1||actionName.indexOf(&#x27;telephone&#x27;)&gt;-1){gtmEvent=&#x27;click_cta&#x27;;}else if(actionName.indexOf(&#x27;reset&#x27;)&gt;-1){gtmEvent=&#x27;click&#x27;;}var eventType=customParams.event_type||&#x27;interaction&#x27;;if(actionName===&#x27;tool_visible&#x27;||actionName.indexOf(&#x27;view_result&#x27;)&gt;-1){eventType=&#x27;impression&#x27;;}var payload={event:gtmEvent,event_system:&#x27;papernest_tool&#x27;,event_component:&#x27;tool-raccordement&#x27;,event_category:&#x27;engagement&#x27;,event_type:eventType,event_position:&#x27;content&#x27;};if(actionName!==&#x27;tool_visible&#x27;){payload.event_step=actionName;}if(gtmEvent===&#x27;form&#x27;){if(actionName.indexOf(&#x27;view_result&#x27;)&gt;-1||actionName.indexOf(&#x27;tooltip&#x27;)&gt;-1||actionName.indexOf(&#x27;help&#x27;)&gt;-1){}else if(actionName.indexOf(&#x27;input_&#x27;)===0){payload.event_form_type=&#x27;text&#x27;;}else{payload.event_form_type=&#x27;select&#x27;;}}window.dataLayer=window.dataLayer||[];window.dataLayer.push(payload);}
@@ -155,6 +203,19 @@ document.addEventListener(&#x27;mouseover&#x27;,function(e){var t=e.target.close
 document.addEventListener(&#x27;mouseout&#x27;,function(e){var t=e.target.closest?e.target.closest(&#x27;.rac-term&#x27;):null;if(t&amp;&amp;window.matchMedia&amp;&amp;window.matchMedia(&#x27;(hover: hover)&#x27;).matches)racHideTip();});
 document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escape&#x27;)racHideTip();});
 window.addEventListener(&#x27;scroll&#x27;,racHideTip,{passive:true});
+document.addEventListener(&#x27;click&#x27;,function(e){
+  var b=e.target.closest?e.target.closest(&#x27;.rac-option-btn&#x27;):null;
+  if(!b||b.getAttribute(&#x27;data-go&#x27;))return;
+  e.stopImmediatePropagation();e.preventDefault();
+  b.classList.add(&#x27;rac-selected&#x27;);
+  setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
+},true);
+/* 4. Distances en un clic */
+window.racChip=function(which,v,el){
+  var c=RAC_INPUTS[which];
+  if(v===&#x27;autre&#x27;){el.parentNode.querySelectorAll(&#x27;.rac-chip&#x27;).forEach(function(x){x.classList.remove(&#x27;rac-chip-on&#x27;);});el.classList.add(&#x27;rac-chip-on&#x27;);document.getElementById(c.input).parentNode.style.display=&#x27;block&#x27;;document.getElementById(c.input).focus();el.closest(&#x27;.rac-question-block&#x27;).querySelector(&#x27;.rac-continue-btn&#x27;).style.display=&#x27;block&#x27;;racSendHeight();return;}
+  el.classList.add(&#x27;rac-chip-on&#x27;);document.getElementById(c.input).value=v;setTimeout(function(){racSubmitLength(which);},220);
+};
 window.racInputKey=function(e,fn,arg){if(e.key===&#x27;Enter&#x27;){e.preventDefault();window[fn](arg);}};
 
 /* Enchaînement des questions : seules les questions utiles sont posées.
@@ -231,7 +292,7 @@ function racFoot(d){
   }else{
     items=&#x27;Selon votre installation, certains travaux sur votre terrain restent à votre charge :&lt;ul&gt;&lt;li&gt;la tranchée et la gaine du câble, s\&#x27;il est enterré ;&lt;/li&gt;&lt;li&gt;le passage du câble à travers vos murs ;&lt;/li&gt;&#x27;+niche+&#x27;&lt;/ul&gt;&#x27;;
   }
-  return &#x27;&lt;div class=\&#x27;rac-foot-block\&#x27;&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;&lt;strong&gt;Non inclus&lt;/strong&gt;&lt;br&gt;&#x27;+items+&#x27;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&lt;/div&gt;&#x27;;
+  return &#x27;&lt;details class=\&#x27;rac-foot-block rac-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;&#x27;+items+&#x27;&lt;/div&gt;&lt;/details&gt;&lt;div class=\&#x27;rac-foot rac-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
 }
 
 function racDevis(why){
@@ -294,7 +355,7 @@ function racShowResult(){
   if(d.ext===&#x27;yes&#x27;)html+=racLine(extLabel,extLo,extHi,extMin);
   if(d.ext===&#x27;yes&#x27;)html+=racLine(&#x27;Total des travaux&#x27;,loHt,hiHt,minimum,&#x27;rac-line-sub&#x27;);
   html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;−&#x27;+racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION,&#x27;−&#x27;))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/span&gt; &lt;span class=\&#x27;rac-amount\&#x27; data-v=\&#x27;&#x27;+racApres(loHt)+&#x27;\&#x27;&gt;&#x27;+racEur(racApres(loHt))+&#x27;&lt;/span&gt;&#x27;:(Math.abs(loHt-hiHt)&lt;0.005?&#x27;&lt;span class=\&#x27;rac-amount\&#x27; data-v=\&#x27;&#x27;+racApres(loHt)+&#x27;\&#x27;&gt;&#x27;+racEur(racApres(loHt))+&#x27;&lt;/span&gt;&#x27;:racRange(racApres(loHt),racApres(hiHt))))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;span class=\&#x27;rac-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
@@ -302,21 +363,30 @@ function racShowResult(){
   html+=racFoot(d);
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
   racGoTo(&#x27;rac-result&#x27;);
+  racCountUp();
+}
+function racCountUp(){
+  var el=document.querySelector(&#x27;.rac-total-value .rac-amount&#x27;);if(!el)return;
+  var target=parseFloat(el.getAttribute(&#x27;data-v&#x27;));if(isNaN(target))return;
+  var t0=null,dur=700;
+  function f(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=racEur(target*e);if(k&lt;1)requestAnimationFrame(f);}
+  requestAnimationFrame(f);
 }
 
 window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-poste-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;document.getElementById(&#x27;rac-err-le&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-poste&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-lb&#x27;).style.display=&#x27;none&#x27;;racGoTo(&#x27;rac-q-type&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
-window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
+window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x27;rac-q-type&#x27;);racSendHeight();
 "></svg>
   <div class="rac-card">
     <div class="rac-title">Estimez le coût de votre raccordement électrique</div>
+    <div class="rac-progress"><div id="rac-progress-fill"></div></div>
 
     <div id="rac-q-type" class="rac-question-block rac-active">
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre projet</div>
       <div class="rac-question-header"><div class="rac-question-text">Que souhaitez-vous raccorder ?</div></div>
-      <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerType('maison')">Une maison</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerType('autre')">Autre projet (local professionnel, terrain, immeuble…)</button>
+      <div class="rac-options rac-tiles">
+        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('maison')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>Une maison</button>
+        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('autre')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>Autre projet<small>local pro, terrain, immeuble…</small></button>
       </div>
     </div>
 
@@ -386,12 +456,13 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <div class="rac-step-label"><span class="rac-step-dot"></span>Distance</div>
       <div class="rac-question-header"><div class="rac-question-text">Sur quelle distance faut-il amener le réseau ?</div></div>
       <div class="rac-question-sub">C'est la longueur de l'<span class="rac-term" tabindex="0" data-term="extension">extension</span>, entre la fin du réseau et votre terrain.</div>
-      <div class="rac-input-wrap">
+      <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('le',10,this)">10 m</button><button type="button" class="rac-chip" onclick="racChip('le',25,this)">25 m</button><button type="button" class="rac-chip" onclick="racChip('le',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('le',100,this)">100 m</button><button type="button" class="rac-chip" onclick="racChip('le',200,this)">200 m</button><button type="button" class="rac-chip" onclick="racChip('le','autre',this)">Autre</button></div>
+      <div class="rac-input-wrap" style="display:none">
         <input type="number" id="rac-extension-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','le')">
         <span class="rac-input-suffix">mètres</span>
       </div>
       <div class="rac-input-error" id="rac-err-le">Indiquez une distance en mètres, ou choisissez « Je ne connais pas la distance ».</div>
-      <button type="button" class="rac-continue-btn" onclick="racSubmitLength('le')">Continuer</button>
+      <button type="button" class="rac-continue-btn" style="display:none" onclick="racSubmitLength('le')">Continuer</button>
       <button type="button" class="rac-link-btn" onclick="racUnknownLength('le')">Je ne connais pas la distance</button>
     </div>
 
@@ -400,12 +471,13 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <div class="rac-step-label"><span class="rac-step-dot"></span>Distance au poste</div>
       <div class="rac-question-header"><div class="rac-question-text">À quelle distance se trouve le <span class="rac-term" tabindex="0" data-term="poste">poste électrique</span> le plus proche ?</div></div>
       <div class="rac-question-sub">À cette puissance, Enedis tire un câble direct depuis le poste.</div>
-      <div class="rac-input-wrap">
+      <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('poste',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('poste',100,this)">100 m</button><button type="button" class="rac-chip" onclick="racChip('poste',200,this)">200 m</button><button type="button" class="rac-chip" onclick="racChip('poste',300,this)">300 m</button><button type="button" class="rac-chip" onclick="racChip('poste','autre',this)">Autre</button></div>
+      <div class="rac-input-wrap" style="display:none">
         <input type="number" id="rac-poste-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','poste')">
         <span class="rac-input-suffix">mètres</span>
       </div>
       <div class="rac-input-error" id="rac-err-poste">Indiquez une distance en mètres, ou choisissez « Je ne connais pas la distance ».</div>
-      <button type="button" class="rac-continue-btn" onclick="racSubmitLength('poste')">Continuer</button>
+      <button type="button" class="rac-continue-btn" style="display:none" onclick="racSubmitLength('poste')">Continuer</button>
       <button type="button" class="rac-link-btn" onclick="racUnknownLength('poste')">Je ne connais pas la distance</button>
     </div>
 
@@ -426,12 +498,13 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <div class="rac-step-label"><span class="rac-step-dot"></span>Longueur du câble</div>
       <div class="rac-question-header"><div class="rac-question-text">Quelle longueur de câble entre le réseau et votre coffret ?</div></div>
       <div class="rac-question-sub">À cette puissance, le <span class="rac-term" tabindex="0" data-term="branchement">branchement</span> est facturé au mètre.</div>
-      <div class="rac-input-wrap">
+      <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('lb',5,this)">5 m</button><button type="button" class="rac-chip" onclick="racChip('lb',10,this)">10 m</button><button type="button" class="rac-chip" onclick="racChip('lb',20,this)">20 m</button><button type="button" class="rac-chip" onclick="racChip('lb',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('lb','autre',this)">Autre</button></div>
+      <div class="rac-input-wrap" style="display:none">
         <input type="number" id="rac-branchement-length" placeholder="0" min="0" inputmode="decimal" onkeydown="racInputKey(event,'racSubmitLength','lb')">
         <span class="rac-input-suffix">mètres</span>
       </div>
       <div class="rac-input-error" id="rac-err-lb">Indiquez une longueur en mètres, ou choisissez « Je ne connais pas la longueur ».</div>
-      <button type="button" class="rac-continue-btn" onclick="racSubmitLength('lb')">Voir l'estimation</button>
+      <button type="button" class="rac-continue-btn" style="display:none" onclick="racSubmitLength('lb')">Voir l'estimation</button>
       <button type="button" class="rac-link-btn" onclick="racUnknownLength('lb')">Je ne connais pas la longueur</button>
     </div>
 
