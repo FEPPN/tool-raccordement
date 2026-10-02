@@ -96,8 +96,33 @@
 .rpv-total-value{white-space:nowrap;margin-left:auto;}
 .rpv-total{flex-wrap:wrap;row-gap:2px;}
 .rpv-total > span:first-child{white-space:nowrap;}
-.rpv-line-desc{font-size:12px;color:#6B7280;font-weight:400;}
-.rpv-source{text-align:right;font-size:11px;color:#9CA3AF;margin-top:2px;}
+/* --- Prototype moderne --- */
+.rpv-title{font-size:14px !important;color:#6B7280 !important;font-weight:600 !important;margin-bottom:12px !important;}
+.rpv-question-text{font-size:17px !important;letter-spacing:-0.2px;}
+.rpv-progress{height:5px;background:#EEEDFF;border-radius:4px;overflow:hidden;margin:0 2px 12px;}
+#rpv-progress-fill{height:100%;width:6%;background:#5A52FF;border-radius:4px;transition:width .4s ease;}
+@keyframes rpvSlideIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:translateX(0);}}
+@keyframes rpvSlideBack{from{opacity:0;transform:translateX(-28px);}to{opacity:1;transform:translateX(0);}}
+.rpv-question-block.rpv-active,.rpv-result-box.rpv-show{animation:rpvSlideIn .32s ease !important;}
+.rpv-going-back .rpv-question-block.rpv-active,.rpv-going-back .rpv-result-box.rpv-show{animation:rpvSlideBack .32s ease !important;}
+.rpv-option-btn{transition:background .15s,border-color .15s;}
+.rpv-option-btn.rpv-selected{border-color:#5A52FF !important;background:#F4F3FF !important;}
+.rpv-option-btn.rpv-selected::before{border-color:#5A52FF !important;background:#5A52FF !important;box-shadow:inset 0 0 0 3px #fff;}
+.rpv-option-btn.rpv-selected::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#5A52FF;font-weight:800;}
+.rpv-tiles{display:grid !important;grid-template-columns:1fr 1fr;gap:10px !important;}
+.rpv-option-btn.rpv-tile{text-align:center !important;padding:18px 10px !important;min-height:120px;line-height:1.3;}
+.rpv-option-btn.rpv-tile::before{display:none;}
+.rpv-tile svg{width:38px;height:38px;display:block;margin:0 auto 10px;color:#5A52FF;}
+.rpv-tile small{display:block;font-weight:500;color:#6B7280;font-size:11.5px;margin-top:4px;}
+.rpv-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.rpv-chip{border:1.5px solid #ECECF2;background:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;font-family:inherit;color:#1A1A2E;cursor:pointer;}
+.rpv-chip.rpv-chip-on{background:#5A52FF;border-color:#5A52FF;color:#fff;}
+details.rpv-fold{margin-top:14px;padding-top:10px;border-top:1px solid #E5E5E8;}
+details.rpv-fold summary{cursor:pointer;font-size:12.5px;font-weight:600;color:#4B5563;list-style:none;display:flex;justify-content:space-between;}
+details.rpv-fold summary::-webkit-details-marker{display:none;}
+details.rpv-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
+details.rpv-fold[open] summary::after{content:'−';}
+.rpv-devis-line{margin-top:8px !important;}
 </style>
 <div class="rpv-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025), § 13.1 – montants HT, réfaction 40 % incluse.
    Le « semi-équipé » n&#x27;existe qu&#x27;au-delà de 28 jours : en courte durée il est facturé comme un non fixe. */
@@ -117,9 +142,27 @@ function rpvGoTo(id,skipHistory){
   for(var i=0;i&lt;blocks.length;i++)blocks[i].classList.remove(&#x27;rpv-active&#x27;);
   document.getElementById(&#x27;rpv-result&#x27;).classList.remove(&#x27;rpv-show&#x27;);
   var t=document.getElementById(id);
+  document.querySelector(&#x27;.rpv-card&#x27;).classList.toggle(&#x27;rpv-going-back&#x27;,!!skipHistory);
+  var sel=document.querySelectorAll(&#x27;.rpv-option-btn.rpv-selected&#x27;);for(var k=0;k&lt;sel.length;k++)sel[k].classList.remove(&#x27;rpv-selected&#x27;);
   if(id===&#x27;rpv-result&#x27;)t.classList.add(&#x27;rpv-show&#x27;);else t.classList.add(&#x27;rpv-active&#x27;);
+  rpvUpdateProgress(id);
   rpvSendHeight();
 }
+/* Progression : étapes faites / (faites + questions restantes probables). */
+var RPV_REST={&#x27;rpv-q1&#x27;:5,&#x27;rpv-q2&#x27;:4,&#x27;rpv-q3&#x27;:3,&#x27;rpv-q4&#x27;:2,&#x27;rpv-q5&#x27;:1};
+function rpvUpdateProgress(id){
+  var bar=document.getElementById(&#x27;rpv-progress-fill&#x27;);if(!bar)return;
+  var done=rpvHistory.length,pct=(id===&#x27;rpv-result&#x27;)?100:Math.round(100*(done+0.5)/(done+RPV_REST[id]+0.5));
+  bar.style.width=Math.max(6,pct)+&#x27;%&#x27;;
+}
+/* La réponse choisie se colore, puis on passe à la suite. */
+document.addEventListener(&#x27;click&#x27;,function(e){
+  var b=e.target.closest?e.target.closest(&#x27;.rpv-option-btn&#x27;):null;
+  if(!b||b.getAttribute(&#x27;data-go&#x27;))return;
+  e.stopImmediatePropagation();e.preventDefault();
+  b.classList.add(&#x27;rpv-selected&#x27;);
+  setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
+},true);
 window.rpvGoBack=function(){if(!rpvHistory.length)return;rpvGoTo(rpvHistory.pop(),true);};
 function rpvTrack(actionName,customParams){
   customParams=customParams||{};
@@ -211,16 +254,24 @@ function rpvShowResult(){
   if(d.duree===&#x27;court&#x27;)infos.push(&#x27;Un raccordement de courte durée est limité à 28 jours. Au-delà, il faut un raccordement de longue durée.&#x27;);
   html=&#x27;&lt;div class=\&#x27;rpv-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-line\&#x27;&gt;&lt;span&gt;&#x27;+lineLabel+&#x27;&lt;br&gt;&lt;span class=\&#x27;rpv-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+&#x27;&lt;span class=\&#x27;rpv-amount\&#x27; data-v=\&#x27;&#x27;+price+&#x27;\&#x27;&gt;&#x27;+rpvEur(price)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-source\&#x27;&gt;&#x27;+rpvTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; de 40 % déjà incluse. Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rpv-plus\&#x27;&gt;&lt;span class=\&#x27;rpv-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rpv-foot-block\&#x27;&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;strong&gt;Non inclus&lt;/strong&gt;&lt;ul&gt;&#x27;;
+  html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&#x27;;
   html+=(d.usage===&#x27;chantier&#x27;)?&#x27;&lt;li&gt;le &#x27;+rpvTerm(&#x27;coffretchantier&#x27;,&#x27;coffret de chantier&#x27;)+&#x27; équipé et le câble, à fournir par vous (achat ou location) ;&lt;/li&gt;&#x27;:&#x27;&lt;li&gt;le coffret équipé et le câble, à fournir par vous, ainsi que l\&#x27;équipement de votre stand ou événement ;&lt;/li&gt;&#x27;;
-  html+=&#x27;&lt;li&gt;l\&#x27;abonnement et la consommation d\&#x27;électricité, facturés par votre fournisseur.&lt;/li&gt;&lt;/ul&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;li&gt;l\&#x27;abonnement et la consommation d\&#x27;électricité, facturés par votre fournisseur.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;
   rpvGoTo(&#x27;rpv-result&#x27;);
+  rpvCountUp();
+}
+function rpvCountUp(){
+  var el=document.querySelector(&#x27;.rpv-total-value .rpv-amount&#x27;);if(!el)return;
+  var target=parseFloat(el.getAttribute(&#x27;data-v&#x27;));if(isNaN(target))return;
+  var t0=null,dur=700;
+  function f(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=rpvEur(target*e);if(k&lt;1)requestAnimationFrame(f);}
+  requestAnimationFrame(f);
 }
 window.rpvHandleReset=function(){
   rpvTrack(&#x27;click_reset_simulator&#x27;);
@@ -230,19 +281,20 @@ window.rpvHandleReset=function(){
 };
 var rpvContainer=document.querySelector(&#x27;.rpv-card&#x27;);
 if(rpvContainer&amp;&amp;window.IntersectionObserver){var rpvObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rpvTrack(&#x27;tool_visible&#x27;);rpvObs.unobserve(en[i].target);}}},{threshold:0.5});rpvObs.observe(rpvContainer);}
-window.addEventListener(&#x27;resize&#x27;,rpvSendHeight);
+window.addEventListener(&#x27;resize&#x27;,rpvSendHeight);rpvUpdateProgress(&#x27;rpv-q1&#x27;);
 rpvSendHeight();
 "></svg>
   <div class="rpv-card">
     <div class="rpv-title">Estimez le coût de votre raccordement provisoire</div>
+    <div class="rpv-progress"><div id="rpv-progress-fill"></div></div>
 
     <div id="rpv-q1" class="rpv-question-block rpv-active">
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Votre besoin</div>
       <div class="rpv-question-header"><div class="rpv-question-text">Pour quel usage avez-vous besoin d'électricité temporaire ?</div></div>
       <div class="rpv-question-sub">Pour alimenter un lieu pendant une durée limitée, avant ou sans raccordement définitif.</div>
-      <div class="rpv-options">
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerUsage('chantier')">Un chantier (construction, rénovation)</button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerUsage('evenement')">Un événement (marché, fête, salon, tournage…)</button>
+      <div class="rpv-options rpv-tiles">
+        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('chantier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9"/><path d="M4 9h16l-3-4H6z"/><path d="M14 9v5"/><rect x="12" y="14" width="4" height="3" rx=".5"/><path d="M2 21h8"/></svg>Un chantier<small>construction, rénovation</small></button>
+        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('evenement')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v17"/><path d="m9 20 3-6 3 6"/></svg>Un événement<small>marché, fête, salon, tournage…</small></button>
       </div>
     </div>
 
