@@ -213,11 +213,22 @@ window.racSubmitLength=function(which){
 window.racUnknownLength=function(which){var c=RAC_INPUTS[which],key=c.key||which;racClearFrom(key);racData[key]=-1;racTrack(c.event+&#x27;_unknown&#x27;);racAdvance();};
 
 function racFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDigits:2,maximumFractionDigits:2});}
-function racRange(lo,hi){return (Math.abs(lo-hi)&lt;0.005)?racFmt(lo)+&#x27; €&#x27;:racFmt(lo)+&#x27; à &#x27;+racFmt(hi)+&#x27; €&#x27;;}
+function racRange(lo,hi,sign){sign=sign||&#x27;&#x27;;return (Math.abs(lo-hi)&lt;0.005)?sign+racFmt(lo)+&#x27; €&#x27;:sign+racFmt(lo)+&#x27; € à &#x27;+sign+racFmt(hi)+&#x27; €&#x27;;}
 function racTtc(ht){return ht*RAC_TVA;}
 function racApres(ht){return ht*(1-RAC_REFACTION)*RAC_TVA;}
 function racEur(n){return racFmt(n)+&#x27; €&#x27;;}
-var RAC_FOOT=&#x27;&lt;div class=\&#x27;rac-foot-block\&#x27;&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;&lt;strong&gt;Non inclus&lt;/strong&gt;&lt;br&gt;Selon votre installation, certains travaux sur votre terrain restent à votre charge :&lt;ul&gt;&lt;li&gt;la tranchée et la gaine du câble, s\&#x27;il est enterré ;&lt;/li&gt;&lt;li&gt;le passage du câble à travers vos murs ;&lt;/li&gt;&lt;li&gt;la niche du coffret, s\&#x27;il est scellé dans un mur, une façade ou un muret de clôture.&lt;/li&gt;&lt;/ul&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&lt;/div&gt;&#x27;;
+/* « Non inclus » selon le cas : § 5.4 (≤ 36 kVA), § 5.5.2 (terrain : coffret seul), § 6.1 et § 6.5 (&gt; 36 kVA). */
+function racFoot(d){
+  var niche=&#x27;&lt;li&gt;la niche du coffret, s\&#x27;il est scellé dans un mur, une façade ou un muret de clôture.&lt;/li&gt;&#x27;,items;
+  if(d.type===&#x27;terrain&#x27;){
+    items=&#x27;Selon votre installation, reste à votre charge : la niche du coffret, s\&#x27;il est scellé dans un mur, une façade ou un muret de clôture.&lt;br&gt;&#x27;;
+  }else if(d.power===&#x27;medium&#x27;||d.power===&#x27;medium120&#x27;){
+    items=&#x27;Selon votre installation, certains travaux restent à votre charge :&lt;ul&gt;&lt;li&gt;la niche du coffret, s\&#x27;il est scellé dans un mur, une façade ou un muret de clôture ;&lt;/li&gt;&lt;li&gt;si votre compteur est à l\&#x27;intérieur du bâtiment : la tranchée, la gaine et le passage du câble à travers vos murs.&lt;/li&gt;&lt;/ul&gt;Dans ce cas, le câble entre le coffret et le compteur est aussi facturé en plus par Enedis, sur devis et sans réfaction.&lt;br&gt;&#x27;;
+  }else{
+    items=&#x27;Selon votre installation, certains travaux sur votre terrain restent à votre charge :&lt;ul&gt;&lt;li&gt;la tranchée et la gaine du câble, s\&#x27;il est enterré ;&lt;/li&gt;&lt;li&gt;le passage du câble à travers vos murs ;&lt;/li&gt;&#x27;+niche+&#x27;&lt;/ul&gt;&#x27;;
+  }
+  return &#x27;&lt;div class=\&#x27;rac-foot-block\&#x27;&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;&lt;strong&gt;Non inclus&lt;/strong&gt;&lt;br&gt;&#x27;+items+&#x27;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&lt;/div&gt;&#x27;;
+}
 
 function racDevis(why){
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&lt;div class=\&#x27;rac-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rac-devis\&#x27;&gt;Sur devis&lt;/div&gt;&lt;p&gt;&#x27;+why+&#x27;&lt;/p&gt;&lt;p&gt;Faites votre demande de raccordement auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/p&gt;&#x27;;
@@ -273,13 +284,13 @@ function racShowResult(){
   html+=racLine(brLabel,br,br,brMin||(minimum&amp;&amp;d.ext!==&#x27;yes&#x27;));
   if(d.ext===&#x27;yes&#x27;)html+=racLine(extLabel,extLo,extHi,extMin);
   if(d.ext===&#x27;yes&#x27;)html+=racLine(&#x27;Total des travaux&#x27;,loHt,hiHt,minimum,&#x27;rac-line-sub&#x27;);
-  html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;−&#x27;+(minimum?racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;−&#x27;+racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION,&#x27;−&#x27;))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;span class=\&#x27;rac-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rac-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
-  html+=RAC_FOOT;
+  html+=racFoot(d);
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
   racGoTo(&#x27;rac-result&#x27;);
 }
