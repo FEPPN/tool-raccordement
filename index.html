@@ -76,7 +76,8 @@
 .rac-total > span:first-child{font-weight:700;}
 .rac-total-value{font-size:23px;font-weight:800;color:#5A52FF;letter-spacing:-0.3px;text-align:right;}
 .rac-total-value small{font-size:11px;color:#6B7280;font-weight:600;}
-.rac-plus{margin-top:14px;background:#EEEDFF;border-radius:10px !important;padding:10px 12px;font-size:12.5px;color:#1A1A2E;line-height:1.55;}
+.rac-plus{display:flex !important;gap:9px;align-items:flex-start;margin-top:12px;font-size:12.5px;color:#1A1A2E;line-height:1.55;}
+.rac-plus-ic{flex-shrink:0;width:20px;height:20px;border-radius:50% !important;background:#EEEDFF;color:#4842CC;font-weight:800;font-size:12px;display:flex !important;align-items:center;justify-content:center;margin-top:1px;}
 .rac-wrap p.rac-info{font-size:12.5px;color:#4B5563;margin:10px 0 0;}
 .rac-foot-block{margin-top:14px;padding-top:10px;border-top:1px solid #E5E5E8;}
 .rac-noninclus{font-size:12.5px;color:#4B5563;line-height:1.55;}
@@ -84,7 +85,7 @@
 .rac-devis-note{margin-top:10px;font-size:12.5px;color:#4B5563;}
 .rac-noninclus ul{margin:4px 0 4px 18px;padding:0;}
 .rac-noninclus li{margin:2px 0;}
-.rac-foot{margin-top:4px;font-size:11px;color:#6B7280;line-height:1.5;}
+.rac-foot{margin-top:4px;font-size:10.5px;color:#6B7280;line-height:1.5;}
 .rac-foot strong{color:#4B5563;font-weight:600;}
 .rac-devis{font-size:24px;font-weight:800;color:#5A52FF;margin:2px 0 8px;}
 .rac-source{text-align:right;font-size:11px;color:#9CA3AF;margin-top:2px;}
@@ -243,7 +244,7 @@ function racShowResult(){
     br=t.branchement;brLabel=racTerm(&#x27;branchement&#x27;,&#x27;Branchement&#x27;)+(big?&#x27;&#x27;:&#x27; complet&#x27;);
     if(d.power===&#x27;medium&#x27;){
       if(d.lb&gt;=0){br+=d.lb*t.branchementMetre;brLabel+=&#x27; (&#x27;+d.lb+&#x27; m)&#x27;;}
-      else{brMin=true;plus.push(racEur(racTtc(t.branchementMetre))+&#x27; par mètre de câble de branchement.&#x27;);}
+      else{brMin=true;plus.push(&#x27;Le câble de &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27; s\&#x27;ajoute : &#x27;+racEur(racApres(t.branchementMetre))+&#x27; par mètre.&#x27;);}
     }
   }
   /* Extension (pour 120-250 kVA : câble depuis le poste) */
@@ -253,12 +254,12 @@ function racShowResult(){
     var eA=t.ext[zones[0]],eB=t.ext[zones[zones.length-1]];
     extLabel=(d.power===&#x27;medium120&#x27;)?&#x27;Câble depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27;&#x27;:racTerm(&#x27;extension&#x27;,&#x27;Extension&#x27;)+&#x27; du réseau&#x27;;
     if(d.le&gt;=0){extLo=eA.fixe+d.le*eA.metre;extHi=eB.fixe+d.le*eB.metre;extLabel+=&#x27; (&#x27;+d.le+&#x27; m)&#x27;;}
-    else{extLo=eA.fixe;extHi=eB.fixe;extMin=true;plus.push(racRange(racTtc(eA.metre),racTtc(eB.metre))+&#x27; par mètre de &#x27;+(d.power===&#x27;medium120&#x27;?&#x27;câble depuis le poste&#x27;:&#x27;réseau à créer&#x27;)+&#x27;.&#x27;);}
+    else{extLo=eA.fixe;extHi=eB.fixe;extMin=true;plus.push((d.power===&#x27;medium120&#x27;?&#x27;Le câble depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27; s\&#x27;ajoute selon la distance : &#x27;:&#x27;L\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute selon la distance : &#x27;)+racRange(racApres(eA.metre),racApres(eB.metre))+&#x27; par mètre.&#x27;);}
     if(zones.length&gt;1)infos.push(&#x27;Le montant dépend de la &#x27;+racTerm(&#x27;zone&#x27;,&#x27;zone&#x27;)+&#x27; : le plus bas correspond à une commune de moins de 100 000 habitants.&#x27;);
   }
   /* Ce qui peut s&#x27;ajouter ou changer selon les réponses « Je ne sais pas » */
-  if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;S\&#x27;il faut amener le réseau jusqu\&#x27;à vous : au moins &#x27;+racEur(racTtc(t.ext.ZFA.fixe))+&#x27;, puis un prix au mètre.&#x27;);
-  if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; : branchement à partir de &#x27;+racEur(racTtc(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
+  if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;Si le réseau ne passe pas devant votre terrain, ajoutez l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; : à partir de &#x27;+racEur(racApres(t.ext.ZFA.fixe))+&#x27; + &#x27;+racRange(racApres(t.ext.ZFA.metre),racApres(t.ext.ZFB.metre))+&#x27; par mètre.&#x27;);
+  if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le branchement coûte à partir de &#x27;+racEur(racApres(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
   if(racIsLow()&amp;&amp;d.viab===&#x27;unknown&#x27;)infos.push(&#x27;S\&#x27;il y a déjà un &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; en bordure de votre terrain, vous paierez seulement &#x27;+racEur(racApres(t.liaisonPrivee))+&#x27;.&#x27;);
   if(d.type===&#x27;terrain&#x27;)infos.push(&#x27;Quand vous construirez, relier la maison au coffret coûtera &#x27;+racEur(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; (après réfaction).&#x27;);
   if(d.type===&#x27;petitcollectif&#x27;)infos.push(&#x27;Prix valable si chaque logement est en 12 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
@@ -276,7 +277,7 @@ function racShowResult(){
   html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  if(plus.length)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;strong&gt;+ Peut s\&#x27;ajouter&lt;/strong&gt;&lt;br&gt;&#x27;+plus.join(&#x27;&lt;br&gt;&#x27;)+&#x27;&lt;/div&gt;&#x27;;
+  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;span class=\&#x27;rac-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rac-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   html+=RAC_FOOT;
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
