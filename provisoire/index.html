@@ -65,7 +65,7 @@
 .rpv-detail-row{display:flex !important;justify-content:space-between;gap:12px;}
 .rpv-term{border-bottom:1.5px dotted #5A52FF;cursor:help;color:inherit;font-weight:inherit;}
 .rpv-term:focus{outline:2px solid rgba(90,82,255,0.35);outline-offset:2px;border-radius:2px;}
-.rpv-term-tip{box-sizing:border-box;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.rpv-term-tip{box-sizing:border-box;pointer-events:none;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 .rpv-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
 .rpv-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
 .rpv-bill{margin-bottom:4px;}
@@ -160,7 +160,7 @@ function rpvUpdateProgress(id){
 /* La réponse choisie se colore, puis on passe à la suite. */
 document.addEventListener(&#x27;click&#x27;,function(e){
   var b=e.target.closest?e.target.closest(&#x27;.rpv-option-btn&#x27;):null;
-  if(!b||b.getAttribute(&#x27;data-go&#x27;))return;
+  if(!b||b.getAttribute(&#x27;data-go&#x27;)||e.target.closest(&#x27;.rpv-term&#x27;))return;
   e.stopImmediatePropagation();e.preventDefault();
   b.classList.add(&#x27;rpv-selected&#x27;);
   setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
@@ -182,7 +182,7 @@ function rpvTrack(actionName,customParams){
 var RPV_TERMS={
   kva:&#x27;Le kVA mesure la puissance électrique disponible en même temps. 36 kVA suffisent pour la plupart des chantiers de maison et des petits événements.&#x27;,
   borne:&#x27;Borne ou armoire installée, souvent par la mairie, pour brancher des installations temporaires : places de marché, lieux d\&#x27;événements…&#x27;,
-  coffret:&#x27;Boîtier Enedis posé en limite de terrain, souvent dans un muret ou sur un poteau côté rue.&#x27;,
+  coffret:&#x27;Boîtier Enedis fixé au sol ou dans un muret, en bordure de terrain, sur lequel on peut brancher votre installation.&#x27;,
   reseau:&#x27;Les câbles électriques d\&#x27;Enedis qui passent dans la rue, sous le trottoir ou sur des poteaux.&#x27;,
   extension:&#x27;Le prolongement du réseau électrique jusqu\&#x27;à votre terrain, quand il ne passe pas à côté. Enedis le chiffre sur devis.&#x27;,
   refaction:&#x27;La réfaction est la part du coût prise en charge par Enedis : 40 % pour un raccordement. Elle est financée par le tarif d\&#x27;utilisation du réseau payé par tous les consommateurs. Pour un raccordement provisoire, elle est déjà incluse dans le prix affiché.&#x27;,
@@ -253,7 +253,6 @@ function rpvShowResult(){
   var desc=(d.usage===&#x27;chantier&#x27;?&#x27;Chantier&#x27;:&#x27;Événement&#x27;)+&#x27; de &#x27;+(d.duree===&#x27;court&#x27;?&#x27;28 jours maximum&#x27;:&#x27;plus de 28 jours&#x27;)+&#x27;, &#x27;+(d.power===&#x27;low&#x27;?&#x27;jusqu\&#x27;à 36 kVA&#x27;:&#x27;de 36 à 250 kVA&#x27;)+&#x27;.&#x27;;
   if(!minimum)infos.push(&#x27;Ce prix comprend la pose et le retrait du compteur, la mise en service et la résiliation.&#x27;);
   if(d.usage===&#x27;chantier&#x27;&amp;&amp;d.duree===&#x27;long&#x27;)infos.push(&#x27;Vous construisez une maison ? Avec la solution « 2 en 1 » d\&#x27;Enedis, le &#x27;+rpvTerm(&#x27;coffretchantier&#x27;,&#x27;coffret de chantier&#x27;)+&#x27; devient ensuite votre raccordement définitif.&#x27;);
-  if(d.duree===&#x27;court&#x27;)infos.push(&#x27;Un raccordement de courte durée est limité à 28 jours. Au-delà, il faut un raccordement de longue durée.&#x27;);
   html=&#x27;&lt;div class=\&#x27;rpv-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-line\&#x27;&gt;&lt;span&gt;&#x27;+lineLabel+&#x27;&lt;br&gt;&lt;span class=\&#x27;rpv-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+&#x27;&lt;span class=\&#x27;rpv-amount\&#x27; data-v=\&#x27;&#x27;+price+&#x27;\&#x27;&gt;&#x27;+rpvEur(price)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
@@ -312,11 +311,11 @@ rpvSendHeight();
     <div id="rpv-q3" class="rpv-question-block">
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Puissance</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">De quelle puissance (en <span class="rpv-term" tabindex="0" data-term="kva">kVA</span>) avez-vous besoin ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">De quelle puissance avez-vous besoin ?</div></div>
       <div class="rpv-options">
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('low')">Jusqu'à 36 kVA<span class="rpv-opt-sub">chantier de maison, stand, food truck…</span></button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('medium')">De 36 à 250 kVA<span class="rpv-opt-sub">chantier d'immeuble, concert, fête foraine…</span></button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('high')">Plus de 250 kVA<span class="rpv-opt-sub">très grand chantier, grand festival…</span></button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('low')">Jusqu'à 36 kVA<span class="rpv-opt-sub">Chantier de maison, stand, food truck…</span></button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('medium')">De 36 à 250 kVA<span class="rpv-opt-sub">Chantier d'immeuble, concert, fête foraine…</span></button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('high')">Plus de 250 kVA<span class="rpv-opt-sub">Très grand chantier, grand festival…</span></button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('unknown')">Je ne sais pas</button>
       </div>
     </div>
@@ -324,10 +323,10 @@ rpvSendHeight();
     <div id="rpv-q4" class="rpv-question-block">
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Point de branchement</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement Enedis sur place pour vous brancher ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement électrique sur place pour vous brancher ?</div></div>
       <div class="rpv-options">
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')">Oui, une borne de branchement provisoire<span class="rpv-opt-sub">souvent installée par la mairie : place de marché, lieu d'événements…</span></button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('semi')">Oui, un coffret électrique Enedis<span class="rpv-opt-sub">boîtier fixé au sol ou dans un muret, en bordure de terrain</span></button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')">Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> de branchement provisoire</button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('semi')">Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique</button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('nonfixe')">Non, aucun équipement</button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('unknown')">Je ne sais pas</button>
       </div>
