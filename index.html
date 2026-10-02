@@ -26,6 +26,7 @@
 .rac-options{display:flex !important;flex-direction:column;gap:10px;margin-top:18px;}
 .rac-option-btn{position:relative;background:#ffffff !important;border:1.5px solid #ECECF2;padding:14px 16px 14px 42px;border-radius:12px !important;cursor:pointer;transition:all 0.15s ease;font-size:14px;font-weight:600;text-align:left;color:#1A1A2E !important;min-height:48px;font-family:inherit;width:100%;}
 .rac-option-btn::before{content:'';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px !important;height:16px !important;border-radius:50% !important;border:2px solid #D1D5DB;background:#fff;transition:all 0.15s ease;}
+.rac-opt-sub{display:block;font-weight:400;font-size:12.5px;color:#6B7280;margin-top:2px;line-height:1.35;}
 .rac-option-btn:hover{border-color:#5A52FF;background:#FAFAFF !important;}
 .rac-option-btn:hover::before{border-color:#5A52FF;}
 .rac-input-wrap{position:relative;margin-top:14px;}
@@ -64,7 +65,7 @@
 .rac-detail-row{display:flex !important;justify-content:space-between;gap:12px;}
 .rac-term{border-bottom:1.5px dotted #5A52FF;cursor:help;color:inherit;font-weight:inherit;}
 .rac-term:focus{outline:2px solid rgba(90,82,255,0.35);outline-offset:2px;border-radius:2px;}
-.rac-term-tip{box-sizing:border-box;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.rac-term-tip{box-sizing:border-box;pointer-events:none;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 .rac-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
 .rac-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
 .rac-bill{margin-bottom:4px;}
@@ -206,7 +207,7 @@ document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escap
 window.addEventListener(&#x27;scroll&#x27;,racHideTip,{passive:true});
 document.addEventListener(&#x27;click&#x27;,function(e){
   var b=e.target.closest?e.target.closest(&#x27;.rac-option-btn&#x27;):null;
-  if(!b||b.getAttribute(&#x27;data-go&#x27;))return;
+  if(!b||b.getAttribute(&#x27;data-go&#x27;)||e.target.closest(&#x27;.rac-term&#x27;))return;
   e.stopImmediatePropagation();e.preventDefault();
   b.classList.add(&#x27;rac-selected&#x27;);
   setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
@@ -418,12 +419,11 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Puissance</div>
       <div class="rac-question-header"><div class="rac-question-text">De quelle puissance avez-vous besoin ?</div></div>
-      <div class="rac-question-sub">La puissance se mesure en <span class="rac-term" tabindex="0" data-term="kva">kVA</span>.</div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')">Jusqu'à 36 kVA (petit commerce, bureau, maison)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">De 36 à 120 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">De 120 à 250 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Plus de 250 kVA</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')">Jusqu'à 36 kVA<span class="rac-opt-sub">Maison, petit commerce, bureau…</span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">De 36 à 120 kVA<span class="rac-opt-sub">Restaurant, supérette, atelier…</span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">De 120 à 250 kVA<span class="rac-opt-sub">Supermarché, grand immeuble…</span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Plus de 250 kVA<span class="rac-opt-sub">Usine, centre commercial…</span></button>
         <button type="button" class="rac-option-btn" onclick="racAnswerPower('unknown')">Je ne sais pas</button>
       </div>
     </div>
