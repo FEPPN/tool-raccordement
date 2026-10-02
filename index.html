@@ -91,7 +91,9 @@
 .rac-source{text-align:right;font-size:11px;color:#9CA3AF;margin-top:2px;}
 .rac-foot ul{margin:3px 0 6px 16px;padding:0;}
 .rac-foot li{margin:1px 0;}
-.rac-from{font-size:0.62em;font-weight:600;color:#6B7280;letter-spacing:0;}
+.rac-from{font-size:inherit;font-weight:inherit;color:inherit;letter-spacing:0;}
+.rac-total-value .rac-from{display:block;font-size:13px;font-weight:700;color:#5A52FF;margin-bottom:-2px;}
+.rac-total > span:first-child{white-space:nowrap;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -236,7 +238,7 @@ function racDevis(why){
 }
 /* Ligne de facture : libellé, montant TTC avant réfaction (fourchette possible), « dès » si minimum. */
 function racLine(label,loHt,hiHt,des,cls){
-  return &#x27;&lt;div class=\&#x27;rac-line&#x27;+(cls?&#x27; &#x27;+cls:&#x27;&#x27;)+&#x27;\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+(des?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racTtc(loHt)):racRange(racTtc(loHt),racTtc(hiHt)))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  return &#x27;&lt;div class=\&#x27;rac-line&#x27;+(cls?&#x27; &#x27;+cls:&#x27;&#x27;)+&#x27;\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+(des?&#x27;&lt;span class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;+racEur(racTtc(loHt)):racRange(racTtc(loHt),racTtc(hiHt)))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
 }
 function racShowResult(){
   racTrack(&#x27;view_result&#x27;);
@@ -266,7 +268,12 @@ function racShowResult(){
     extLabel=(d.power===&#x27;medium120&#x27;)?&#x27;Câble depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27;&#x27;:racTerm(&#x27;extension&#x27;,&#x27;Extension&#x27;)+&#x27; du réseau&#x27;;
     if(d.le&gt;=0){extLo=eA.fixe+d.le*eA.metre;extHi=eB.fixe+d.le*eB.metre;extLabel+=&#x27; (&#x27;+d.le+&#x27; m)&#x27;;}
     else{extLo=eA.fixe;extHi=eB.fixe;extMin=true;plus.push((d.power===&#x27;medium120&#x27;?&#x27;Le câble depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27; s\&#x27;ajoute selon la distance : &#x27;:&#x27;L\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute selon la distance : &#x27;)+racRange(racApres(eA.metre),racApres(eB.metre))+&#x27; par mètre.&#x27;);}
-    if(zones.length&gt;1)infos.push(&#x27;Le montant dépend de la &#x27;+racTerm(&#x27;zone&#x27;,&#x27;zone&#x27;)+&#x27; : le plus bas correspond à une commune de moins de 100 000 habitants.&#x27;);
+    /* Commune inconnue : une seule valeur par ligne (moins de 100 000 hab.), le maximum en note. */
+    if(zones.length&gt;1){
+      extMin=true;
+      if(d.le&gt;=0)plus.push(&#x27;Dans une commune de plus de 100 000 habitants, vous paierez &#x27;+racEur(racApres(br+extHi))+&#x27;.&#x27;);
+      else plus.push(&#x27;Le prix est plus élevé dans une commune de plus de 100 000 habitants (voir la &#x27;+racTerm(&#x27;zone&#x27;,&#x27;zone&#x27;)+&#x27;).&#x27;);
+    }
   }
   /* Ce qui peut s&#x27;ajouter ou changer selon les réponses « Je ne sais pas » */
   if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;Si le réseau ne passe pas devant votre terrain, ajoutez l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; : à partir de &#x27;+racEur(racApres(t.ext.ZFA.fixe))+&#x27; + &#x27;+racRange(racApres(t.ext.ZFA.metre),racApres(t.ext.ZFB.metre))+&#x27; par mètre.&#x27;);
@@ -285,7 +292,7 @@ function racShowResult(){
   if(d.ext===&#x27;yes&#x27;)html+=racLine(extLabel,extLo,extHi,extMin);
   if(d.ext===&#x27;yes&#x27;)html+=racLine(&#x27;Total des travaux&#x27;,loHt,hiHt,minimum,&#x27;rac-line-sub&#x27;);
   html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;−&#x27;+racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION,&#x27;−&#x27;))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;small class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/small&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;span class=\&#x27;rac-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
