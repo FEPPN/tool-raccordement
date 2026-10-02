@@ -358,7 +358,7 @@ function racShowResult(){
   html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rac-from\&#x27;&gt;à partir de&lt;/span&gt; &lt;span class=\&#x27;rac-amount\&#x27; data-v=\&#x27;&#x27;+racApres(loHt)+&#x27;\&#x27;&gt;&#x27;+racEur(racApres(loHt))+&#x27;&lt;/span&gt;&#x27;:(Math.abs(loHt-hiHt)&lt;0.005?&#x27;&lt;span class=\&#x27;rac-amount\&#x27; data-v=\&#x27;&#x27;+racApres(loHt)+&#x27;\&#x27;&gt;&#x27;+racEur(racApres(loHt))+&#x27;&lt;/span&gt;&#x27;:racRange(racApres(loHt),racApres(hiHt))))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-source\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;span class=\&#x27;rac-plus-ic\&#x27;&gt;+&lt;/span&gt;&lt;span&gt;&#x27;+plus[j]+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rac-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rac-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   html+=racFoot(d);
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
