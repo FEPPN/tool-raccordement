@@ -234,7 +234,8 @@ function racShowResult(){
   if(d.ext===&#x27;unknown&#x27;)notes.push(&#x27;S\&#x27;il faut amener le réseau jusqu\&#x27;à votre terrain, comptez en plus au moins &#x27;+racFmt(racTtc(t.ext.ZFA.fixe))+&#x27; € (&#x27;+racFmt(racApres(t.ext.ZFA.fixe))+&#x27; € après réfaction), puis un prix au mètre.&#x27;);
   if(d.powerUnknown)notes.push(&#x27;Calcul fait pour 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; maximum. Au-delà, le branchement seul coûte au moins &#x27;+racFmt(racTtc(RAC_BAREME.medium.branchement))+&#x27; € (&#x27;+racFmt(racApres(RAC_BAREME.medium.branchement))+&#x27; € après réfaction).&#x27;);
   if(d.ext===&#x27;yes&#x27;&amp;&amp;!big)notes.push(&#x27;Si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; le plus proche est à plus de 250 m, Enedis peut ajouter des travaux sur devis.&#x27;);
-  /* Longueur inconnue : on affiche le minimum ; le prix au mètre est donné dans les notes. */
+  /* Réponse inconnue pouvant augmenter le prix (longueur, extension, puissance) : on affiche le minimum. */
+  if(d.ext===&#x27;unknown&#x27;||d.powerUnknown)minimum=true;
   var fmtPrice=function(f){return minimum?&#x27;À partir de &#x27;+racFmt(f(loHt))+&#x27; €&#x27;:racRange(f(loHt),f(hiHt));};
   var html=&#x27;&lt;span class=\&#x27;rac-price-label\&#x27;&gt;Coût des travaux, avant réfaction&lt;/span&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;&#x27;+fmtPrice(racTtc)+&#x27; TTC&lt;/div&gt;&#x27;;
