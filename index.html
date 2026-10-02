@@ -135,7 +135,7 @@ function racNext(){
   if(d.type===null)return &#x27;rac-q-type&#x27;;
   if(d.type===&#x27;autre&#x27;)return &#x27;rac-q-projet&#x27;;
   if(d.type===&#x27;collectif&#x27;)return &#x27;rac-result&#x27;;
-  if(d.type===&#x27;petitcollectif&#x27;&amp;&amp;d.n===null)return &#x27;rac-q-nb&#x27;; /* § 12.1.3 : 3 logements au plus, prix du barème */
+  if((d.type===&#x27;logements&#x27;||d.type===&#x27;petitcollectif&#x27;)&amp;&amp;d.n===null)return &#x27;rac-q-nb&#x27;; /* § 12.1.3 : 3 logements au plus, prix du barème */
   if(d.type===&#x27;pro&#x27;&amp;&amp;d.power===null)return &#x27;rac-q-power&#x27;;
   if(d.power===&#x27;high&#x27;)return &#x27;rac-result&#x27;;
   if(d.power===&#x27;medium120&#x27;){ /* § 6.4.2 : câble direct depuis le poste, facturé comme une extension */
@@ -167,7 +167,11 @@ window.racAnswerPower=function(p){
   if(p===&#x27;medium120&#x27;)racData.ext=&#x27;yes&#x27;;
   racAdvance();
 };
-window.racAnswerNb=function(n){racClearFrom(&#x27;n&#x27;);racTrack(&#x27;select_logements_&#x27;+n);racData.n=n;racAdvance();};
+window.racAnswerNb=function(n){
+  racClearFrom(&#x27;n&#x27;);racTrack(&#x27;select_logements_&#x27;+n);
+  if(n&gt;=4){racData.type=&#x27;collectif&#x27;;}else{racData.type=&#x27;petitcollectif&#x27;;racData.n=n;} /* § 12.1.3 jusqu&#x27;à 3, devis au-delà (§ 12.1.4) */
+  racAdvance();
+};
 /* Maison de plus de 36 kVA (rare) : on passe par la question de puissance. */
 window.racMaisonPlus36=function(){racTrack(&#x27;select_maison_plus_36&#x27;);racClearFrom(&#x27;type&#x27;);racData.type=&#x27;pro&#x27;;racData.maisonPlus36=true;racGoTo(&#x27;rac-q-power&#x27;);};
 window.racAnswerViab=function(v){if(racData.maisonPlus36){racData.type=&#x27;maison&#x27;;racData.maisonPlus36=false;racData.power=null;racData.powerUnknown=false;}racClearFrom(&#x27;viab&#x27;);racTrack(&#x27;select_viabilisation_&#x27;+v);racData.viab=v;racAdvance();};
@@ -287,8 +291,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerProjet('pro')">Un local professionnel (commerce, bureau, atelier…)</button>
         <button type="button" class="rac-option-btn" onclick="racAnswerProjet('terrain')">Viabiliser un terrain (pour le vendre ou construire plus tard)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('petitcollectif')">2 ou 3 logements (terrain divisé, maison + logement…)</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('collectif')">Un immeuble ou un lotissement (4 logements ou plus)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('logements')">Plusieurs logements (immeuble, lotissement, terrain divisé…)</button>
       </div>
     </div>
 
@@ -296,9 +299,11 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racSendHeight();
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Logements</div>
       <div class="rac-question-header"><div class="rac-question-text">Combien de logements faut-il raccorder ?</div></div>
+      <div class="rac-question-sub">Maisons ou appartements, dans un immeuble, un lotissement ou sur un terrain divisé.</div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerNb(2)">2 logements</button>
         <button type="button" class="rac-option-btn" onclick="racAnswerNb(3)">3 logements</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerNb(4)">4 logements ou plus</button>
       </div>
     </div>
 
