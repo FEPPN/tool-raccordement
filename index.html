@@ -67,6 +67,19 @@
 .rac-term-tip{box-sizing:border-box;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 .rac-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
 .rac-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
+.rac-bill{margin-bottom:4px;}
+.rac-line{display:flex !important;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed #E5E5E8;font-size:13.5px;color:#1A1A2E;}
+.rac-line span:last-child{font-weight:700;white-space:nowrap;}
+.rac-line-sub{color:#6B7280;}
+.rac-line-sub span:last-child{color:#6B7280;}
+.rac-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px;font-weight:700;font-size:14px;}
+.rac-total-value{font-size:23px;font-weight:800;color:#5A52FF;letter-spacing:-0.3px;text-align:right;}
+.rac-total-value small{font-size:11px;color:#6B7280;font-weight:600;}
+.rac-plus{margin-top:14px;background:#EEEDFF;border-radius:10px !important;padding:10px 12px;font-size:12.5px;color:#1A1A2E;line-height:1.55;}
+.rac-wrap p.rac-info{font-size:12.5px;color:#4B5563;margin:10px 0 0;}
+.rac-noninclus{margin-top:14px;font-size:12.5px;color:#1A1A2E;}
+.rac-foot{margin-top:8px;font-size:11.5px;color:#6B7280;}
+.rac-devis{font-size:24px;font-weight:800;color:#5A52FF;margin:2px 0 8px;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -191,14 +204,16 @@ function racFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDig
 function racRange(lo,hi){return (Math.abs(lo-hi)&lt;0.005)?racFmt(lo)+&#x27; €&#x27;:racFmt(lo)+&#x27; à &#x27;+racFmt(hi)+&#x27; €&#x27;;}
 function racTtc(ht){return ht*RAC_TVA;}
 function racApres(ht){return ht*(1-RAC_REFACTION)*RAC_TVA;}
-function racRow(label,loHt,hiHt){return &#x27;&lt;div class=\&#x27;rac-detail-row\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+racRange(racTtc(loHt),racTtc(hiHt))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;}
-
-
-var RAC_BOX_SOURCE=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;À savoir&lt;/strong&gt;&lt;br&gt;Prix du barème officiel d\&#x27;Enedis (version 7.2, juillet 2025). Seul un devis d\&#x27;Enedis donne le montant exact.&lt;br&gt;&lt;br&gt;&lt;strong&gt;Pas compris dans ce prix&lt;/strong&gt;&lt;br&gt;Les travaux sur votre terrain, à faire faire par votre constructeur ou un maçon : creuser la tranchée et poser la gaine où passera le câble, et préparer l\&#x27;emplacement du coffret (muret ou niche).&lt;/div&gt;&#x27;;
+function racEur(n){return racFmt(n)+&#x27; €&#x27;;}
+var RAC_FOOT=&#x27;&lt;div class=\&#x27;rac-noninclus\&#x27;&gt;&lt;strong&gt;Non inclus :&lt;/strong&gt; tranchée, gaine et muret du coffret sur votre terrain.&lt;/div&gt;&lt;div class=\&#x27;rac-foot\&#x27;&gt;Prix basés sur le barème officiel d\&#x27;Enedis. Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
 
 function racDevis(why){
-  document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;Prix sur devis&lt;/div&gt;&lt;p&gt;&#x27;+why+&#x27;&lt;/p&gt;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Comment faire ?&lt;/strong&gt;&lt;br&gt;Faites votre demande de raccordement auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/div&gt;&#x27;;
+  document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&lt;div class=\&#x27;rac-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rac-devis\&#x27;&gt;Sur devis&lt;/div&gt;&lt;p&gt;&#x27;+why+&#x27;&lt;/p&gt;&lt;p&gt;Faites votre demande de raccordement auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/p&gt;&#x27;;
   racGoTo(&#x27;rac-result&#x27;);
+}
+/* Ligne de facture : libellé, montant TTC avant réfaction (fourchette possible), « dès » si minimum. */
+function racLine(label,loHt,hiHt,des,cls){
+  return &#x27;&lt;div class=\&#x27;rac-line&#x27;+(cls?&#x27; &#x27;+cls:&#x27;&#x27;)+&#x27;\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+(des?&#x27;dès &#x27;+racEur(racTtc(loHt)):racRange(racTtc(loHt),racTtc(hiHt)))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
 }
 function racShowResult(){
   racTrack(&#x27;view_result&#x27;);
@@ -207,64 +222,51 @@ function racShowResult(){
   if(d.power===&#x27;high&#x27;){racDevis(&#x27;Au-delà de 250 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le raccordement se fait en &#x27;+racTerm(&#x27;hta&#x27;,&#x27;haute tension&#x27;)+&#x27; : Enedis établit un devis personnalisé.&#x27;);return;}
   var big=(d.power===&#x27;medium&#x27;||d.power===&#x27;medium120&#x27;);
   var t=big?RAC_BAREME.medium:RAC_BAREME.low;
-  var notes=[],minimum=false,intro;
+  var plus=[],infos=[];
   /* Branchement */
-  var br;
-  var nb=(d.type===&#x27;petitcollectif&#x27;)?d.n:1;
-  if(d.type===&#x27;terrain&#x27;){br=t.liaisonPublique;}
-  else if(d.type===&#x27;petitcollectif&#x27;){br=nb*t.branchement;}
-  else if(racIsLow()&amp;&amp;d.viab===&#x27;yes&#x27;){br=t.liaisonPrivee;}
+  var nb=(d.type===&#x27;petitcollectif&#x27;)?d.n:1,br,brLabel,brMin=false;
+  if(d.type===&#x27;terrain&#x27;){br=t.liaisonPublique;brLabel=&#x27;Pose du &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret électrique&#x27;);}
+  else if(d.type===&#x27;petitcollectif&#x27;){br=nb*t.branchement;brLabel=racTerm(&#x27;branchement&#x27;,&#x27;Branchements&#x27;)+&#x27; (&#x27;+nb+&#x27; logements)&#x27;;}
+  else if(racIsLow()&amp;&amp;d.viab===&#x27;yes&#x27;){br=t.liaisonPrivee;brLabel=&#x27;Liaison du &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; à la maison&#x27;;}
   else{
-    br=t.branchement;
+    br=t.branchement;brLabel=racTerm(&#x27;branchement&#x27;,&#x27;Branchement&#x27;)+(big?&#x27;&#x27;:&#x27; complet&#x27;);
     if(d.power===&#x27;medium&#x27;){
-      if(d.lb&gt;=0){br+=d.lb*t.branchementMetre;}
-      else{minimum=true;notes.push(&#x27;Câble de branchement : ajoutez &#x27;+racFmt(racTtc(t.branchementMetre))+&#x27; € par mètre (&#x27;+racFmt(racApres(t.branchementMetre))+&#x27; € après réfaction).&#x27;);}
+      if(d.lb&gt;=0){br+=d.lb*t.branchementMetre;brLabel+=&#x27; (&#x27;+d.lb+&#x27; m)&#x27;;}
+      else{brMin=true;plus.push(racEur(racTtc(t.branchementMetre))+&#x27; par mètre de câble de branchement.&#x27;);}
     }
   }
   /* Extension (pour 120-250 kVA : câble depuis le poste) */
   var zones=(d.zone===&#x27;ZFA&#x27;||d.zone===&#x27;ZFB&#x27;)?[d.zone]:[&#x27;ZFA&#x27;,&#x27;ZFB&#x27;];
-  var extLo=0,extHi=0;
+  var extLo=0,extHi=0,extMin=false,extLabel=&#x27;&#x27;;
   if(d.ext===&#x27;yes&#x27;){
     var eA=t.ext[zones[0]],eB=t.ext[zones[zones.length-1]];
-    if(d.le&gt;=0){extLo=eA.fixe+d.le*eA.metre;extHi=eB.fixe+d.le*eB.metre;}
-    else{extLo=eA.fixe;extHi=eB.fixe;minimum=true;notes.push((d.power===&#x27;medium120&#x27;?&#x27;Câble depuis le poste&#x27;:&#x27;Extension&#x27;)+&#x27; : ajoutez &#x27;+racRange(racTtc(eA.metre),racTtc(eB.metre))+&#x27; par mètre (&#x27;+racRange(racApres(eA.metre),racApres(eB.metre))+&#x27; après réfaction).&#x27;);}
-    if(zones.length&gt;1)notes.push(&#x27;Le prix exact dépend de la &#x27;+racTerm(&#x27;zone&#x27;,&#x27;zone&#x27;)+&#x27; : le plus bas correspond à une commune de moins de 100 000 habitants.&#x27;);
+    extLabel=(d.power===&#x27;medium120&#x27;)?&#x27;Câble depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27;&#x27;:racTerm(&#x27;extension&#x27;,&#x27;Extension&#x27;)+&#x27; du réseau&#x27;;
+    if(d.le&gt;=0){extLo=eA.fixe+d.le*eA.metre;extHi=eB.fixe+d.le*eB.metre;extLabel+=&#x27; (&#x27;+d.le+&#x27; m)&#x27;;}
+    else{extLo=eA.fixe;extHi=eB.fixe;extMin=true;plus.push(racRange(racTtc(eA.metre),racTtc(eB.metre))+&#x27; par mètre de &#x27;+(d.power===&#x27;medium120&#x27;?&#x27;câble depuis le poste&#x27;:&#x27;réseau à créer&#x27;)+&#x27;.&#x27;);}
+    if(zones.length&gt;1)infos.push(&#x27;Le montant dépend de la &#x27;+racTerm(&#x27;zone&#x27;,&#x27;zone&#x27;)+&#x27; : le plus bas correspond à une commune de moins de 100 000 habitants.&#x27;);
   }
+  /* Ce qui peut s&#x27;ajouter ou changer selon les réponses « Je ne sais pas » */
+  if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;S\&#x27;il faut amener le réseau jusqu\&#x27;à vous : au moins &#x27;+racEur(racTtc(t.ext.ZFA.fixe))+&#x27;, puis un prix au mètre.&#x27;);
+  if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; : branchement à partir de &#x27;+racEur(racTtc(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
+  if(racIsLow()&amp;&amp;d.viab===&#x27;unknown&#x27;)infos.push(&#x27;S\&#x27;il y a déjà un &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; en bordure de votre terrain, vous paierez seulement &#x27;+racEur(racApres(t.liaisonPrivee))+&#x27;.&#x27;);
+  if(d.type===&#x27;terrain&#x27;)infos.push(&#x27;Quand vous construirez, relier la maison au coffret coûtera &#x27;+racEur(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; (après réfaction).&#x27;);
+  if(d.type===&#x27;petitcollectif&#x27;)infos.push(&#x27;Prix valable si chaque logement est en 12 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
+  if(d.power===&#x27;medium120&#x27;)infos.push(&#x27;Au-delà de 120 kVA, Enedis tire toujours un câble direct depuis le poste, même si le réseau passe devant. Le branchement est facturé au forfait.&#x27;);
+  if(d.ext===&#x27;yes&#x27;&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)infos.push(&#x27;Si des voisins se raccordent en même temps que vous, ce coût de &#x27;+(d.power===&#x27;medium120&#x27;?&#x27;câble&#x27;:&#x27;réseau&#x27;)+&#x27; est partagé entre vous.&#x27;);
+  if(d.ext===&#x27;yes&#x27;&amp;&amp;!big&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)infos.push(&#x27;Si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; le plus proche est à plus de 250 m, Enedis peut ajouter des travaux sur devis.&#x27;);
+  /* Facture */
+  var minimum=brMin||extMin||d.ext===&#x27;unknown&#x27;||d.powerUnknown;
   var loHt=br+extLo,hiHt=br+extHi;
-  /* Textes */
-  if(d.type===&#x27;petitcollectif&#x27;){
-    intro=&#x27;Ce montant comprend les &#x27;+nb+&#x27; &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchements&#x27;)+&#x27; (un par logement)&#x27;+(d.ext===&#x27;yes&#x27;?&#x27; et une seule &#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension du réseau&#x27;):&#x27;&#x27;)+&#x27;.&#x27;;
-    notes.push(&#x27;Prix valable si chaque logement est en 12 kVA, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
-  }else if(d.type===&#x27;terrain&#x27;){
-    intro=&#x27;Ce montant correspond à la pose du &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret électrique&#x27;)+&#x27; en bordure de votre terrain&#x27;+(d.ext===&#x27;yes&#x27;?&#x27;, avec l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension du réseau&#x27;)+&#x27; jusqu\&#x27;à lui&#x27;:&#x27;&#x27;)+&#x27;.&#x27;;
-    notes.push(&#x27;Quand vous construirez, le raccordement de la maison au coffret coûtera &#x27;+racFmt(racTtc(RAC_BAREME.low.liaisonPrivee))+&#x27; € (&#x27;+racFmt(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; € après réfaction).&#x27;);
-  }else if(racIsLow()&amp;&amp;d.viab===&#x27;yes&#x27;){
-    intro=&#x27;Le &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret électrique&#x27;)+&#x27; est déjà en place : il reste à le relier à votre compteur.&#x27;;
-  }else if(d.power===&#x27;medium120&#x27;){
-    intro=&#x27;Ce montant comprend votre &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27; et le câble tiré depuis le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27;.&#x27;;
-    notes.push(&#x27;Au-delà de 120 kVA, Enedis tire toujours un câble direct depuis le poste, même si le réseau passe devant votre bâtiment. Le branchement est facturé au forfait, quelle que soit sa longueur.&#x27;);
-  }else if(d.ext===&#x27;yes&#x27;){
-    intro=&#x27;Ce montant comprend votre &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27; et l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension du réseau&#x27;)+&#x27; jusqu\&#x27;à votre terrain.&#x27;;
-  }else{
-    intro=&#x27;Ce montant correspond à votre &#x27;+racTerm(&#x27;branchement&#x27;,&#x27;branchement&#x27;)+&#x27; complet, du réseau jusqu\&#x27;à votre compteur.&#x27;;
-  }
-  if(racIsLow()&amp;&amp;d.viab===&#x27;unknown&#x27;)notes.push(&#x27;S\&#x27;il y a déjà un coffret en bordure de votre terrain, le prix tombe à &#x27;+racFmt(racTtc(t.liaisonPrivee))+&#x27; € (&#x27;+racFmt(racApres(t.liaisonPrivee))+&#x27; € après réfaction).&#x27;);
-  if(d.ext===&#x27;unknown&#x27;)notes.push(&#x27;S\&#x27;il faut amener le réseau jusqu\&#x27;à votre terrain, comptez en plus au moins &#x27;+racFmt(racTtc(t.ext.ZFA.fixe))+&#x27; € (&#x27;+racFmt(racApres(t.ext.ZFA.fixe))+&#x27; € après réfaction), puis un prix au mètre.&#x27;);
-  if(d.powerUnknown)notes.push(&#x27;Calcul fait pour 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; maximum. Au-delà, le branchement seul coûte au moins &#x27;+racFmt(racTtc(RAC_BAREME.medium.branchement))+&#x27; € (&#x27;+racFmt(racApres(RAC_BAREME.medium.branchement))+&#x27; € après réfaction).&#x27;);
-  if(d.ext===&#x27;yes&#x27;&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)notes.push(&#x27;Si des voisins se raccordent en même temps que vous, le coût &#x27;+(d.power===&#x27;medium120&#x27;?&#x27;du câble depuis le poste&#x27;:&#x27;de l\&#x27;extension&#x27;)+&#x27; est partagé entre vous.&#x27;);
-  if(d.ext===&#x27;yes&#x27;&amp;&amp;!big&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)notes.push(&#x27;Si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; le plus proche est à plus de 250 m, Enedis peut ajouter des travaux sur devis.&#x27;);
-  /* Réponse inconnue pouvant augmenter le prix (longueur, extension, puissance) : on affiche le minimum. */
-  if(d.ext===&#x27;unknown&#x27;||d.powerUnknown)minimum=true;
-  var fmtPrice=function(f){return minimum?&#x27;À partir de &#x27;+racFmt(f(loHt))+&#x27; €&#x27;:racRange(f(loHt),f(hiHt));};
-  var html=&#x27;&lt;span class=\&#x27;rac-price-label\&#x27;&gt;Coût des travaux, avant réfaction&lt;/span&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rac-price-primary\&#x27;&gt;&#x27;+fmtPrice(racTtc)+&#x27; TTC&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rac-price-after\&#x27;&gt;&lt;span class=\&#x27;rac-price-label\&#x27;&gt;Ce que vous payez, après &#x27;+racTerm(&#x27;refaction&#x27;,&#x27;réfaction&#x27;)+&#x27; de 40 %&lt;/span&gt;&lt;span class=\&#x27;rac-price-after-value\&#x27;&gt;&#x27;+fmtPrice(racApres)+&#x27; TTC&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;p&gt;&#x27;+intro+&#x27;&lt;/p&gt;&#x27;;
-  if(d.ext===&#x27;yes&#x27;||d.power===&#x27;medium&#x27;){
-    html+=&#x27;&lt;div class=\&#x27;rac-info-box\&#x27;&gt;&lt;strong&gt;Détail avant réfaction (TTC)&lt;/strong&gt;&lt;br&gt;&#x27;+racRow(nb&gt;1?&#x27;Branchements (&#x27;+nb+&#x27; logements)&#x27;:&#x27;Branchement&#x27;,br,br)+(d.ext===&#x27;yes&#x27;?racRow(d.power===&#x27;medium120&#x27;?&#x27;Câble depuis le poste&#x27;:&#x27;Extension du réseau&#x27;,extLo,extHi):&#x27;&#x27;)+&#x27;&lt;/div&gt;&#x27;;
-  }
-  for(var i=0;i&lt;notes.length;i++)html+=&#x27;&lt;p&gt;&#x27;+notes[i]+&#x27;&lt;/p&gt;&#x27;;
-  html+=RAC_BOX_SOURCE;
+  var html=&#x27;&lt;div class=\&#x27;rac-bill\&#x27;&gt;&#x27;;
+  html+=racLine(brLabel,br,br,brMin||(minimum&amp;&amp;d.ext!==&#x27;yes&#x27;));
+  if(d.ext===&#x27;yes&#x27;)html+=racLine(extLabel,extLo,extHi,extMin);
+  if(d.ext===&#x27;yes&#x27;)html+=racLine(&#x27;Total des travaux&#x27;,loHt,hiHt,minimum,&#x27;rac-line-sub&#x27;);
+  html+=&#x27;&lt;div class=\&#x27;rac-line\&#x27;&gt;&lt;span&gt;&#x27;+racTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; Enedis (−40 %)&lt;/span&gt;&lt;span&gt;−&#x27;+(minimum?racEur(racTtc(loHt)*RAC_REFACTION):racRange(racTtc(loHt)*RAC_REFACTION,racTtc(hiHt)*RAC_REFACTION))+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rac-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rac-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;dès &#x27;+racEur(racApres(loHt)):racRange(racApres(loHt),racApres(hiHt)))+&#x27; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;/div&gt;&#x27;;
+  if(plus.length)html+=&#x27;&lt;div class=\&#x27;rac-plus\&#x27;&gt;&lt;strong&gt;+ Peut s\&#x27;ajouter&lt;/strong&gt;&lt;br&gt;&#x27;+plus.join(&#x27;&lt;br&gt;&#x27;)+&#x27;&lt;/div&gt;&#x27;;
+  for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rac-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
+  html+=RAC_FOOT;
   document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=html;
   racGoTo(&#x27;rac-result&#x27;);
 }
