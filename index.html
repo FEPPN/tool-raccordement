@@ -339,7 +339,7 @@ function racShowResult(){
     }
   }
   /* Ce qui peut s&#x27;ajouter ou changer selon les réponses « Je ne sais pas » */
-  if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;Si le réseau ne passe pas devant votre terrain, ajoutez l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; : à partir de &#x27;+racEur(racApres(t.ext.ZFA.fixe))+&#x27; + &#x27;+racRange(racApres(t.ext.ZFA.metre),racApres(t.ext.ZFB.metre))+&#x27; par mètre.&#x27;);
+  if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;Si le réseau ne passe pas devant votre terrain, l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute : à partir de &#x27;+racEur(racApres(t.ext.ZFA.fixe))+&#x27; + &#x27;+racRange(racApres(t.ext.ZFA.metre),racApres(t.ext.ZFB.metre))+&#x27; par mètre.&#x27;);
   if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le branchement coûte à partir de &#x27;+racEur(racApres(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
   if(racIsLow()&amp;&amp;d.viab===&#x27;unknown&#x27;)infos.push(&#x27;S\&#x27;il y a déjà un &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; en bordure de votre terrain, vous paierez seulement &#x27;+racEur(racApres(t.liaisonPrivee))+&#x27;.&#x27;);
   if(d.type===&#x27;terrain&#x27;)infos.push(&#x27;Quand vous construirez, relier la maison au coffret coûtera &#x27;+racEur(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; (après réfaction).&#x27;);
