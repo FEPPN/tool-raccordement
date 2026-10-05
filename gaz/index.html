@@ -1,0 +1,379 @@
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
+<style>
+.rgz-wrap, .rgz-wrap *{box-sizing:border-box;}
+.rgz-wrap{font-family:'Inter','Segoe UI',Arial,sans-serif;background:transparent;padding:16px;line-height:1.6;color:#1A1A2E;overflow-x:hidden;}
+.rgz-card{max-width:640px;margin:0 auto;background:transparent;border-radius:0 !important;padding:0;box-shadow:none;border:none;}
+.rgz-title{color:#1A1A2E;margin-bottom:20px;font-size:19px;text-align:center;font-weight:800;letter-spacing:-0.2px;}
+.rgz-back-btn{display:inline-flex !important;align-items:center;gap:5px;background:none !important;border:none !important;color:#6B7280 !important;font-size:12px;font-weight:600;cursor:pointer;padding:0 !important;margin-bottom:12px;font-family:inherit;}
+.rgz-back-btn:hover{color:#5A52FF !important;}
+.rgz-back-btn svg{width:14px !important;height:14px !important;}
+.rgz-question-block{display:none;animation:rgzFadeIn 0.4s ease;background:#ffffff;border:1px solid #E6E6EE;border-radius:16px !important;padding:22px;}
+.rgz-question-block.rgz-active{display:block;}
+.rgz-step-label{display:flex !important;align-items:center;gap:8px;color:#1A1A2E;font-size:11px;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.3px;}
+.rgz-step-dot{width:7px !important;height:7px !important;border-radius:50% !important;background:#5A52FF;flex-shrink:0;}
+@keyframes rgzFadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.rgz-question-header{display:flex !important;align-items:flex-start;gap:10px;margin-bottom:16px;}
+.rgz-question-text{font-size:15px;color:#1A1A2E;font-weight:700;line-height:1.4;}
+.rgz-help-icon{position:relative;display:inline-flex !important;align-items:center;justify-content:center;width:20px !important;height:20px !important;margin-top:2px;cursor:pointer;flex-shrink:0;color:#9CA3AF;transition:color 0.2s ease;}
+.rgz-help-icon svg{width:18px !important;height:18px !important;}
+.rgz-help-icon.rgz-tooltip-open{color:#5A52FF;}
+.rgz-help-icon.rgz-tooltip-open .rgz-tooltip{display:block;}
+.rgz-tooltip{display:none;position:absolute;bottom:28px;right:0;left:auto;background:#1F2937;color:#ffffff !important;padding:12px 16px;border-radius:10px !important;font-size:13px;width:240px;max-width:calc(100vw - 64px);z-index:1000;line-height:1.5;font-weight:400;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.rgz-tooltip::after{content:'';position:absolute;top:100%;right:16px;left:auto;border:6px solid transparent;border-top-color:#1F2937;}
+.rgz-note-box{background:#F7F7F8;padding:12px 14px;border-radius:12px !important;margin:12px 0;font-size:12.5px;border:1px solid #ECECEE;display:flex !important;gap:8px;align-items:flex-start;color:#4B5563 !important;}
+.rgz-definition{background:#F7F7F8;border-radius:12px !important;padding:12px 14px;color:#4B5563 !important;font-size:12.5px;margin:12px 0;}
+.rgz-definition strong{color:#1A1A2E;}
+.rgz-options{display:flex !important;flex-direction:column;gap:10px;margin-top:18px;}
+.rgz-option-btn{position:relative;background:#ffffff !important;border:1.5px solid #ECECF2;padding:14px 16px 14px 42px;border-radius:12px !important;cursor:pointer;transition:all 0.15s ease;font-size:14px;font-weight:600;text-align:left;color:#1A1A2E !important;min-height:48px;font-family:inherit;width:100%;}
+.rgz-option-btn::before{content:'';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px !important;height:16px !important;border-radius:50% !important;border:2px solid #D1D5DB;background:#fff;transition:all 0.15s ease;}
+.rgz-opt-sub{display:block;font-weight:400;font-size:12.5px;color:#6B7280;margin-top:2px;line-height:1.35;}
+.rgz-option-btn:hover{border-color:#5A52FF;background:#FAFAFF !important;}
+.rgz-option-btn:hover::before{border-color:#5A52FF;}
+.rgz-input-wrap{position:relative;margin-top:14px;}
+.rgz-wrap input[type='number']{width:100%;padding:16px 50px 16px 18px;border:2px solid #E5E5E8;border-radius:12px !important;font-size:16px;font-family:inherit;color:#1A1A2E;-moz-appearance:textfield;}
+.rgz-wrap input[type='number']::-webkit-outer-spin-button, .rgz-wrap input[type='number']::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.rgz-wrap input[type='number']:focus{outline:none;border-color:#5A52FF;box-shadow:0 0 0 4px rgba(90,82,255,0.1);}
+.rgz-input-suffix{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#9CA3AF !important;font-size:14px;font-weight:600;pointer-events:none;}
+.rgz-result-box{display:none;background:#ffffff !important;padding:24px;border:1px solid #E6E6EE;border-radius:16px !important;margin-top:8px;}
+.rgz-result-box.rgz-show{display:block;animation:rgzFadeIn 0.4s ease;}
+.rgz-result-title{display:flex !important;align-items:center;gap:8px;color:#1A1A2E;font-size:11px;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.3px;}
+.rgz-result-title .rgz-check{width:17px !important;height:17px !important;border-radius:50% !important;background:#5A52FF;color:#fff !important;flex-shrink:0;display:flex !important;align-items:center;justify-content:center;}
+.rgz-check svg{width:10px !important;height:10px !important;}
+.rgz-note-icon{width:18px !important;height:18px !important;flex-shrink:0;margin-top:1px;color:#6B7280;}
+.rgz-price-primary{font-size:18px;color:#5A52FF;font-weight:800;letter-spacing:-0.2px;display:block;margin-bottom:4px;}
+.rgz-price-secondary{font-size:12px;color:#6B7280;font-weight:500;display:block;margin-bottom:12px;}
+.rgz-result-box p{font-size:12.5px;color:#374151;margin-bottom:12px;}
+.rgz-info-box{background:#F7F7F8;padding:12px 14px;border-radius:12px !important;margin-top:10px;font-size:12px;border:1px solid #ECECEE;color:#4B5563;line-height:1.55;}
+.rgz-info-box strong{color:#1A1A2E;}
+.rgz-reset-btn{background:#5A52FF !important;color:#ffffff !important;border:none;padding:15px 28px;border-radius:12px !important;cursor:pointer;font-size:15px;font-weight:700;margin-top:18px;width:100%;transition:all 0.2s ease;font-family:inherit;}
+.rgz-reset-btn:hover{background:#4842CC !important;}
+@media (max-width:600px){
+  .rgz-wrap{padding:10px !important;}
+  .rgz-title{font-size:16px !important;margin-bottom:16px !important;}
+  .rgz-question-text{font-size:14px !important;}
+  .rgz-option-btn{padding:12px 14px 12px 38px !important;font-size:13px !important;}
+  .rgz-price-primary{font-size:17px !important;}
+}
+.rgz-continue-btn{background:#5A52FF !important;color:#ffffff !important;border:none;padding:14px 24px;border-radius:12px !important;cursor:pointer;font-size:15px;font-weight:700;margin-top:14px;width:100%;transition:all 0.2s ease;font-family:inherit;}
+.rgz-continue-btn:hover{background:#4842CC !important;}
+.rgz-link-btn{display:block;background:none !important;border:none !important;color:#5A52FF !important;font-size:13px;font-weight:600;cursor:pointer;margin:12px auto 0;padding:4px !important;font-family:inherit;text-decoration:underline;}
+.rgz-input-hint{font-size:12px;color:#6B7280;margin-top:8px;}
+.rgz-price-label{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.3px;display:block;}
+.rgz-price-after{background:#EEEDFF;border-radius:12px !important;padding:12px 14px;margin:10px 0 14px;}
+.rgz-price-after .rgz-price-label{color:#4842CC;}
+.rgz-price-after-value{font-size:18px;font-weight:800;color:#1A1A2E;display:block;}
+.rgz-detail-row{display:flex !important;justify-content:space-between;gap:12px;}
+.rgz-term{border-bottom:1.5px dotted #5A52FF;cursor:help;color:inherit;font-weight:inherit;}
+.rgz-term:focus{outline:2px solid rgba(90,82,255,0.35);outline-offset:2px;border-radius:2px;}
+.rgz-term-tip{box-sizing:border-box;pointer-events:none;display:none;position:absolute;z-index:1000;background:#1F2937;color:#ffffff;padding:10px 14px;border-radius:10px;font-family:'Inter','Segoe UI',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.5;text-transform:none;letter-spacing:0;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.rgz-question-sub{font-size:13px;color:#6B7280;margin:-8px 0 4px;}
+.rgz-input-error{display:none;font-size:12.5px;color:#B42318;margin-top:8px;}
+.rgz-bill{margin-bottom:4px;}
+.rgz-line{display:flex !important;justify-content:space-between;gap:12px;padding:6px 0;font-size:13.5px;color:#1A1A2E;}
+.rgz-line > span:last-child{font-weight:700;white-space:nowrap;}
+.rgz-line-sub{color:#6B7280;}
+.rgz-line-sub > span:last-child{color:#6B7280;}
+.rgz-total{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid #E5E5E8;font-size:14px;}
+.rgz-total > span:first-child{font-weight:700;}
+.rgz-total-value{font-size:23px;font-weight:800;color:#5A52FF;letter-spacing:-0.3px;text-align:right;}
+.rgz-total-value small{font-size:11px;color:#5A52FF;font-weight:700;}
+.rgz-plus{display:flex !important;gap:9px;align-items:flex-start;margin-top:12px;font-size:12.5px;color:#1A1A2E;line-height:1.55;}
+.rgz-plus-ic{flex-shrink:0;width:20px;height:20px;border-radius:50% !important;background:#EEEDFF;color:#4842CC;font-weight:800;font-size:12px;display:flex !important;align-items:center;justify-content:center;margin-top:1px;}
+.rgz-wrap p.rgz-info{font-size:12.5px;color:#4B5563;margin:10px 0 0;}
+.rgz-foot-block{margin-top:14px;padding-top:10px;border-top:1px solid #E5E5E8;}
+.rgz-noninclus{font-size:12.5px;color:#4B5563;line-height:1.55;}
+.rgz-noninclus strong{color:#1A1A2E;}
+.rgz-devis-note{margin-top:10px;font-size:12.5px;color:#4B5563;}
+.rgz-noninclus ul{margin:4px 0 4px 18px;padding:0;}
+.rgz-noninclus li{margin:2px 0;}
+.rgz-foot{margin-top:4px;font-size:10.5px;color:#6B7280;line-height:1.5;}
+.rgz-foot strong{color:#4B5563;font-weight:600;}
+.rgz-devis{font-size:24px;font-weight:800;color:#5A52FF;margin:2px 0 8px;}
+.rgz-source{text-align:right;font-size:11px;color:#9CA3AF;margin-top:2px;}
+.rgz-foot ul{margin:3px 0 6px 16px;padding:0;}
+.rgz-foot li{margin:1px 0;}
+.rgz-from{font-size:inherit;font-weight:inherit;color:inherit;letter-spacing:0;}
+.rgz-total-value .rgz-from{display:inline;font-size:14px;font-weight:700;color:#5A52FF;margin-right:2px;}
+.rgz-total-value{white-space:nowrap;margin-left:auto;}
+.rgz-total{flex-wrap:wrap;row-gap:2px;}
+.rgz-total > span:first-child{white-space:nowrap;}
+/* --- Prototype moderne --- */
+.rgz-title{font-size:18px !important;color:#1A1A2E !important;font-family:'Inter Tight','Inter','Segoe UI',Arial,sans-serif !important;font-weight:700 !important;margin-bottom:14px !important;letter-spacing:0 !important;line-height:1.35;}
+@media (max-width:600px){.rgz-wrap .rgz-title{font-size:16px !important;}}
+.rgz-question-text{font-size:17px !important;letter-spacing:-0.2px;}
+.rgz-progress{height:5px;background:#EEEDFF;border-radius:4px;overflow:hidden;margin:0 2px 12px;}
+#rgz-progress-fill{height:100%;width:6%;background:#5A52FF;border-radius:4px;transition:width .4s ease;}
+@keyframes rgzSlideIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:translateX(0);}}
+@keyframes rgzSlideBack{from{opacity:0;transform:translateX(-28px);}to{opacity:1;transform:translateX(0);}}
+.rgz-question-block.rgz-active,.rgz-result-box.rgz-show{animation:rgzSlideIn .32s ease !important;}
+.rgz-going-back .rgz-question-block.rgz-active,.rgz-going-back .rgz-result-box.rgz-show{animation:rgzSlideBack .32s ease !important;}
+.rgz-option-btn{transition:background .15s,border-color .15s;}
+.rgz-option-btn.rgz-selected{border-color:#5A52FF !important;background:#F4F3FF !important;}
+.rgz-option-btn.rgz-selected::before{border-color:#5A52FF !important;background:#5A52FF !important;box-shadow:inset 0 0 0 3px #fff;}
+.rgz-option-btn.rgz-selected::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#5A52FF;font-weight:800;}
+.rgz-tiles{display:grid !important;grid-template-columns:1fr 1fr;gap:10px !important;}
+.rgz-option-btn.rgz-tile{text-align:center !important;padding:18px 10px !important;min-height:120px;line-height:1.3;}
+.rgz-option-btn.rgz-tile::before{display:none;}
+.rgz-tile svg{width:38px;height:38px;display:block;margin:0 auto 10px;color:#5A52FF;}
+.rgz-tile small{display:block;font-weight:500;color:#6B7280;font-size:11.5px;margin-top:4px;}
+.rgz-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.rgz-chip{border:1.5px solid #ECECF2;background:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;font-family:inherit;color:#1A1A2E;cursor:pointer;}
+.rgz-chip.rgz-chip-on{background:#5A52FF;border-color:#5A52FF;color:#fff;}
+details.rgz-fold{margin-top:14px;padding-top:4px;border-top:none;}
+details.rgz-fold summary{cursor:pointer;font-size:12.5px;font-weight:600;color:#4B5563;list-style:none;display:flex;justify-content:space-between;}
+details.rgz-fold summary::-webkit-details-marker{display:none;}
+details.rgz-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
+details.rgz-fold[open] summary::after{content:'−';}
+.rgz-devis-line{margin-top:8px !important;}
+</style>
+<div class="rgz-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Tarifs de raccordement au gaz GRDF, période du 1er juillet 2026 au 30 juin 2027.
+   Sources : grdf.fr « Les prix du raccordement au gaz » et Catalogue des prestations GRDF du 1er juillet 2026, N°232.
+   Branchement de débit 6 à 10 Nm3/h, toute longueur : forfait 1 (cuisson et/ou eau chaude) ou forfait 2 (chauffage).
+   Extension : chauffage ≤ 35 m sans facturation complémentaire ; chauffage &gt; 35 m et cuisson/eau chaude (toute extension) :
+   participation éventuelle du client selon la rentabilité de l&#x27;opération. */
+var RGZ_TARIFS={
+  chauffage:{ht:436.56,ttc:{&#x27;20&#x27;:523.87,&#x27;10&#x27;:480.22,&#x27;5,5&#x27;:460.57}},
+  eau:{ht:982.27,ttc:{&#x27;20&#x27;:1178.72,&#x27;10&#x27;:1080.50}}
+};
+var rgzData={usage:null,equip:null,pac:null,age:null,reseau:null,dist:null,lotissement:false};
+var rgzHistory=[];
+function rgzSendHeight(){setTimeout(function(){var h=document.body.offsetHeight||document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
+function rgzCurrentScreenId(){var a=document.querySelector(&#x27;.rgz-question-block.rgz-active&#x27;);if(a)return a.id;var r=document.getElementById(&#x27;rgz-result&#x27;);if(r&amp;&amp;r.classList.contains(&#x27;rgz-show&#x27;))return &#x27;rgz-result&#x27;;return null;}
+function rgzGoTo(id,skipHistory){
+  rgzHideTip();
+  if(!skipHistory){var cur=rgzCurrentScreenId();if(cur&amp;&amp;cur!==id)rgzHistory.push(cur);}
+  var blocks=document.querySelectorAll(&#x27;.rgz-question-block&#x27;);
+  for(var i=0;i&lt;blocks.length;i++)blocks[i].classList.remove(&#x27;rgz-active&#x27;);
+  document.getElementById(&#x27;rgz-result&#x27;).classList.remove(&#x27;rgz-show&#x27;);
+  var t=document.getElementById(id);
+  document.querySelector(&#x27;.rgz-card&#x27;).classList.toggle(&#x27;rgz-going-back&#x27;,!!skipHistory);
+  var sel=document.querySelectorAll(&#x27;.rgz-option-btn.rgz-selected&#x27;);for(var k=0;k&lt;sel.length;k++)sel[k].classList.remove(&#x27;rgz-selected&#x27;);
+  if(id===&#x27;rgz-result&#x27;)t.classList.add(&#x27;rgz-show&#x27;);else t.classList.add(&#x27;rgz-active&#x27;);
+  rgzUpdateProgress(id);
+  rgzSendHeight();
+}
+/* Progression : étapes faites / (faites + questions restantes probables). */
+var RGZ_REST={&#x27;rgz-q-usage&#x27;:4,&#x27;rgz-q-equip&#x27;:3,&#x27;rgz-q-pac&#x27;:3,&#x27;rgz-q-age&#x27;:2,&#x27;rgz-q-reseau&#x27;:1,&#x27;rgz-q-dist&#x27;:1};
+function rgzUpdateProgress(id){
+  var bar=document.getElementById(&#x27;rgz-progress-fill&#x27;);if(!bar)return;
+  var done=rgzHistory.length,pct=(id===&#x27;rgz-result&#x27;)?100:Math.round(100*(done+0.5)/(done+RGZ_REST[id]+0.5));
+  bar.style.width=Math.max(6,pct)+&#x27;%&#x27;;
+}
+/* La réponse choisie se colore, puis on passe à la suite. */
+document.addEventListener(&#x27;click&#x27;,function(e){
+  var b=e.target.closest?e.target.closest(&#x27;.rgz-option-btn&#x27;):null;
+  if(!b||b.getAttribute(&#x27;data-go&#x27;)||e.target.closest(&#x27;.rgz-term&#x27;))return;
+  e.stopImmediatePropagation();e.preventDefault();
+  b.classList.add(&#x27;rgz-selected&#x27;);
+  setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
+},true);
+window.rgzGoBack=function(){if(!rgzHistory.length)return;rgzGoTo(rgzHistory.pop(),true);};
+function rgzTrack(actionName,customParams){
+  customParams=customParams||{};
+  var gtmEvent=&#x27;form&#x27;;
+  if(actionName===&#x27;tool_visible&#x27;)gtmEvent=&#x27;impression&#x27;;
+  else if(actionName.indexOf(&#x27;reset&#x27;)&gt;-1)gtmEvent=&#x27;click&#x27;;
+  var eventType=customParams.event_type||&#x27;interaction&#x27;;
+  if(actionName===&#x27;tool_visible&#x27;||actionName.indexOf(&#x27;view_result&#x27;)&gt;-1)eventType=&#x27;impression&#x27;;
+  var payload={event:gtmEvent,event_system:&#x27;papernest_tool&#x27;,event_component:&#x27;tool-raccordement-gaz&#x27;,event_category:&#x27;engagement&#x27;,event_type:eventType,event_position:&#x27;content&#x27;};
+  if(actionName!==&#x27;tool_visible&#x27;)payload.event_step=actionName;
+  if(gtmEvent===&#x27;form&#x27;&amp;&amp;actionName.indexOf(&#x27;view_result&#x27;)&lt;0)payload.event_form_type=&#x27;select&#x27;;
+  window.dataLayer=window.dataLayer||[];window.dataLayer.push(payload);
+}
+/* Infobulles sur les mots techniques */
+var RGZ_TERMS={
+  tva10:&#x27;La TVA est réduite à 10 % pour une pompe à chaleur hybride qui couvre moins de 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
+  tva55:&#x27;La TVA est réduite à 5,5 % pour une pompe à chaleur hybride qui couvre au moins 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
+  tva10eau:&#x27;La TVA est réduite à 10 % dans un logement construit il y a plus de 2 ans.&#x27;,
+  tva20neuf:&#x27;Dans un logement construit il y a moins de 2 ans, la TVA réduite ne s\&#x27;applique pas.&#x27;,
+  coffret:&#x27;Le boîtier qui accueillera votre compteur de gaz.&#x27;
+};
+function rgzTerm(key,label){if(!RGZ_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rgz-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
+var rgzTip=null,rgzTipOwner=null;
+function rgzHideTip(){if(rgzTip){rgzTip.style.display=&#x27;none&#x27;;}rgzTipOwner=null;}
+function rgzShowTip(el){
+  if(!rgzTip){rgzTip=document.createElement(&#x27;div&#x27;);rgzTip.className=&#x27;rgz-term-tip&#x27;;document.body.appendChild(rgzTip);}
+  rgzTip.textContent=RGZ_TERMS[el.getAttribute(&#x27;data-term&#x27;)]||&#x27;&#x27;;
+  rgzTip.style.display=&#x27;block&#x27;;
+  /* L&#x27;infobulle reste dans la largeur du simulateur, même sur petit écran. */
+  var r=el.getBoundingClientRect(),box=(document.querySelector(&#x27;.rgz-card&#x27;)||document.body).getBoundingClientRect();
+  var w=Math.min(260,box.width);
+  rgzTip.style.width=w+&#x27;px&#x27;;
+  var left=r.left+r.width/2-w/2;left=Math.max(box.left,Math.min(left,box.right-w));
+  rgzTip.style.left=(left+window.scrollX)+&#x27;px&#x27;;rgzTip.style.top=(r.bottom+window.scrollY+8)+&#x27;px&#x27;;
+  if(rgzTipOwner!==el)rgzTrack(&#x27;open_tooltip_&#x27;+el.getAttribute(&#x27;data-term&#x27;));
+  rgzTipOwner=el;rgzSendHeight();
+}
+document.addEventListener(&#x27;click&#x27;,function(e){var t=e.target.closest?e.target.closest(&#x27;.rgz-term&#x27;):null;if(t){e.preventDefault();e.stopPropagation();if(rgzTipOwner===t){rgzHideTip();}else{rgzShowTip(t);}return;}rgzHideTip();},true);
+document.addEventListener(&#x27;mouseover&#x27;,function(e){var t=e.target.closest?e.target.closest(&#x27;.rgz-term&#x27;):null;if(t&amp;&amp;window.matchMedia&amp;&amp;window.matchMedia(&#x27;(hover: hover)&#x27;).matches)rgzShowTip(t);});
+document.addEventListener(&#x27;mouseout&#x27;,function(e){var t=e.target.closest?e.target.closest(&#x27;.rgz-term&#x27;):null;if(t&amp;&amp;window.matchMedia&amp;&amp;window.matchMedia(&#x27;(hover: hover)&#x27;).matches)rgzHideTip();});
+document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escape&#x27;)rgzHideTip();});
+window.addEventListener(&#x27;scroll&#x27;,rgzHideTip,{passive:true});
+
+
+window.rgzLotissement=function(){rgzTrack(&#x27;select_lotissement&#x27;);rgzData={usage:null,equip:null,pac:null,age:null,reseau:null,dist:null,lotissement:true};rgzShowResult();};
+window.rgzAnswerUsage=function(u){rgzTrack(&#x27;select_usage_&#x27;+u);rgzData={usage:u,equip:null,pac:null,age:null,reseau:null,dist:null,lotissement:false};rgzGoTo(u===&#x27;chauffage&#x27;?&#x27;rgz-q-equip&#x27;:&#x27;rgz-q-age&#x27;);};
+window.rgzAnswerEquip=function(e){rgzTrack(&#x27;select_equipement_&#x27;+e);rgzData.equip=e;rgzData.pac=null;rgzData.age=null;rgzData.reseau=null;rgzGoTo(e===&#x27;pac&#x27;?&#x27;rgz-q-pac&#x27;:(e===&#x27;chaudiere&#x27;?&#x27;rgz-q-reseau&#x27;:&#x27;rgz-q-age&#x27;));};
+window.rgzAnswerPac=function(p){rgzTrack(&#x27;select_pac_&#x27;+p);rgzData.pac=p;rgzData.age=null;rgzData.reseau=null;rgzGoTo(&#x27;rgz-q-age&#x27;);};
+/* TVA réduite seulement pour un logement construit il y a plus de 2 ans (conditions générales GRDF, art. 3.1). */
+window.rgzAnswerAge=function(a){rgzTrack(&#x27;select_age_&#x27;+a);rgzData.age=a;rgzData.reseau=null;rgzGoTo(&#x27;rgz-q-reseau&#x27;);};
+window.rgzAnswerReseau=function(r){rgzTrack(&#x27;select_reseau_&#x27;+r);rgzData.reseau=r;rgzData.dist=null;if(r===&#x27;no&#x27;&amp;&amp;rgzData.usage===&#x27;chauffage&#x27;)rgzGoTo(&#x27;rgz-q-dist&#x27;);else rgzShowResult();};
+window.rgzAnswerDist=function(v){rgzTrack(&#x27;select_distance_&#x27;+v);rgzData.dist=v;rgzShowResult();};
+function rgzFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function rgzEur(n){return rgzFmt(n)+&#x27; €&#x27;;}
+function rgzPct(t){return t.replace(&#x27;.&#x27;,&#x27;,&#x27;)+&#x27; %&#x27;;}
+function rgzShowResult(){
+  rgzTrack(&#x27;view_result&#x27;);
+  var d=rgzData,html,el=document.getElementById(&#x27;rgz-result-content&#x27;);
+  if(d.lotissement){
+    el.innerHTML=&#x27;&lt;div class=\&#x27;rgz-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rgz-devis\&#x27;&gt;Gratuit&lt;/div&gt;&lt;p&gt;Votre maison neuve est construite dans un lotissement desservi en gaz et votre parcelle est déjà équipée d\&#x27;un &#x27;+rgzTerm(&#x27;coffret&#x27;,&#x27;coffret de comptage&#x27;)+&#x27; : votre raccordement est gratuit.&lt;/p&gt;&#x27;;
+    rgzGoTo(&#x27;rgz-result&#x27;);return;
+  }
+  var t=RGZ_TARIFS[d.usage],taux,minimum=false,plus=[],desc,tip=null;
+  var vieux=(d.age===&#x27;plus2&#x27;),neuf=(d.age===&#x27;moins2&#x27;),ageInconnu=(d.age===&#x27;unknown&#x27;);
+  if(d.usage===&#x27;eau&#x27;){
+    desc=&#x27;Pour l\&#x27;eau chaude et la cuisson uniquement.&#x27;;
+    if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
+    else{taux=&#x27;10&#x27;;tip=&#x27;tva10eau&#x27;;if(ageInconnu){minimum=true;plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}}
+  }else if(d.equip===&#x27;chaudiere&#x27;){taux=&#x27;20&#x27;;desc=&#x27;Pour le chauffage, avec une chaudière gaz.&#x27;;}
+  else if(d.equip===&#x27;pac&#x27;){
+    desc=&#x27;Pour le chauffage, avec une pompe à chaleur hybride.&#x27;;
+    if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
+    else{
+      if(d.pac===&#x27;plus70&#x27;){taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;}else if(d.pac===&#x27;moins70&#x27;){taux=&#x27;10&#x27;;tip=&#x27;tva10&#x27;;}
+      else{taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;minimum=true;plus.push(&#x27;Si la pompe à chaleur couvre moins de 70 % de vos besoins en chauffage, la TVA est de 10 % : &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27;.&#x27;);}
+      if(ageInconnu){minimum=true;plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}
+    }
+  }else{
+    desc=&#x27;Pour le chauffage.&#x27;;
+    if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
+    else{
+      taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;minimum=true;
+      plus.push(&#x27;Avec une chaudière gaz : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27; (TVA à 20 %).&#x27;);
+      plus.push(&#x27;Avec une pompe à chaleur hybride : &#x27;+rgzEur(t.ttc[&#x27;5,5&#x27;])+&#x27; si elle couvre au moins 70 % de vos besoins en chauffage, &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27; sinon.&#x27;);
+      if(ageInconnu)plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);
+    }
+  }
+  /* Extension (catalogue N°232) */
+  var ext=&#x27;prolonger le réseau&#x27;,partic=false;
+  if(d.usage===&#x27;eau&#x27;){
+    if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;Le réseau ne passe pas devant chez vous : GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux. Elle est indiquée dans son devis.&#x27;);}
+    else if(d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux.&#x27;);}
+  }else{
+    if(d.dist===&#x27;moins35&#x27;)plus.push(&#x27;Il faut &#x27;+ext+&#x27; sur 35 m ou moins : pour le chauffage, ce n\&#x27;est pas facturé en plus.&#x27;);
+    else if(d.dist===&#x27;plus35&#x27;){partic=true;plus.push(&#x27;Il faut &#x27;+ext+&#x27; sur plus de 35 m : GRDF peut vous demander une participation au coût de ces travaux, selon leur rentabilité. Elle est indiquée dans son devis.&#x27;);}
+    else if(d.dist===&#x27;unknown&#x27;||d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, &#x27;+ext+&#x27; sur 35 m ou moins n\&#x27;est pas facturé en plus. Au-delà de 35 m, GRDF peut vous demander une participation, selon la rentabilité des travaux.&#x27;);}
+  }
+  if(partic)minimum=true;
+  var ttc=t.ttc[taux],tva=Math.round((ttc-t.ht)*100)/100;
+  var from=minimum?&#x27;&lt;span class=\&#x27;rgz-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;;
+  var tvaLbl=&#x27;TVA (&#x27;+rgzPct(taux)+&#x27;)&#x27;;if(tip)tvaLbl=rgzTerm(tip,tvaLbl);
+  html=&#x27;&lt;div class=\&#x27;rgz-bill\&#x27;&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Raccordement au gaz&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(t.ht)+&#x27; HT&lt;/span&gt;&lt;/div&gt;&#x27;;
+  if(partic)html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Prolongement du réseau&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;Participation éventuelle de votre part.&lt;/span&gt;&lt;/span&gt;&lt;span&gt;sur devis&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;&#x27;+tvaLbl+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(tva)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rgz-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rgz-total-value\&#x27;&gt;&#x27;+from+&#x27;&lt;span class=\&#x27;rgz-amount\&#x27; data-v=\&#x27;&#x27;+ttc+&#x27;\&#x27;&gt;&#x27;+rgzEur(ttc)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;div class=\&#x27;rgz-source\&#x27;&gt;Prix basés sur les tarifs officiels de GRDF.&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Tarifs valables pour le raccordement d\&#x27;un logement particulier (débit de 6 ou 10 m³/h).&lt;/p&gt;&#x27;;
+  if(taux!==&#x27;20&#x27;&amp;&amp;d.equip!==&#x27;unknown&#x27;&amp;&amp;d.pac!==&#x27;unknown&#x27;)plus.push(&#x27;Pour bénéficier de la TVA réduite, vous devrez attester que votre logement est construit il y a plus de 2 ans.&#x27;);
+  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
+  html+=&#x27;&lt;details class=\&#x27;rgz-foot-block rgz-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rgz-foot\&#x27;&gt;&lt;ul&gt;&lt;li&gt;l\&#x27;installation de gaz dans votre logement, après le compteur (tuyaux, raccordement de la chaudière ou de la cuisinière) : elle est à faire par votre installateur.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
+  el.innerHTML=html;
+  rgzGoTo(&#x27;rgz-result&#x27;);
+  rgzCountUp();
+}
+function rgzCountUp(){
+  var el=document.querySelector(&#x27;.rgz-total-value .rgz-amount&#x27;);if(!el)return;
+  var target=parseFloat(el.getAttribute(&#x27;data-v&#x27;));if(isNaN(target))return;
+  var t0=null,dur=700;
+  function f(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=rgzEur(target*e);if(k&lt;1)requestAnimationFrame(f);}
+  requestAnimationFrame(f);
+}
+window.rgzHandleReset=function(){
+  rgzTrack(&#x27;click_reset_simulator&#x27;);
+  rgzData={usage:null,equip:null,pac:null,age:null,reseau:null,dist:null,lotissement:false};rgzHistory=[];rgzHideTip();
+  document.getElementById(&#x27;rgz-result-content&#x27;).innerHTML=&#x27;&#x27;;
+  rgzGoTo(&#x27;rgz-q-usage&#x27;,true);
+};
+var rgzContainer=document.querySelector(&#x27;.rgz-card&#x27;);
+if(rgzContainer&amp;&amp;window.IntersectionObserver){var rgzObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rgzTrack(&#x27;tool_visible&#x27;);rgzObs.unobserve(en[i].target);}}},{threshold:0.5});rgzObs.observe(rgzContainer);}
+window.addEventListener(&#x27;resize&#x27;,rgzSendHeight);rgzUpdateProgress(&#x27;rgz-q-usage&#x27;);
+rgzSendHeight();
+"></svg>
+  <div class="rgz-card">
+    <div class="rgz-title">Estimez le coût de votre raccordement au gaz</div>
+    <div class="rgz-progress"><div id="rgz-progress-fill"></div></div>
+
+    <div id="rgz-q-usage" class="rgz-question-block rgz-active">
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre besoin</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Pour quoi utiliserez-vous le gaz ?</div></div>
+      <div class="rgz-options rgz-tiles">
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 1.6 1.2 2.6 2.5 3 0-3 0-5.5 0-8z"/></svg>Pour me chauffer</button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Pour l'eau chaude et la cuisson uniquement</button>
+      </div>
+      <button type="button" class="rgz-link-btn" onclick="rgzLotissement()">Maison neuve en lotissement, avec un coffret de comptage déjà posé ?</button>
+    </div>
+
+    <div id="rgz-q-equip" class="rgz-question-block">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre chauffage</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Avec quel équipement allez-vous vous chauffer ?</div></div>
+      <div class="rgz-options">
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('chaudiere')">Une chaudière gaz</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('pac')">Une pompe à chaleur hybride</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('unknown')">Je ne sais pas encore</button>
+      </div>
+    </div>
+
+    <div id="rgz-q-pac" class="rgz-question-block">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Pompe à chaleur hybride</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Votre pompe à chaleur hybride couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année ?</div></div>
+      <div class="rgz-options">
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')">Oui, au moins 70 %</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')">Non, moins de 70 %</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('unknown')">Je ne sais pas</button>
+      </div>
+    </div>
+
+    <div id="rgz-q-age" class="rgz-question-block">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre logement</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Votre logement a-t-il été construit il y a plus de 2 ans ?</div></div>
+      <div class="rgz-options">
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')">Oui</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')">Non, il est neuf ou a moins de 2 ans</button>
+      </div>
+    </div>
+
+    <div id="rgz-q-reseau" class="rgz-question-block">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Réseau de gaz</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Le réseau de gaz passe-t-il devant votre maison ?</div></div>
+      <div class="rgz-options">
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('yes')">Oui</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('no')">Non, il faut l'amener jusqu'à chez moi</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('unknown')">Je ne sais pas</button>
+      </div>
+    </div>
+
+    <div id="rgz-q-dist" class="rgz-question-block">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-step-label"><span class="rgz-step-dot"></span>Distance</div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Sur quelle distance faut-il prolonger le réseau jusqu'à chez vous ?</div></div>
+      <div class="rgz-options">
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('moins35')">35 m ou moins</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('plus35')">Plus de 35 m</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('unknown')">Je ne sais pas</button>
+      </div>
+    </div>
+
+    <div id="rgz-result" class="rgz-result-box">
+      <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+      <div class="rgz-result-title"><span class="rgz-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>Estimation du coût</div>
+      <div id="rgz-result-content"></div>
+      <button type="button" class="rgz-reset-btn" onclick="rgzHandleReset()">Nouvelle estimation</button>
+    </div>
+  </div>
+</div>
