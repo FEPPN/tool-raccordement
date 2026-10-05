@@ -185,8 +185,7 @@ var RGZ_TERMS={
   tva10:&#x27;La TVA est réduite à 10 % pour une pompe à chaleur hybride qui couvre moins de 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
   tva55:&#x27;La TVA est réduite à 5,5 % pour une pompe à chaleur hybride qui couvre au moins 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
   tva10eau:&#x27;La TVA est réduite à 10 % dans un logement construit il y a plus de 2 ans.&#x27;,
-  tva20neuf:&#x27;Dans un logement construit il y a moins de 2 ans, la TVA réduite ne s\&#x27;applique pas.&#x27;,
-  coffret:&#x27;Le boîtier qui accueillera votre compteur de gaz.&#x27;
+  tva20neuf:&#x27;Dans un logement construit il y a moins de 2 ans, la TVA réduite ne s\&#x27;applique pas.&#x27;
 };
 function rgzTerm(key,label){if(!RGZ_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rgz-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
 var rgzTip=null,rgzTipOwner=null;
@@ -226,7 +225,7 @@ function rgzShowResult(){
   rgzTrack(&#x27;view_result&#x27;);
   var d=rgzData,html,el=document.getElementById(&#x27;rgz-result-content&#x27;);
   if(d.lotissement){
-    el.innerHTML=&#x27;&lt;div class=\&#x27;rgz-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rgz-devis\&#x27;&gt;Gratuit&lt;/div&gt;&lt;p&gt;Votre maison neuve est construite dans un lotissement desservi en gaz et votre parcelle est déjà équipée d\&#x27;un &#x27;+rgzTerm(&#x27;coffret&#x27;,&#x27;coffret de comptage&#x27;)+&#x27; : votre raccordement est gratuit.&lt;/p&gt;&#x27;;
+    el.innerHTML=&#x27;&lt;div class=\&#x27;rgz-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rgz-devis\&#x27;&gt;Gratuit&lt;/div&gt;&lt;p&gt;Pour une maison neuve dans un lotissement desservi en gaz, avec un coffret de comptage déjà posé sur la parcelle, le raccordement est gratuit.&lt;/p&gt;&#x27;;
     rgzGoTo(&#x27;rgz-result&#x27;);return;
   }
   var t=RGZ_TARIFS[d.usage],taux,minimum=false,plus=[],desc,tip=null;
@@ -234,35 +233,35 @@ function rgzShowResult(){
   if(d.usage===&#x27;eau&#x27;){
     desc=&#x27;Pour l\&#x27;eau chaude et la cuisson uniquement.&#x27;;
     if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
-    else{taux=&#x27;10&#x27;;tip=&#x27;tva10eau&#x27;;if(ageInconnu){minimum=true;plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}}
+    else{taux=&#x27;10&#x27;;tip=&#x27;tva10eau&#x27;;if(ageInconnu){minimum=true;plus.push(&#x27;Logement construit il y a moins de 2 ans : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}}
   }else if(d.equip===&#x27;chaudiere&#x27;){taux=&#x27;20&#x27;;desc=&#x27;Pour le chauffage, avec une chaudière gaz.&#x27;;}
   else if(d.equip===&#x27;pac&#x27;){
     desc=&#x27;Pour le chauffage, avec une pompe à chaleur hybride.&#x27;;
     if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
     else{
       if(d.pac===&#x27;plus70&#x27;){taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;}else if(d.pac===&#x27;moins70&#x27;){taux=&#x27;10&#x27;;tip=&#x27;tva10&#x27;;}
-      else{taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;minimum=true;plus.push(&#x27;Si la pompe à chaleur couvre moins de 70 % de vos besoins en chauffage, la TVA est de 10 % : &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27;.&#x27;);}
-      if(ageInconnu){minimum=true;plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}
+      else{taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;minimum=true;plus.push(&#x27;Si la pompe à chaleur couvre moins de 70 % de vos besoins : &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27;.&#x27;);}
+      if(ageInconnu){minimum=true;plus.push(&#x27;Logement construit il y a moins de 2 ans : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);}
     }
   }else{
     desc=&#x27;Pour le chauffage.&#x27;;
     if(neuf){taux=&#x27;20&#x27;;tip=&#x27;tva20neuf&#x27;;}
     else{
       taux=&#x27;5,5&#x27;;tip=&#x27;tva55&#x27;;minimum=true;
-      plus.push(&#x27;Avec une chaudière gaz : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27; (TVA à 20 %).&#x27;);
-      plus.push(&#x27;Avec une pompe à chaleur hybride : &#x27;+rgzEur(t.ttc[&#x27;5,5&#x27;])+&#x27; si elle couvre au moins 70 % de vos besoins en chauffage, &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27; sinon.&#x27;);
-      if(ageInconnu)plus.push(&#x27;Si votre logement est construit il y a moins de 2 ans, la TVA est de 20 % : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);
+      plus.push(&#x27;Avec une chaudière gaz : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);
+      plus.push(&#x27;Avec une pompe à chaleur hybride : &#x27;+rgzEur(t.ttc[&#x27;5,5&#x27;])+&#x27; ou &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27;, selon la part de vos besoins qu\&#x27;elle couvre.&#x27;);
+      if(ageInconnu)plus.push(&#x27;Logement construit il y a moins de 2 ans : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27;.&#x27;);
     }
   }
   /* Extension (catalogue N°232) */
-  var ext=&#x27;prolonger le réseau&#x27;,partic=false;
+  var partic=false;
   if(d.usage===&#x27;eau&#x27;){
-    if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;Le réseau ne passe pas devant chez vous : GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux. Elle est indiquée dans son devis.&#x27;);}
-    else if(d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux.&#x27;);}
+    if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;GRDF peut demander une participation pour prolonger le réseau, selon la rentabilité des travaux (sur devis).&#x27;);}
+    else if(d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, GRDF peut demander une participation pour le prolonger (sur devis).&#x27;);}
   }else{
-    if(d.dist===&#x27;moins35&#x27;)plus.push(&#x27;Il faut &#x27;+ext+&#x27; sur 35 m ou moins : pour le chauffage, ce n\&#x27;est pas facturé en plus.&#x27;);
-    else if(d.dist===&#x27;plus35&#x27;){partic=true;plus.push(&#x27;Il faut &#x27;+ext+&#x27; sur plus de 35 m : GRDF peut vous demander une participation au coût de ces travaux, selon leur rentabilité. Elle est indiquée dans son devis.&#x27;);}
-    else if(d.dist===&#x27;unknown&#x27;||d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, &#x27;+ext+&#x27; sur 35 m ou moins n\&#x27;est pas facturé en plus. Au-delà de 35 m, GRDF peut vous demander une participation, selon la rentabilité des travaux.&#x27;);}
+    if(d.dist===&#x27;moins35&#x27;)plus.push(&#x27;Prolonger le réseau sur 35 m ou moins n\&#x27;est pas facturé en plus.&#x27;);
+    else if(d.dist===&#x27;plus35&#x27;){partic=true;plus.push(&#x27;Au-delà de 35 m, GRDF peut demander une participation pour prolonger le réseau, selon la rentabilité des travaux (sur devis).&#x27;);}
+    else if(d.dist===&#x27;unknown&#x27;||d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau doit être prolongé de plus de 35 m, GRDF peut demander une participation, selon la rentabilité des travaux (sur devis).&#x27;);}
   }
   if(partic)minimum=true;
   var ttc=t.ttc[taux],tva=Math.round((ttc-t.ht)*100)/100;
@@ -270,13 +269,11 @@ function rgzShowResult(){
   var tvaLbl=&#x27;TVA (&#x27;+rgzPct(taux)+&#x27;)&#x27;;if(tip)tvaLbl=rgzTerm(tip,tvaLbl);
   html=&#x27;&lt;div class=\&#x27;rgz-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Raccordement au gaz&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(t.ht)+&#x27; HT&lt;/span&gt;&lt;/div&gt;&#x27;;
-  if(partic)html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Prolongement du réseau&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;Participation éventuelle, sur devis.&lt;/span&gt;&lt;/span&gt;&lt;span&gt;—&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;&#x27;+tvaLbl+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(tva)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rgz-total-value\&#x27;&gt;&#x27;+from+&#x27;&lt;span class=\&#x27;rgz-amount\&#x27; data-v=\&#x27;&#x27;+ttc+&#x27;\&#x27;&gt;&#x27;+rgzEur(ttc)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-source\&#x27;&gt;Prix basés sur les tarifs officiels de GRDF.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Prix valable pour un logement particulier avec un compteur de 6 à 10 m³/h.&lt;/p&gt;&#x27;;
-  if(taux!==&#x27;20&#x27;)plus.push(&#x27;Pour bénéficier de la TVA réduite, vous devrez attester que votre logement est construit il y a plus de 2 ans.&#x27;);
+  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Prix valable pour le logement d\&#x27;un particulier.&lt;/p&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   html+=&#x27;&lt;details class=\&#x27;rgz-foot-block rgz-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rgz-foot\&#x27;&gt;&lt;ul&gt;&lt;li&gt;l\&#x27;installation de gaz dans votre logement, après le compteur (tuyaux, raccordement de la chaudière ou de la cuisinière) : elle est à faire par votre installateur.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
   el.innerHTML=html;
