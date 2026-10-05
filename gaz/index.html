@@ -180,7 +180,8 @@ function rgzTrack(actionName,customParams){
 }
 /* Infobulles sur les mots techniques */
 var RGZ_TERMS={
-  pac:&#x27;Pompe à chaleur hybride : une pompe à chaleur associée à une chaudière gaz.&#x27;,
+  tva10:&#x27;La TVA est réduite à 10 % pour une pompe à chaleur hybride qui couvre moins de 70 % des besoins en chauffage annuels.&#x27;,
+  tva55:&#x27;La TVA est réduite à 5,5 % pour une pompe à chaleur hybride qui couvre au moins 70 % des besoins en chauffage annuels.&#x27;,
   coffret:&#x27;Le boîtier qui accueille le compteur de gaz.&#x27;
 };
 function rgzTerm(key,label){if(!RGZ_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rgz-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
@@ -231,20 +232,21 @@ function rgzShowResult(){
     label=&#x27;Raccordement au gaz&#x27;;
     if(d.equip===&#x27;chaudiere&#x27;){taux=&#x27;20&#x27;;desc=&#x27;Pour le chauffage, avec une chaudière gaz.&#x27;;}
     else if(d.equip===&#x27;pac&#x27;){
-      desc=&#x27;Pour le chauffage, avec une &#x27;+rgzTerm(&#x27;pac&#x27;,&#x27;pompe à chaleur hybride&#x27;)+&#x27;.&#x27;;
+      desc=&#x27;Pour le chauffage, avec une &#x27;+&#x27;pompe à chaleur hybride&#x27;+&#x27;.&#x27;;
       if(d.pac===&#x27;plus70&#x27;)taux=&#x27;5,5&#x27;;else if(d.pac===&#x27;moins70&#x27;)taux=&#x27;10&#x27;;
       else{taux=&#x27;5,5&#x27;;minimum=true;plus.push(&#x27;Si la pompe à chaleur couvre moins de 70 % de vos besoins en chauffage, la TVA est de 10 % : &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27;.&#x27;);}
     }else{
       taux=&#x27;5,5&#x27;;minimum=true;desc=&#x27;Pour le chauffage.&#x27;;
       plus.push(&#x27;Avec une chaudière gaz : &#x27;+rgzEur(t.ttc[&#x27;20&#x27;])+&#x27; (TVA à 20 %).&#x27;);
-      plus.push(&#x27;Avec une &#x27;+rgzTerm(&#x27;pac&#x27;,&#x27;pompe à chaleur hybride&#x27;)+&#x27; : &#x27;+rgzEur(t.ttc[&#x27;5,5&#x27;])+&#x27; si elle couvre au moins 70 % de vos besoins en chauffage, &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27; sinon.&#x27;);
+      plus.push(&#x27;Avec une &#x27;+&#x27;pompe à chaleur hybride&#x27;+&#x27; : &#x27;+rgzEur(t.ttc[&#x27;5,5&#x27;])+&#x27; si elle couvre au moins 70 % de vos besoins en chauffage, &#x27;+rgzEur(t.ttc[&#x27;10&#x27;])+&#x27; sinon.&#x27;);
     }
   }
   var ttc=t.ttc[taux],tva=Math.round((ttc-t.ht)*100)/100;
   var from=minimum?&#x27;&lt;span class=\&#x27;rgz-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;;
   html=&#x27;&lt;div class=\&#x27;rgz-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;&#x27;+label+&#x27;&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(t.ht)+&#x27; HT&lt;/span&gt;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;TVA (&#x27;+rgzPct(taux)+&#x27;)&lt;/span&gt;&lt;span&gt;&#x27;+from+rgzEur(tva)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+  var tvaLbl=&#x27;TVA (&#x27;+rgzPct(taux)+&#x27;)&#x27;;if(taux===&#x27;10&#x27;)tvaLbl=rgzTerm(&#x27;tva10&#x27;,tvaLbl);else if(taux===&#x27;5,5&#x27;)tvaLbl=rgzTerm(&#x27;tva55&#x27;,tvaLbl);
+  html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;&#x27;+tvaLbl+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+from+rgzEur(tva)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rgz-total-value\&#x27;&gt;&#x27;+from+&#x27;&lt;span class=\&#x27;rgz-amount\&#x27; data-v=\&#x27;&#x27;+ttc+&#x27;\&#x27;&gt;&#x27;+rgzEur(ttc)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-source\&#x27;&gt;Prix basés sur les tarifs officiels de GRDF.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
@@ -301,7 +303,7 @@ rgzSendHeight();
     <div id="rgz-q-pac" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Pompe à chaleur hybride</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Votre <span class="rgz-term" tabindex="0" data-term="pac">pompe à chaleur hybride</span> couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Votre pompe à chaleur hybride couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année ?</div></div>
       <div class="rgz-options">
         <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')">Oui, au moins 70 %</button>
         <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')">Non, moins de 70 %</button>
