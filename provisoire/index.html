@@ -133,7 +133,7 @@ var RPV_TARIFS_HT={
   long:{low_fixe:33.00,low_semi:310.00,low_nonfixe:414.00,medium_fixe:521.00,medium_semi:612.00,medium_nonfixe:714.00}
 };
 var RPV_TVA=1.20;
-var rpvData={usage:null,duree:null,power:null,powerUnknown:false,branchement:null,reseau:null};
+var rpvData={duree:null,power:null,powerUnknown:false,branchement:null,reseau:null};
 var rpvHistory=[];
 function rpvSendHeight(){setTimeout(function(){var h=document.body.offsetHeight||document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
 function rpvCurrentScreenId(){var a=document.querySelector(&#x27;.rpv-question-block.rpv-active&#x27;);if(a)return a.id;var r=document.getElementById(&#x27;rpv-result&#x27;);if(r&amp;&amp;r.classList.contains(&#x27;rpv-show&#x27;))return &#x27;rpv-result&#x27;;return null;}
@@ -151,7 +151,7 @@ function rpvGoTo(id,skipHistory){
   rpvSendHeight();
 }
 /* Progression : étapes faites / (faites + questions restantes probables). */
-var RPV_REST={&#x27;rpv-q1&#x27;:5,&#x27;rpv-q2&#x27;:4,&#x27;rpv-q3&#x27;:3,&#x27;rpv-q4&#x27;:2,&#x27;rpv-q5&#x27;:1};
+var RPV_REST={&#x27;rpv-q2&#x27;:4,&#x27;rpv-q3&#x27;:3,&#x27;rpv-q4&#x27;:2,&#x27;rpv-q5&#x27;:1};
 function rpvUpdateProgress(id){
   var bar=document.getElementById(&#x27;rpv-progress-fill&#x27;);if(!bar)return;
   var done=rpvHistory.length,pct=(id===&#x27;rpv-result&#x27;)?100:Math.round(100*(done+0.5)/(done+RPV_REST[id]+0.5));
@@ -209,7 +209,6 @@ document.addEventListener(&#x27;mouseout&#x27;,function(e){var t=e.target.closes
 document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escape&#x27;)rpvHideTip();});
 window.addEventListener(&#x27;scroll&#x27;,rpvHideTip,{passive:true});
 
-window.rpvAnswerUsage=function(usage){rpvData.usage=usage;rpvTrack(&#x27;select_usage_&#x27;+usage);rpvGoTo(&#x27;rpv-q2&#x27;);};
 window.rpvAnswerDuree=function(duree){rpvData.duree=duree;rpvTrack(&#x27;select_duree_&#x27;+duree);rpvGoTo(&#x27;rpv-q3&#x27;);};
 window.rpvAnswerPower=function(power){
   rpvTrack(&#x27;select_power_&#x27;+power);
@@ -240,15 +239,15 @@ function rpvShowResult(){
   /* Équipement inconnu : prix le plus bas probable, l&#x27;autre cas en note (les bornes dédiées se trouvent surtout sur les places publiques). */
   var type=d.branchement;
   if(type===&#x27;unknown&#x27;){
-    type=(d.usage===&#x27;chantier&#x27;)?&#x27;semi&#x27;:&#x27;fixe&#x27;;
+    type=(d.duree===&#x27;long&#x27;)?&#x27;semi&#x27;:&#x27;fixe&#x27;;
     if(rpvTtc(type)!==rpvTtc(&#x27;nonfixe&#x27;)){minimum=true;plus.push(&#x27;S\&#x27;il n\&#x27;y a aucun équipement sur place pour vous raccorder : &#x27;+rpvEur(rpvTtc(&#x27;nonfixe&#x27;))+&#x27;.&#x27;);}
   }
   var price=rpvTtc(type);
   if(d.reseau===&#x27;no&#x27;){minimum=true;plus.push(&#x27;L\&#x27;&#x27;+rpvTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; du réseau jusqu\&#x27;à votre terrain s\&#x27;ajoute : Enedis la chiffre sur devis.&#x27;);}
-  else if(d.reseau===&#x27;unknown&#x27;){minimum=true;plus.push(&#x27;Si le &#x27;+rpvTerm(&#x27;reseau&#x27;,&#x27;réseau&#x27;)+&#x27; ne passe pas à côté, l\&#x27;&#x27;+rpvTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute : Enedis la chiffre sur devis.&#x27;);}
+  else if(d.reseau===&#x27;unknown&#x27;){minimum=true;plus.push(&#x27;Si le &#x27;+rpvTerm(&#x27;reseau&#x27;,&#x27;réseau&#x27;)+&#x27; ne passe pas devant votre terrain, l\&#x27;&#x27;+rpvTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute : Enedis la chiffre sur devis.&#x27;);}
   if(d.powerUnknown){minimum=true;plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+rpvTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; : &#x27;+rpvEur(rpvTtc(type,&#x27;medium&#x27;))+&#x27;.&#x27;);}
   var lineLabel=&#x27;Raccordement provisoire&#x27;+(typeLabels[d.branchement]?&#x27; &#x27;+typeLabels[d.branchement]:&#x27;&#x27;);
-  var desc=(d.usage===&#x27;chantier&#x27;?&#x27;Chantier&#x27;:&#x27;Événement&#x27;)+&#x27; de &#x27;+(d.duree===&#x27;court&#x27;?&#x27;28 jours maximum&#x27;:&#x27;plus de 28 jours&#x27;)+&#x27;, &#x27;+(d.power===&#x27;low&#x27;?&#x27;jusqu\&#x27;à 36 kVA&#x27;:&#x27;de 36 à 250 kVA&#x27;)+&#x27;.&#x27;;
+  var desc=(d.duree===&#x27;court&#x27;?&#x27;28 jours maximum&#x27;:&#x27;Plus de 28 jours&#x27;)+&#x27;, &#x27;+(d.power===&#x27;low&#x27;?&#x27;jusqu\&#x27;à 36 kVA&#x27;:&#x27;de 36 à 250 kVA&#x27;)+&#x27;.&#x27;;
   if(!minimum)infos.push(&#x27;Ce prix comprend le raccordement, la pose et la dépose du compteur, la mise en service, la résiliation et le dé-raccordement.&#x27;);
   html=&#x27;&lt;div class=\&#x27;rpv-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-line\&#x27;&gt;&lt;span&gt;&#x27;+lineLabel+&#x27;&lt;br&gt;&lt;span class=\&#x27;rpv-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
@@ -272,30 +271,21 @@ function rpvCountUp(){
 }
 window.rpvHandleReset=function(){
   rpvTrack(&#x27;click_reset_simulator&#x27;);
-  rpvData={usage:null,duree:null,power:null,powerUnknown:false,branchement:null,reseau:null};rpvHistory=[];rpvHideTip();
+  rpvData={duree:null,power:null,powerUnknown:false,branchement:null,reseau:null};rpvHistory=[];rpvHideTip();
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=&#x27;&#x27;;
-  rpvGoTo(&#x27;rpv-q1&#x27;,true);
+  rpvGoTo(&#x27;rpv-q2&#x27;,true);
 };
 var rpvContainer=document.querySelector(&#x27;.rpv-card&#x27;);
 if(rpvContainer&amp;&amp;window.IntersectionObserver){var rpvObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rpvTrack(&#x27;tool_visible&#x27;);rpvObs.unobserve(en[i].target);}}},{threshold:0.5});rpvObs.observe(rpvContainer);}
-window.addEventListener(&#x27;resize&#x27;,rpvSendHeight);rpvUpdateProgress(&#x27;rpv-q1&#x27;);
+window.addEventListener(&#x27;resize&#x27;,rpvSendHeight);rpvUpdateProgress(&#x27;rpv-q2&#x27;);
 rpvSendHeight();
 "></svg>
   <div class="rpv-card">
     <div class="rpv-title">Estimez le coût de votre raccordement provisoire</div>
     <div class="rpv-progress"><div id="rpv-progress-fill"></div></div>
 
-    <div id="rpv-q1" class="rpv-question-block rpv-active">
-      <div class="rpv-step-label"><span class="rpv-step-dot"></span>Votre besoin</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">Pour quel usage avez-vous besoin d'électricité temporaire ?</div></div>
-      <div class="rpv-options rpv-tiles">
-        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('chantier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9"/><path d="M4 9h16l-3-4H6z"/><path d="M14 9v5"/><rect x="12" y="14" width="4" height="3" rx=".5"/><path d="M2 21h8"/></svg>Un chantier</button>
-        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('evenement')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v17"/><path d="m9 20 3-6 3 6"/></svg>Un événement<small>forain, marché, manifestation publique</small></button>
-      </div>
-    </div>
 
-    <div id="rpv-q2" class="rpv-question-block">
-      <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
+    <div id="rpv-q2" class="rpv-question-block rpv-active">
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Durée</div>
       <div class="rpv-question-header"><div class="rpv-question-text">Combien de temps aurez-vous besoin d'électricité ?</div></div>
       <div class="rpv-options">
