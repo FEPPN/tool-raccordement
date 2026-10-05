@@ -173,15 +173,14 @@ function racUpdateProgress(id){
 window.racGoBack=function(){if(racHistory.length===0)return;var prev=racHistory.pop();racGoTo(prev,true);};
 function racTrack(actionName,customParams){customParams=customParams||{};var gtmEvent=&#x27;form&#x27;;if(actionName===&#x27;tool_visible&#x27;){gtmEvent=&#x27;impression&#x27;;}else if(customParams.is_contact||actionName.indexOf(&#x27;contact&#x27;)&gt;-1||actionName.indexOf(&#x27;telephone&#x27;)&gt;-1){gtmEvent=&#x27;click_cta&#x27;;}else if(actionName.indexOf(&#x27;reset&#x27;)&gt;-1){gtmEvent=&#x27;click&#x27;;}var eventType=customParams.event_type||&#x27;interaction&#x27;;if(actionName===&#x27;tool_visible&#x27;||actionName.indexOf(&#x27;view_result&#x27;)&gt;-1){eventType=&#x27;impression&#x27;;}var payload={event:gtmEvent,event_system:&#x27;papernest_tool&#x27;,event_component:&#x27;tool-raccordement&#x27;,event_category:&#x27;engagement&#x27;,event_type:eventType,event_position:&#x27;content&#x27;};if(actionName!==&#x27;tool_visible&#x27;){payload.event_step=actionName;}if(gtmEvent===&#x27;form&#x27;){if(actionName.indexOf(&#x27;view_result&#x27;)&gt;-1||actionName.indexOf(&#x27;tooltip&#x27;)&gt;-1||actionName.indexOf(&#x27;help&#x27;)&gt;-1){}else if(actionName.indexOf(&#x27;input_&#x27;)===0){payload.event_form_type=&#x27;text&#x27;;}else{payload.event_form_type=&#x27;select&#x27;;}}window.dataLayer=window.dataLayer||[];window.dataLayer.push(payload);}
 var RAC_TERMS={
-  kva:&#x27;Le kVA est l\&#x27;unité de la puissance de raccordement. Jusqu\&#x27;à 36 kVA, Enedis raccorde en 12 kVA (monophasé) ou en 36 kVA (triphasé).&#x27;,
-  viabilise:&#x27;Terrain dont le branchement électrique a déjà été réalisé jusqu\&#x27;en limite de parcelle.&#x27;,
-  coffret:&#x27;Boîtier qui contient le coupe-circuit d\&#x27;Enedis, en général en limite de propriété et accessible depuis la rue.&#x27;,
-  refaction:&#x27;Part du coût du raccordement couverte par le tarif d\&#x27;utilisation du réseau : 40 %. Elle est déduite du prix.&#x27;,
-  branchement:&#x27;Les ouvrages qui relient le réseau à votre compteur, en passant par le coffret.&#x27;,
-  extension:&#x27;Le réseau à créer quand votre terrain ne peut pas être raccordé directement au réseau existant. Il va jusqu\&#x27;à votre coffret et s\&#x27;ajoute au branchement.&#x27;,
-  reseau:&#x27;Le réseau public de distribution d\&#x27;électricité en basse tension, aérien ou souterrain.&#x27;,
-  hta:&#x27;HTA : haute tension. Au-delà de 250 kVA, le raccordement ne se fait plus en basse tension.&#x27;,
-  poste:&#x27;Poste de transformation HTA/BT : il passe la haute tension en basse tension pour alimenter le réseau du quartier.&#x27;,
+  viabilise:&#x27;Un terrain viabilisé est déjà relié aux réseaux (électricité, eau, égouts…) en bordure de parcelle, prêt pour construire.&#x27;,
+  coffret:&#x27;Boîtier Enedis posé en limite de terrain, souvent dans un muret ou sur un poteau côté rue. C\&#x27;est le point d\&#x27;arrivée de l\&#x27;électricité chez vous.&#x27;,
+  refaction:&#x27;Une aide de 40 % sur le coût de votre raccordement. Elle est financée par une partie des factures d\&#x27;électricité de tous les consommateurs (le tarif d\&#x27;utilisation du réseau).&#x27;,
+  branchement:&#x27;Le câble qui relie le réseau électrique de la rue à votre compteur, en passant par le coffret.&#x27;,
+  extension:&#x27;Quand le réseau ne passe pas devant votre terrain, Enedis doit le prolonger jusqu\&#x27;à chez vous. Ces travaux s\&#x27;ajoutent au prix du branchement.&#x27;,
+  reseau:&#x27;Les câbles électriques d\&#x27;Enedis qui passent dans la rue, sous le trottoir ou sur des poteaux.&#x27;,
+  hta:&#x27;Au-delà de 250 kVA, le besoin est trop important pour le réseau des rues : Enedis vous raccorde au réseau haute tension, plus puissant.&#x27;,
+  poste:&#x27;Le petit bâtiment ou l\&#x27;armoire d\&#x27;Enedis qui alimente en électricité les rues du quartier.&#x27;,
 };
 function racTerm(key,label){if(!RAC_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rac-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
 var racTip=null,racTipOwner=null;
@@ -308,7 +307,7 @@ function racShowResult(){
   racTrack(&#x27;view_result&#x27;);
   var d=racData;
   if(d.type===&#x27;collectif&#x27;){racDevis(&#x27;Au-delà de 3 logements, le raccordement collectif est établi sur devis d\&#x27;Enedis.&#x27;);return;}
-  if(d.power===&#x27;high&#x27;){racDevis(&#x27;Au-delà de 250 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le raccordement se fait en &#x27;+racTerm(&#x27;hta&#x27;,&#x27;haute tension&#x27;)+&#x27;. Son coût dépend de la distance au réseau haute tension et des travaux nécessaires : Enedis le chiffre dans sa proposition de raccordement.&#x27;);return;}
+  if(d.power===&#x27;high&#x27;){racDevis(&#x27;Au-delà de 250 &#x27;+&#x27;kVA&#x27;+&#x27;, le raccordement se fait en &#x27;+racTerm(&#x27;hta&#x27;,&#x27;haute tension&#x27;)+&#x27;. Son coût dépend de la distance au réseau haute tension et des travaux nécessaires : Enedis le chiffre dans sa proposition de raccordement.&#x27;);return;}
   var big=(d.power===&#x27;medium&#x27;||d.power===&#x27;medium120&#x27;);
   var t=big?RAC_BAREME.medium:RAC_BAREME.low;
   var plus=[],infos=[];
@@ -341,10 +340,10 @@ function racShowResult(){
   }
   /* Ce qui peut s&#x27;ajouter ou changer selon les réponses « Je ne sais pas » */
   if(d.ext===&#x27;unknown&#x27;)plus.push(&#x27;Si le réseau ne passe pas devant votre terrain, l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; s\&#x27;ajoute : à partir de &#x27;+racEur(racApres(t.ext.ZFA.fixe))+&#x27; + &#x27;+racRange(racApres(t.ext.ZFA.metre),racApres(t.ext.ZFB.metre))+&#x27; par mètre.&#x27;);
-  if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le branchement coûte à partir de &#x27;+racEur(racApres(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
+  if(d.powerUnknown)plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+&#x27;kVA&#x27;+&#x27;, le branchement coûte à partir de &#x27;+racEur(racApres(RAC_BAREME.medium.branchement))+&#x27;.&#x27;);
   if(racIsLow()&amp;&amp;d.viab===&#x27;unknown&#x27;)infos.push(&#x27;S\&#x27;il y a déjà un &#x27;+racTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; en bordure de votre terrain, vous paierez seulement &#x27;+racEur(racApres(t.liaisonPrivee))+&#x27;.&#x27;);
   if(d.type===&#x27;terrain&#x27;)infos.push(&#x27;Quand vous construirez, relier la maison au coffret coûtera &#x27;+racEur(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; (après réfaction).&#x27;);
-  if(d.type===&#x27;petitcollectif&#x27;)infos.push(&#x27;Prix valable si chaque logement est en 12 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
+  if(d.type===&#x27;petitcollectif&#x27;)infos.push(&#x27;Prix valable si chaque logement est en 12 &#x27;+&#x27;kVA&#x27;+&#x27;, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
   if(d.power===&#x27;medium120&#x27;)infos.push(&#x27;À partir de 120 kVA, pour un projet soumis à autorisation d\&#x27;urbanisme, Enedis réalise un raccordement direct depuis un &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27;, même si le réseau passe devant. Le branchement est facturé au forfait, sans prix au mètre.&#x27;);
   /* Facture */
   var minimum=brMin||extMin||d.ext===&#x27;unknown&#x27;||d.powerUnknown;
