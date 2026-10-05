@@ -183,7 +183,7 @@ var RPV_TERMS={
   kva:&#x27;Le kVA (kilovoltampère) est l\&#x27;unité de la puissance de raccordement.&#x27;,
   borne:&#x27;Borne ou armoire installée exprès pour les branchements provisoires, souvent par la mairie sur une place publique.&#x27;,
   coffret:&#x27;Boîtier du réseau Enedis, fixé au sol en bordure de terrain ou de trottoir.&#x27;,
-  reseau:&#x27;Les câbles électriques d\&#x27;Enedis qui passent dans la rue, sous le trottoir ou sur des poteaux.&#x27;,
+  reseau:&#x27;Le réseau public de distribution d\&#x27;électricité en basse tension, aérien ou souterrain.&#x27;,
   extension:&#x27;Les travaux pour prolonger le réseau jusqu\&#x27;à votre installation, quand il n\&#x27;est pas à proximité immédiate. Enedis les chiffre sur devis.&#x27;,
   refaction:&#x27;Réduction de 40 % appliquée au coût des travaux de raccordement. Pour un raccordement provisoire, elle est déjà incluse dans les prix du barème.&#x27;,
   hta:&#x27;HTA : haute tension. Au-delà de 250 kVA, le raccordement ne se fait plus en basse tension.&#x27;
@@ -263,8 +263,7 @@ function rpvShowResult(){
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
-  html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&#x27;;
-  html+=&#x27;&lt;li&gt;le matériel nécessaire au raccordement (câble, coffret équipé…), fourni par vous.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
+  html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;Le câble et le coffret équipé sont à fournir par vous : ils ne sont pas compris dans ce prix.&lt;/p&gt;&#x27;;
   if(d.reseau===&#x27;no&#x27;||d.reseau===&#x27;unknown&#x27;)html+=&#x27;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;
   rpvGoTo(&#x27;rpv-result&#x27;);
