@@ -270,13 +270,13 @@ function rgzShowResult(){
   var tvaLbl=&#x27;TVA (&#x27;+rgzPct(taux)+&#x27;)&#x27;;if(tip)tvaLbl=rgzTerm(tip,tvaLbl);
   html=&#x27;&lt;div class=\&#x27;rgz-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Raccordement au gaz&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(t.ht)+&#x27; HT&lt;/span&gt;&lt;/div&gt;&#x27;;
-  if(partic)html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Prolongement du réseau&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;Participation éventuelle, sur devis.&lt;/span&gt;&lt;/span&gt;&lt;span&gt;—&lt;/span&gt;&lt;/div&gt;&#x27;;
+  if(partic)html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;Prolongement du réseau&lt;br&gt;&lt;span class=\&#x27;rgz-line-desc\&#x27;&gt;Participation éventuelle de votre part.&lt;/span&gt;&lt;/span&gt;&lt;span&gt;sur devis&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-line\&#x27;&gt;&lt;span&gt;&#x27;+tvaLbl+&#x27;&lt;/span&gt;&lt;span&gt;&#x27;+rgzEur(tva)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rgz-total-value\&#x27;&gt;&#x27;+from+&#x27;&lt;span class=\&#x27;rgz-amount\&#x27; data-v=\&#x27;&#x27;+ttc+&#x27;\&#x27;&gt;&#x27;+rgzEur(ttc)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-source\&#x27;&gt;Prix basés sur les tarifs officiels de GRDF.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Tarifs valables pour le raccordement d’un logement particulier (débit de 6 ou 10 m³/h).&lt;/p&gt;&#x27;;
-  if(taux!==&#x27;20&#x27;)plus.push(&#x27;Pour bénéficier de la TVA réduite, vous devrez attester que votre logement est construit il y a plus de 2 ans.&#x27;);
+  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Tarifs valables pour le raccordement d\&#x27;un logement particulier (débit de 6 ou 10 m³/h).&lt;/p&gt;&#x27;;
+  if(taux!==&#x27;20&#x27;&amp;&amp;d.equip!==&#x27;unknown&#x27;&amp;&amp;d.pac!==&#x27;unknown&#x27;)plus.push(&#x27;Pour bénéficier de la TVA réduite, vous devrez attester que votre logement est construit il y a plus de 2 ans.&#x27;);
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   html+=&#x27;&lt;details class=\&#x27;rgz-foot-block rgz-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rgz-foot\&#x27;&gt;&lt;ul&gt;&lt;li&gt;l\&#x27;installation de gaz dans votre logement, après le compteur (tuyaux, raccordement de la chaudière ou de la cuisinière) : elle est à faire par votre installateur.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
   el.innerHTML=html;
@@ -344,7 +344,6 @@ rgzSendHeight();
       <div class="rgz-options">
         <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')">Oui</button>
         <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')">Non, il est neuf ou a moins de 2 ans</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('unknown')">Je ne sais pas</button>
       </div>
     </div>
 
