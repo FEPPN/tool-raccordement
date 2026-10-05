@@ -257,7 +257,7 @@ function rgzShowResult(){
   /* Extension (catalogue N°232) */
   var ext=&#x27;prolonger le réseau&#x27;,partic=false;
   if(d.usage===&#x27;eau&#x27;){
-    if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;Le réseau ne passe pas devant chez vous : pour l\&#x27;eau chaude et la cuisson, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux. Elle est indiquée dans son devis.&#x27;);}
+    if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;Le réseau ne passe pas devant chez vous : GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux. Elle est indiquée dans son devis.&#x27;);}
     else if(d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux.&#x27;);}
   }else{
     if(d.dist===&#x27;moins35&#x27;)plus.push(&#x27;Il faut &#x27;+ext+&#x27; sur 35 m ou moins : pour le chauffage, ce n\&#x27;est pas facturé en plus.&#x27;);
