@@ -185,7 +185,6 @@ var RGZ_TERMS={
   tva10:&#x27;La TVA est réduite à 10 % pour une pompe à chaleur hybride qui couvre moins de 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
   tva55:&#x27;La TVA est réduite à 5,5 % pour une pompe à chaleur hybride qui couvre au moins 70 % des besoins en chauffage annuels, dans un logement construit il y a plus de 2 ans.&#x27;,
   tva10eau:&#x27;La TVA est réduite à 10 % dans un logement construit il y a plus de 2 ans.&#x27;,
-  extension:&#x27;Le prolongement du réseau de gaz jusqu\&#x27;à votre maison, quand il ne passe pas devant.&#x27;,
   tva20neuf:&#x27;Dans un logement construit il y a moins de 2 ans, la TVA réduite ne s\&#x27;applique pas.&#x27;,
   coffret:&#x27;Le boîtier qui accueillera votre compteur de gaz.&#x27;
 };
@@ -256,7 +255,7 @@ function rgzShowResult(){
     }
   }
   /* Extension (catalogue N°232) */
-  var ext=rgzTerm(&#x27;extension&#x27;,&#x27;prolonger le réseau&#x27;),partic=false;
+  var ext=&#x27;prolonger le réseau&#x27;,partic=false;
   if(d.usage===&#x27;eau&#x27;){
     if(d.reseau===&#x27;no&#x27;){partic=true;plus.push(&#x27;Le réseau ne passe pas devant chez vous : pour l\&#x27;eau chaude et la cuisson, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux. Elle est indiquée dans son devis.&#x27;);}
     else if(d.reseau===&#x27;unknown&#x27;){partic=true;plus.push(&#x27;Si le réseau ne passe pas devant chez vous, GRDF peut vous demander une participation au coût pour &#x27;+ext+&#x27;, selon la rentabilité des travaux.&#x27;);}
