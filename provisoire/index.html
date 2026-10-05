@@ -180,14 +180,12 @@ function rpvTrack(actionName,customParams){
 }
 /* Infobulles sur les mots techniques */
 var RPV_TERMS={
-  kva:&#x27;Le kVA mesure la puissance électrique disponible en même temps. 36 kVA suffisent pour la plupart des chantiers de maison et des petits événements.&#x27;,
-  borne:&#x27;Borne ou armoire installée, souvent par la mairie, pour brancher des installations temporaires : places de marché, lieux d\&#x27;événements…&#x27;,
-  coffret:&#x27;Boîtier Enedis fixé au sol ou dans un muret, en bordure de terrain, sur lequel on peut brancher votre installation.&#x27;,
+  kva:&#x27;Le kVA (kilovoltampère) est l\&#x27;unité de la puissance de raccordement.&#x27;,
+  borne:&#x27;Borne ou armoire spécialement destinée à recevoir des branchements provisoires. Les cas les plus courants : places publiques équipées à demeure par la mairie.&#x27;,
   reseau:&#x27;Les câbles électriques d\&#x27;Enedis qui passent dans la rue, sous le trottoir ou sur des poteaux.&#x27;,
-  extension:&#x27;Le prolongement du réseau électrique jusqu\&#x27;à votre terrain, quand il ne passe pas à côté. Enedis le chiffre sur devis.&#x27;,
-  refaction:&#x27;La réfaction est la part du coût prise en charge par Enedis : 40 % pour un raccordement. Elle est financée par le tarif d\&#x27;utilisation du réseau payé par tous les consommateurs. Pour un raccordement provisoire, elle est déjà incluse dans le prix affiché.&#x27;,
-  hta:&#x27;Au-delà de 250 kVA, le raccordement se fait sur le réseau haute tension (20 000 volts), et non sur le réseau basse tension des rues.&#x27;,
-  coffretchantier:&#x27;Armoire électrique de chantier aux normes, sur laquelle Enedis raccorde son câble et pose le compteur. Elle s\&#x27;achète ou se loue auprès d\&#x27;un électricien.&#x27;
+  extension:&#x27;Les travaux pour prolonger le réseau jusqu\&#x27;à votre installation, quand il n\&#x27;est pas à proximité immédiate. Enedis les chiffre sur devis.&#x27;,
+  refaction:&#x27;Réduction de 40 % appliquée au coût des travaux de raccordement. Pour un raccordement provisoire, elle est déjà incluse dans les prix du barème.&#x27;,
+  hta:&#x27;HTA : haute tension. Au-delà de 250 kVA, le raccordement ne se fait plus en basse tension.&#x27;
 };
 function rpvTerm(key,label){if(!RPV_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rpv-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
 var rpvTip=null,rpvTipOwner=null;
@@ -234,11 +232,11 @@ function rpvShowResult(){
   rpvTrack(&#x27;view_result&#x27;);
   var d=rpvData,html;
   if(d.power===&#x27;high&#x27;){
-    html=&#x27;&lt;div class=\&#x27;rpv-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rpv-devis\&#x27;&gt;Sur devis&lt;/div&gt;&lt;p&gt;Au-delà de 250 &#x27;+rpvTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le raccordement se fait en &#x27;+rpvTerm(&#x27;hta&#x27;,&#x27;haute tension&#x27;)+&#x27; : Enedis établit un devis personnalisé.&lt;/p&gt;&lt;p&gt;Faites votre demande de raccordement provisoire auprès d\&#x27;Enedis : il vous enverra une proposition chiffrée.&lt;/p&gt;&#x27;;
+    html=&#x27;&lt;div class=\&#x27;rpv-price-label\&#x27;&gt;Prix&lt;/div&gt;&lt;div class=\&#x27;rpv-devis\&#x27;&gt;Sur devis&lt;/div&gt;&lt;p&gt;Au-delà de 250 &#x27;+rpvTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, le raccordement se fait en &#x27;+rpvTerm(&#x27;hta&#x27;,&#x27;haute tension&#x27;)+&#x27; : son coût est établi sur devis d\&#x27;Enedis.&lt;/p&gt;&#x27;;
     document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;rpvGoTo(&#x27;rpv-result&#x27;);return;
   }
   var plus=[],infos=[],minimum=false;
-  var typeLabels={fixe:&#x27;sur une &#x27;+rpvTerm(&#x27;borne&#x27;,&#x27;borne&#x27;)+&#x27; existante&#x27;,semi:&#x27;sur un &#x27;+rpvTerm(&#x27;coffret&#x27;,&#x27;coffret&#x27;)+&#x27; existant&#x27;,nonfixe:&#x27;sans équipement sur place&#x27;,unknown:&#x27;&#x27;};
+  var typeLabels={fixe:&#x27;sur une &#x27;+rpvTerm(&#x27;borne&#x27;,&#x27;borne&#x27;)+&#x27; existante&#x27;,semi:&#x27;sur un équipement du réseau fixé au sol&#x27;,nonfixe:&#x27;sans équipement sur place&#x27;,unknown:&#x27;&#x27;};
   /* Équipement inconnu : prix le plus bas probable, l&#x27;autre cas en note (les bornes dédiées se trouvent surtout sur les places publiques). */
   var type=d.branchement;
   if(type===&#x27;unknown&#x27;){
@@ -251,8 +249,7 @@ function rpvShowResult(){
   if(d.powerUnknown){minimum=true;plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+rpvTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; : &#x27;+rpvEur(rpvTtc(type,&#x27;medium&#x27;))+&#x27;.&#x27;);}
   var lineLabel=&#x27;Raccordement provisoire&#x27;+(typeLabels[d.branchement]?&#x27; &#x27;+typeLabels[d.branchement]:&#x27;&#x27;);
   var desc=(d.usage===&#x27;chantier&#x27;?&#x27;Chantier&#x27;:&#x27;Événement&#x27;)+&#x27; de &#x27;+(d.duree===&#x27;court&#x27;?&#x27;28 jours maximum&#x27;:&#x27;plus de 28 jours&#x27;)+&#x27;, &#x27;+(d.power===&#x27;low&#x27;?&#x27;jusqu\&#x27;à 36 kVA&#x27;:&#x27;de 36 à 250 kVA&#x27;)+&#x27;.&#x27;;
-  if(!minimum)infos.push(&#x27;Ce prix comprend la pose et le retrait du compteur, la mise en service et la résiliation.&#x27;);
-  if(d.usage===&#x27;chantier&#x27;&amp;&amp;d.duree===&#x27;long&#x27;)infos.push(&#x27;Vous construisez une maison ? Avec la solution « 2 en 1 » d\&#x27;Enedis, le &#x27;+rpvTerm(&#x27;coffretchantier&#x27;,&#x27;coffret de chantier&#x27;)+&#x27; devient ensuite votre raccordement définitif.&#x27;);
+  if(!minimum)infos.push(&#x27;Ce prix comprend le raccordement, la pose et la dépose du compteur, la mise en service, la résiliation et le dé-raccordement.&#x27;);
   html=&#x27;&lt;div class=\&#x27;rpv-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-line\&#x27;&gt;&lt;span&gt;&#x27;+lineLabel+&#x27;&lt;br&gt;&lt;span class=\&#x27;rpv-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+&#x27;&lt;span class=\&#x27;rpv-amount\&#x27; data-v=\&#x27;&#x27;+price+&#x27;\&#x27;&gt;&#x27;+rpvEur(price)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
@@ -261,8 +258,7 @@ function rpvShowResult(){
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&#x27;;
-  html+=(d.usage===&#x27;chantier&#x27;)?&#x27;&lt;li&gt;le &#x27;+rpvTerm(&#x27;coffretchantier&#x27;,&#x27;coffret de chantier&#x27;)+&#x27; équipé et le câble, à fournir par vous (achat ou location) ;&lt;/li&gt;&#x27;:&#x27;&lt;li&gt;le coffret équipé et le câble, à fournir par vous, ainsi que l\&#x27;équipement de votre stand ou événement ;&lt;/li&gt;&#x27;;
-  html+=&#x27;&lt;li&gt;l\&#x27;abonnement et la consommation d\&#x27;électricité, facturés par votre fournisseur.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;li&gt;le matériel nécessaire au raccordement (câble, coffret équipé…), fourni par vous.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;
   rpvGoTo(&#x27;rpv-result&#x27;);
   rpvCountUp();
@@ -293,8 +289,8 @@ rpvSendHeight();
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Votre besoin</div>
       <div class="rpv-question-header"><div class="rpv-question-text">Pour quel usage avez-vous besoin d'électricité temporaire ?</div></div>
       <div class="rpv-options rpv-tiles">
-        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('chantier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9"/><path d="M4 9h16l-3-4H6z"/><path d="M14 9v5"/><rect x="12" y="14" width="4" height="3" rx=".5"/><path d="M2 21h8"/></svg>Un chantier<small>construction, rénovation</small></button>
-        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('evenement')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v17"/><path d="m9 20 3-6 3 6"/></svg>Un événement<small>marché, forain, manifestation…</small></button>
+        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('chantier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9"/><path d="M4 9h16l-3-4H6z"/><path d="M14 9v5"/><rect x="12" y="14" width="4" height="3" rx=".5"/><path d="M2 21h8"/></svg>Un chantier</button>
+        <button type="button" class="rpv-option-btn rpv-tile" onclick="rpvAnswerUsage('evenement')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v17"/><path d="m9 20 3-6 3 6"/></svg>Un événement<small>forain, marché, manifestation publique</small></button>
       </div>
     </div>
 
@@ -325,8 +321,8 @@ rpvSendHeight();
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Point de branchement</div>
       <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement électrique sur place pour vous brancher ?</div></div>
       <div class="rpv-options">
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')">Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> de branchement provisoire</button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('semi')">Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique</button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')">Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> prévue pour les branchements provisoires</button>
+        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('semi')">Oui, un autre équipement du réseau fixé au sol</button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('nonfixe')">Non, aucun équipement</button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('unknown')">Je ne sais pas</button>
       </div>
