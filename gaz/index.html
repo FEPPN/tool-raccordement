@@ -181,8 +181,7 @@ function rgzTrack(actionName,customParams){
 /* Infobulles sur les mots techniques */
 var RGZ_TERMS={
   pac:&#x27;Pompe à chaleur hybride : une pompe à chaleur associée à une chaudière gaz.&#x27;,
-  coffret:&#x27;Le boîtier qui accueille le compteur de gaz.&#x27;,
-  debit:&#x27;Le débit maximal du compteur de gaz, en mètres cubes par heure.&#x27;
+  coffret:&#x27;Le boîtier qui accueille le compteur de gaz.&#x27;
 };
 function rgzTerm(key,label){if(!RGZ_TERMS[key])return label;return &#x27;&lt;span class=\&#x27;rgz-term\&#x27; tabindex=\&#x27;0\&#x27; data-term=\&#x27;&#x27;+key+&#x27;\&#x27;&gt;&#x27;+label+&#x27;&lt;/span&gt;&#x27;;}
 var rgzTip=null,rgzTipOwner=null;
@@ -249,7 +248,7 @@ function rgzShowResult(){
   html+=&#x27;&lt;div class=\&#x27;rgz-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rgz-total-value\&#x27;&gt;&#x27;+from+&#x27;&lt;span class=\&#x27;rgz-amount\&#x27; data-v=\&#x27;&#x27;+ttc+&#x27;\&#x27;&gt;&#x27;+rgzEur(ttc)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rgz-source\&#x27;&gt;Prix basés sur les tarifs officiels de GRDF.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Prix valable pour un logement particulier avec un compteur de 6 à 10 m³/h (&#x27;+rgzTerm(&#x27;debit&#x27;,&#x27;débit&#x27;)+&#x27;).&lt;/p&gt;&#x27;;
+  html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;Prix valable pour un logement particulier avec un compteur de 6 à 10 m³/h.&lt;/p&gt;&#x27;;
   if(d.reseau===&#x27;unknown&#x27;)plus.push(&#x27;Ce prix vaut si le réseau de gaz passe à proximité de votre maison. Sinon, le coût dépend des travaux nécessaires.&#x27;);
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rgz-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   el.innerHTML=html;
@@ -283,7 +282,7 @@ rgzSendHeight();
       <div class="rgz-question-header"><div class="rgz-question-text">Pour quoi utiliserez-vous le gaz ?</div></div>
       <div class="rgz-options rgz-tiles">
         <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 1.6 1.2 2.6 2.5 3 0-3 0-5.5 0-8z"/></svg>Pour me chauffer</button>
-        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Pour l'eau chaude et la cuisson<small>uniquement</small></button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Pour l'eau chaude et la cuisson uniquement</button>
       </div>
       <button type="button" class="rgz-link-btn" onclick="rgzLotissement()">Maison neuve en lotissement, avec un coffret de comptage déjà posé ?</button>
     </div>
