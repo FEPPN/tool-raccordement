@@ -119,7 +119,7 @@
 .rpv-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
 .rpv-chip{border:1.5px solid #ECECF2;background:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;font-family:inherit;color:#1A1A2E;cursor:pointer;}
 .rpv-chip.rpv-chip-on{background:#5A52FF;border-color:#5A52FF;color:#fff;}
-details.rpv-fold{margin-top:14px;padding-top:10px;border-top:1px solid #E5E5E8;}
+details.rpv-fold{margin-top:14px;padding-top:4px;border-top:none;}
 details.rpv-fold summary{cursor:pointer;font-size:12.5px;font-weight:600;color:#4B5563;list-style:none;display:flex;justify-content:space-between;}
 details.rpv-fold summary::-webkit-details-marker{display:none;}
 details.rpv-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
@@ -210,7 +210,13 @@ document.addEventListener(&#x27;mouseout&#x27;,function(e){var t=e.target.closes
 document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escape&#x27;)rpvHideTip();});
 window.addEventListener(&#x27;scroll&#x27;,rpvHideTip,{passive:true});
 
-window.rpvAnswerDuree=function(duree){rpvData.duree=duree;rpvTrack(&#x27;select_duree_&#x27;+duree);rpvGoTo(&#x27;rpv-q3&#x27;);};
+/* 28 jours maximum : le barème ne distingue que « fixe » (borne) et « non fixe » (tout le reste), sans « semi-équipé ». */
+window.rpvAnswerDuree=function(duree){
+  rpvData.duree=duree;rpvTrack(&#x27;select_duree_&#x27;+duree);
+  document.getElementById(&#x27;rpv-opt-semi&#x27;).style.display=(duree===&#x27;court&#x27;)?&#x27;none&#x27;:&#x27;&#x27;;
+  document.getElementById(&#x27;rpv-opt-nonfixe&#x27;).textContent=(duree===&#x27;court&#x27;)?&#x27;Non&#x27;:&#x27;Non, seulement des poteaux ou des fils électriques&#x27;;
+  rpvGoTo(&#x27;rpv-q3&#x27;);
+};
 window.rpvAnswerPower=function(power){
   rpvTrack(&#x27;select_power_&#x27;+power);
   rpvData.branchement=null;rpvData.reseau=null; /* réponses suivantes à reposer */
@@ -236,12 +242,12 @@ function rpvShowResult(){
     document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;rpvGoTo(&#x27;rpv-result&#x27;);return;
   }
   var plus=[],infos=[],minimum=false;
-  var typeLabels={fixe:&#x27;sur une &#x27;+rpvTerm(&#x27;borne&#x27;,&#x27;borne&#x27;)+&#x27; existante&#x27;,semi:&#x27;sur un &#x27;+rpvTerm(&#x27;coffret&#x27;,&#x27;coffret Enedis&#x27;)+&#x27; existant&#x27;,nonfixe:&#x27;sans équipement au sol&#x27;,unknown:&#x27;&#x27;};
+  var typeLabels={fixe:&#x27;sur une &#x27;+rpvTerm(&#x27;borne&#x27;,&#x27;borne&#x27;)+&#x27; existante&#x27;,semi:&#x27;sur un &#x27;+rpvTerm(&#x27;coffret&#x27;,&#x27;coffret Enedis&#x27;)+&#x27; existant&#x27;,nonfixe:(d.duree===&#x27;court&#x27;)?&#x27;sans borne&#x27;:&#x27;sans équipement au sol&#x27;,unknown:&#x27;&#x27;};
   /* Équipement inconnu : prix le plus bas probable, l&#x27;autre cas en note (les bornes dédiées se trouvent surtout sur les places publiques). */
   var type=d.branchement;
   if(type===&#x27;unknown&#x27;){
     type=(d.duree===&#x27;long&#x27;)?&#x27;semi&#x27;:&#x27;fixe&#x27;;
-    if(rpvTtc(type)!==rpvTtc(&#x27;nonfixe&#x27;)){minimum=true;plus.push(&#x27;S\&#x27;il n\&#x27;y a aucun équipement sur place pour vous raccorder : &#x27;+rpvEur(rpvTtc(&#x27;nonfixe&#x27;))+&#x27;.&#x27;);}
+    if(rpvTtc(type)!==rpvTtc(&#x27;nonfixe&#x27;)){minimum=true;plus.push((d.duree===&#x27;court&#x27;?&#x27;S\&#x27;il n\&#x27;y a pas de borne prévue pour les branchements provisoires : &#x27;:&#x27;S\&#x27;il n\&#x27;y a aucun équipement au sol : &#x27;)+rpvEur(rpvTtc(&#x27;nonfixe&#x27;))+&#x27;.&#x27;);}
   }
   var price=rpvTtc(type);
   if(d.reseau===&#x27;no&#x27;){minimum=true;plus.push(&#x27;L\&#x27;&#x27;+rpvTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; du réseau jusqu\&#x27;à votre terrain s\&#x27;ajoute : Enedis la chiffre sur devis.&#x27;);}
@@ -249,16 +255,17 @@ function rpvShowResult(){
   if(d.powerUnknown){minimum=true;plus.push(&#x27;Si votre besoin dépasse 36 &#x27;+rpvTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27; : &#x27;+rpvEur(rpvTtc(type,&#x27;medium&#x27;))+&#x27;.&#x27;);}
   var lineLabel=&#x27;Raccordement provisoire&#x27;+(typeLabels[d.branchement]?&#x27; &#x27;+typeLabels[d.branchement]:&#x27;&#x27;);
   var desc=(d.duree===&#x27;court&#x27;?&#x27;28 jours maximum&#x27;:&#x27;Plus de 28 jours&#x27;)+&#x27;, &#x27;+(d.power===&#x27;low&#x27;?&#x27;jusqu\&#x27;à 36 kVA&#x27;:&#x27;de 36 à 250 kVA&#x27;)+&#x27;.&#x27;;
-  if(!minimum)infos.push(&#x27;Ce prix comprend le raccordement, la pose et la dépose du compteur, la mise en service, la résiliation et le dé-raccordement.&#x27;);
+  infos.push(&#x27;Ce prix comprend le raccordement, la mise en service, la résiliation et le dé-raccordement.&#x27;);
   html=&#x27;&lt;div class=\&#x27;rpv-bill\&#x27;&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-line\&#x27;&gt;&lt;span&gt;&#x27;+lineLabel+&#x27;&lt;br&gt;&lt;span class=\&#x27;rpv-line-desc\&#x27;&gt;&#x27;+desc+&#x27;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+rpvEur(price)+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-total\&#x27;&gt;&lt;span&gt;Vous payez&lt;/span&gt;&lt;span class=\&#x27;rpv-total-value\&#x27;&gt;&#x27;+(minimum?&#x27;&lt;span class=\&#x27;rpv-from\&#x27;&gt;à partir de&lt;/span&gt; &#x27;:&#x27;&#x27;)+&#x27;&lt;span class=\&#x27;rpv-amount\&#x27; data-v=\&#x27;&#x27;+price+&#x27;\&#x27;&gt;&#x27;+rpvEur(price)+&#x27;&lt;/span&gt; &lt;small&gt;TTC&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;div class=\&#x27;rpv-source\&#x27;&gt;&#x27;+rpvTerm(&#x27;refaction&#x27;,&#x27;Réfaction&#x27;)+&#x27; de 40 % déjà incluse. Prix basés sur le barème officiel d\&#x27;Enedis.&lt;/div&gt;&#x27;;
   html+=&#x27;&lt;/div&gt;&#x27;;
-  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
+  for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
   html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&#x27;;
-  html+=&#x27;&lt;li&gt;le matériel nécessaire au raccordement (câble, coffret équipé…), fourni par vous.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
+  html+=&#x27;&lt;li&gt;le matériel nécessaire au raccordement (câble, coffret équipé…), fourni par vous.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
+  if(d.reseau===&#x27;no&#x27;||d.reseau===&#x27;unknown&#x27;)html+=&#x27;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;
   rpvGoTo(&#x27;rpv-result&#x27;);
   rpvCountUp();
@@ -313,8 +320,8 @@ rpvSendHeight();
       <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement électrique sur place pour vous brancher ?</div></div>
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')">Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> prévue pour les branchements provisoires</button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('semi')">Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique Enedis au sol</button>
-        <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('nonfixe')">Non, seulement des poteaux ou des fils électriques</button>
+        <button type="button" class="rpv-option-btn" id="rpv-opt-semi" onclick="rpvAnswerBranchement('semi')">Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique Enedis au sol</button>
+        <button type="button" class="rpv-option-btn" id="rpv-opt-nonfixe" onclick="rpvAnswerBranchement('nonfixe')">Non, seulement des poteaux ou des fils électriques</button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('unknown')">Je ne sais pas</button>
       </div>
     </div>
