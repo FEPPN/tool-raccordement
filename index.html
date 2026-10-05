@@ -179,7 +179,7 @@ var RAC_TERMS={
   refaction:&#x27;La réfaction est la part du coût prise en charge par Enedis : 40 % pour un raccordement. Elle est financée par le tarif d\&#x27;utilisation du réseau payé par tous les consommateurs et déduite automatiquement de votre facture.&#x27;,
   branchement:&#x27;Le câble qui relie le réseau de la rue à votre coffret puis à votre compteur. Il est toujours nécessaire.&#x27;,
   extension:&#x27;Le prolongement du réseau électrique jusqu\&#x27;à votre terrain, quand il ne passe pas devant. Il est facturé en plus du branchement.&#x27;,
-  zone:&#x27;Le barème d\&#x27;Enedis compte la population de l\&#x27;agglomération (unité urbaine au sens de l\&#x27;INSEE) quand votre commune en fait partie. Les prix sont plus élevés au-delà de 100 000 habitants, et à Paris.&#x27;,
+  zone:&#x27;On compte toute l\&#x27;agglomération : votre commune et les communes voisines qui forment avec elle une même zone bâtie. Par exemple, une petite commune de la banlieue de Lyon compte comme Lyon, donc plus de 100 000 habitants.&#x27;,
   reseau:&#x27;Les câbles électriques d\&#x27;Enedis qui passent dans la rue, sous le trottoir ou sur des poteaux.&#x27;,
   hta:&#x27;Au-delà de 250 kVA, le raccordement se fait sur le réseau haute tension (20 000 volts), et non sur le réseau basse tension des rues.&#x27;,
   poste:&#x27;Le poste électrique (ou transformateur) est le petit bâtiment ou l\&#x27;armoire Enedis du quartier qui alimente les rues autour.&#x27;,
@@ -485,10 +485,10 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-zone" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre commune</div>
-      <div class="rac-question-header"><div class="rac-question-text">Combien d'habitants compte votre commune ou son <span class="rac-term" tabindex="0" data-term="zone">agglomération</span>&nbsp;?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Quelle est la taille de votre ville, en comptant les <span class="rac-term" tabindex="0" data-term="zone">communes voisines</span>&nbsp;?</div></div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFA')">Moins de 100 000 habitants</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFB')">Plus de 100 000 habitants</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFB')">Plus de 100 000 habitants, ou Paris</button>
         <button type="button" class="rac-option-btn" onclick="racAnswerZone('unknown')">Je ne sais pas</button>
       </div>
     </div>
