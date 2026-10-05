@@ -346,8 +346,6 @@ function racShowResult(){
   if(d.type===&#x27;terrain&#x27;)infos.push(&#x27;Quand vous construirez, relier la maison au coffret coûtera &#x27;+racEur(racApres(RAC_BAREME.low.liaisonPrivee))+&#x27; (après réfaction).&#x27;);
   if(d.type===&#x27;petitcollectif&#x27;)infos.push(&#x27;Prix valable si chaque logement est en 12 &#x27;+racTerm(&#x27;kva&#x27;,&#x27;kVA&#x27;)+&#x27;, si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; est à moins de 250 m et si les câbles passent par une rue existante. Sinon, Enedis établit un devis.&#x27;);
   if(d.power===&#x27;medium120&#x27;)infos.push(&#x27;À partir de 120 kVA, pour un projet soumis à autorisation d\&#x27;urbanisme, Enedis réalise un raccordement direct depuis un &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste&#x27;)+&#x27;, même si le réseau passe devant. Le branchement est facturé au forfait, sans prix au mètre.&#x27;);
-  if(d.ext===&#x27;yes&#x27;&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)infos.push(&#x27;Si plusieurs installations proches sont raccordées ensemble, le coût de l\&#x27;&#x27;+racTerm(&#x27;extension&#x27;,&#x27;extension&#x27;)+&#x27; est réparti selon la puissance de chacune.&#x27;);
-  if(d.ext===&#x27;yes&#x27;&amp;&amp;!big&amp;&amp;d.type!==&#x27;petitcollectif&#x27;)infos.push(&#x27;Si le &#x27;+racTerm(&#x27;poste&#x27;,&#x27;poste électrique&#x27;)+&#x27; le plus proche est à plus de 250 m, la création d\&#x27;un poste et de réseau haute tension peut s\&#x27;ajouter.&#x27;);
   /* Facture */
   var minimum=brMin||extMin||d.ext===&#x27;unknown&#x27;||d.powerUnknown;
   var loHt=br+extLo,hiHt=br+extHi;
