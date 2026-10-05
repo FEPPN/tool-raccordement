@@ -263,7 +263,8 @@ function rpvShowResult(){
   html+=&#x27;&lt;/div&gt;&#x27;;
   for(var i=0;i&lt;infos.length;i++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+infos[i]+&#x27;&lt;/p&gt;&#x27;;
   for(var j=0;j&lt;plus.length;j++)html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;&#x27;+plus[j]+&#x27;&lt;/p&gt;&#x27;;
-  html+=&#x27;&lt;p class=\&#x27;rpv-info\&#x27;&gt;Le câble et le coffret équipé sont à fournir par vous : ils ne sont pas compris dans ce prix.&lt;/p&gt;&#x27;;
+  /* § 13.1 : « L&#x27;ensemble du matériel nécessaire au raccordement des installations provisoires est fourni par le client (câble, coffret équipé…) » */
+  html+=&#x27;&lt;details class=\&#x27;rpv-foot-block rpv-fold\&#x27;&gt;&lt;summary&gt;Ce qui n\&#x27;est pas inclus&lt;/summary&gt;&lt;div class=\&#x27;rpv-foot\&#x27;&gt;&lt;ul&gt;&lt;li&gt;le câble et le coffret équipé, à fournir par vous.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/details&gt;&#x27;;
   if(d.reseau===&#x27;no&#x27;||d.reseau===&#x27;unknown&#x27;)html+=&#x27;&lt;div class=\&#x27;rpv-foot rpv-devis-line\&#x27;&gt;Seul un devis d\&#x27;Enedis donne le montant exact.&lt;/div&gt;&#x27;;
   document.getElementById(&#x27;rpv-result-content&#x27;).innerHTML=html;
   rpvGoTo(&#x27;rpv-result&#x27;);
