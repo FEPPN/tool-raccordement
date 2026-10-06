@@ -161,13 +161,45 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-question-text{font-size:18px !important;}
 @media (max-width:600px){.rac-question-text{font-size:16px !important;}.rac-lbl strong{font-size:14px;}}
 .rac-question-header{justify-content:center !important;}.rac-question-text{text-align:center !important;width:100%;}
-/* Comme le simulateur tarifs réglementés : pas de barre de progression ni d'étiquette d'étape, titre plus grand, réponses centrées */
-.rac-wrap .rac-progress{display:none !important;}
-.rac-wrap .rac-step-label{display:none !important;}
-.rac-wrap .rac-title{font-size:32px !important;line-height:1.25 !important;margin-bottom:24px !important;}
-.rac-wrap .rac-options,.rac-wrap .rac-tiles,.rac-wrap .rac-input-wrap{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
-.rac-wrap .rac-chips{justify-content:center !important;}
-@media (max-width:600px){.rac-wrap .rac-title{font-size:26px !important;}}
+/* Repris du simulateur tarifs réglementés (FEPPN/tarif_jaune_vert_bleu), avec le violet papernest.
+   Pas de barre de progression ni d'étiquette d'étape ; au clic, la réponse se surligne en violet clair, sans se remplir. */
+.rac-wrap{padding:16px !important;}
+.rac-card{max-width:680px !important;}
+.rac-wrap .rac-progress,.rac-wrap .rac-step-label{display:none !important;}
+.rac-wrap .rac-title{font-size:32px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
+.rac-wrap .rac-question-block,.rac-wrap .rac-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
+.rac-wrap .rac-question-block.rac-active,.rac-wrap .rac-result-box.rac-show,.rac-going-back .rac-question-block.rac-active,.rac-going-back .rac-result-box.rac-show{animation:racFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
+@keyframes racFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.rac-wrap .rac-question-text{font-size:22px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
+.rac-wrap .rac-question-sub{font-size:14px !important;font-weight:500;line-height:1.45;text-align:center;margin:6px 0 0 !important;}
+.rac-wrap .rac-options,.rac-wrap .rac-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;max-width:480px;margin:24px auto 0 !important;}
+.rac-wrap .rac-input-wrap,.rac-wrap .rac-chips{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+.rac-wrap .rac-chips{justify-content:center !important;margin-top:24px !important;}
+.rac-wrap .rac-option-btn,.rac-wrap .rac-option-btn.rac-tile{display:flex !important;align-items:center;gap:16px;padding:16px 20px !important;background:#fff !important;border:2px solid #E8E9ED !important;border-radius:12px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;transition:all .2s ease !important;transform:none;box-shadow:none;}
+.rac-wrap .rac-option-btn::before,.rac-wrap .rac-option-btn::after{display:none !important;content:none !important;}
+.rac-wrap .rac-ico,.rac-wrap .rac-option-btn.rac-selected .rac-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF !important;color:#5A52FF !important;}
+.rac-wrap .rac-ico svg{color:#5A52FF !important;}
+.rac-wrap .rac-lbl strong{font-size:16px;font-weight:700;color:#1A1A2E;}
+.rac-wrap .rac-lbl small{font-size:13.5px;line-height:1.35;color:#6B7280;}
+.rac-wrap .rac-chip{background:#fff !important;border:2px solid #E8E9ED !important;color:#1A1A2E !important;transition:all .2s ease !important;}
+@media (hover:hover){
+.rac-wrap .rac-option-btn:hover,.rac-wrap .rac-chip:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);}
+}
+@media (hover:none){.rac-wrap .rac-option-btn:hover,.rac-wrap .rac-chip:hover{border-color:#E8E9ED !important;transform:none;box-shadow:none;}}
+.rac-wrap .rac-option-btn.rac-selected,.rac-wrap .rac-chip.rac-chip-on{border-color:#5A52FF !important;background:#F0EFFF !important;color:#1A1A2E !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);transform:none;}
+.rac-wrap .rac-option-btn:focus-visible,.rac-wrap .rac-chip:focus-visible{outline:3px solid #5A52FF;outline-offset:2px;}
+.rac-wrap .rac-continue-btn{display:flex;align-items:center;justify-content:center;width:100%;max-width:380px;margin:24px auto 0 !important;padding:14px 28px !important;border-radius:99px !important;border:2px solid #5A52FF !important;background:#5A52FF !important;font-size:16px !important;font-weight:700;box-shadow:0 4px 16px rgba(90,82,255,0.25);}
+.rac-wrap .rac-continue-btn:hover{background:#4842CC !important;border-color:#4842CC !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
+.rac-wrap .rac-reset-btn{display:flex !important;align-items:center;justify-content:center;gap:8px;width:auto !important;margin:24px auto 0 !important;padding:10px 20px !important;background:none !important;border:0 !important;box-shadow:none !important;color:#6B7280 !important;font-size:15px !important;font-weight:700;transition:color .2s !important;}
+.rac-wrap .rac-reset-btn:hover{background:none !important;color:#5A52FF !important;transform:none;box-shadow:none !important;}
+.rac-wrap .rac-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rac-wrap .rac-link-btn{margin-top:16px !important;}
+@media (max-width:600px){
+.rac-wrap .rac-title{font-size:26px !important;}
+.rac-wrap .rac-question-block,.rac-wrap .rac-result-box{padding:24px 16px !important;}
+.rac-wrap .rac-question-text{font-size:20px !important;}
+.rac-wrap .rac-lbl strong{font-size:16px;}
+}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -424,7 +456,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
 
     <div id="rac-q-type" class="rac-question-block rac-active">
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre projet</div>
-      <div class="rac-question-header"><div class="rac-question-text">Que souhaitez-vous raccorder ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Que souhaitez-vous raccorder&nbsp;?</div></div>
       <div class="rac-options rac-tiles">
         <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('maison')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>Une maison</strong></span></button>
         <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('autre')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 12h4" /><path d="M10 8h4" /><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></svg></span><span class="rac-lbl"><strong>Autre projet</strong><small>local pro, terrain, immeuble…</small></span></button>
@@ -434,7 +466,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-projet" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre projet</div>
-      <div class="rac-question-header"><div class="rac-question-text">Quel est votre projet ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Quel est votre projet&nbsp;?</div></div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerProjet('pro')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5" /><path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244" /><path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05" /></svg></span><span class="rac-lbl"><strong>Un local professionnel</strong></span></button>
         <button type="button" class="rac-option-btn" onclick="racAnswerProjet('terrain')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 8 6-3-6-3v10" /><path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" /><path d="m6.49 12.85 11.02 6.3" /><path d="M17.51 12.85 6.5 19.15" /></svg></span><span class="rac-lbl"><strong>Viabiliser un terrain nu</strong></span></button>
@@ -445,7 +477,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-nb" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Logements</div>
-      <div class="rac-question-header"><div class="rac-question-text">Combien de logements faut-il raccorder ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Combien de logements faut-il raccorder&nbsp;?</div></div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerNb(2)"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>2 logements</strong></span></button>
         <button type="button" class="rac-option-btn" onclick="racAnswerNb(3)"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>3 logements</strong></span></button>
@@ -456,7 +488,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-power" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Puissance</div>
-      <div class="rac-question-header"><div class="rac-question-text">De quelle puissance avez-vous besoin ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">De quelle puissance avez-vous besoin&nbsp;?</div></div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></svg></span><span class="rac-lbl"><strong>Jusqu'à 36 kVA</strong></span></button>
         <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" /><path d="M8 16h.01" /></svg></span><span class="rac-lbl"><strong>De 36 à 120 kVA</strong></span></button>
@@ -469,7 +501,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-viab" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre terrain</div>
-      <div class="rac-question-header"><div class="rac-question-text">Y a-t-il déjà un <span class="rac-term" tabindex="0" data-term="coffret">coffret électrique</span> en bordure de votre terrain ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Y a-t-il déjà un <span class="rac-term" tabindex="0" data-term="coffret">coffret électrique</span> en bordure de votre terrain&nbsp;?</div></div>
       <div class="rac-question-sub">Par exemple sur un terrain <span class="rac-term" tabindex="0" data-term="viabilise">viabilisé</span> ou en lotissement.</div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerViab('yes')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rac-lbl"><strong>Oui</strong></span></button>
@@ -482,7 +514,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-ext" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Réseau électrique</div>
-      <div class="rac-question-header"><div class="rac-question-text">Le <span class="rac-term" tabindex="0" data-term="reseau">réseau électrique</span> passe-t-il devant votre terrain ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Le <span class="rac-term" tabindex="0" data-term="reseau">réseau électrique</span> passe-t-il devant votre terrain&nbsp;?</div></div>
       <div class="rac-options">
         <button type="button" class="rac-option-btn" onclick="racAnswerExt('no')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rac-lbl"><strong>Oui</strong></span></button>
         <button type="button" class="rac-option-btn" onclick="racAnswerExt('yes')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></svg></span><span class="rac-lbl"><strong>Non, il faut l'amener jusqu'à mon terrain</strong></span></button>
@@ -493,7 +525,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-extlen" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Distance</div>
-      <div class="rac-question-header"><div class="rac-question-text">Sur quelle distance faut-il amener le réseau ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Sur quelle distance faut-il amener le réseau&nbsp;?</div></div>
       <div class="rac-question-sub">C'est la longueur de l'<span class="rac-term" tabindex="0" data-term="extension">extension</span>, entre la fin du réseau et votre terrain.</div>
       <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('le',10,this)">10 m</button><button type="button" class="rac-chip" onclick="racChip('le',25,this)">25 m</button><button type="button" class="rac-chip" onclick="racChip('le',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('le',100,this)">100 m</button><button type="button" class="rac-chip" onclick="racChip('le',200,this)">200 m</button><button type="button" class="rac-chip" onclick="racChip('le','autre',this)">Autre</button></div>
       <div class="rac-input-wrap" style="display:none">
@@ -508,7 +540,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-poste" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Distance au poste</div>
-      <div class="rac-question-header"><div class="rac-question-text">À quelle distance se trouve le <span class="rac-term" tabindex="0" data-term="poste">poste électrique</span> le plus proche ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">À quelle distance se trouve le <span class="rac-term" tabindex="0" data-term="poste">poste électrique</span> le plus proche&nbsp;?</div></div>
       <div class="rac-question-sub">À partir de 120 kVA, Enedis réalise un raccordement direct depuis un poste.</div>
       <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('poste',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('poste',100,this)">100 m</button><button type="button" class="rac-chip" onclick="racChip('poste',200,this)">200 m</button><button type="button" class="rac-chip" onclick="racChip('poste',300,this)">300 m</button><button type="button" class="rac-chip" onclick="racChip('poste','autre',this)">Autre</button></div>
       <div class="rac-input-wrap" style="display:none">
@@ -534,7 +566,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
     <div id="rac-q-brlen" class="rac-question-block">
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-step-label"><span class="rac-step-dot"></span>Longueur du câble</div>
-      <div class="rac-question-header"><div class="rac-question-text">Quelle longueur de câble entre le réseau et votre coffret ?</div></div>
+      <div class="rac-question-header"><div class="rac-question-text">Quelle longueur de câble entre le réseau et votre coffret&nbsp;?</div></div>
       <div class="rac-question-sub">À cette puissance, le <span class="rac-term" tabindex="0" data-term="branchement">branchement</span> est facturé au mètre.</div>
       <div class="rac-chips"><button type="button" class="rac-chip" onclick="racChip('lb',5,this)">5 m</button><button type="button" class="rac-chip" onclick="racChip('lb',10,this)">10 m</button><button type="button" class="rac-chip" onclick="racChip('lb',20,this)">20 m</button><button type="button" class="rac-chip" onclick="racChip('lb',50,this)">50 m</button><button type="button" class="rac-chip" onclick="racChip('lb','autre',this)">Autre</button></div>
       <div class="rac-input-wrap" style="display:none">
@@ -550,7 +582,7 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <button type="button" class="rac-back-btn" onclick="racGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rac-result-title"><span class="rac-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>Estimation du coût</div>
       <div id="rac-result-content"></div>
-      <button type="button" class="rac-reset-btn" onclick="racHandleReset()">Nouvelle estimation</button>
+      <button type="button" class="rac-reset-btn" onclick="racHandleReset()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Nouvelle estimation</button>
     </div>
   </div>
 </div>

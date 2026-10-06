@@ -161,12 +161,45 @@ details.rpv-fold[open] summary::after{content:'−';}
 .rpv-question-text{font-size:18px !important;}
 @media (max-width:600px){.rpv-question-text{font-size:16px !important;}.rpv-lbl strong{font-size:14px;}}
 .rpv-question-header{justify-content:center !important;}.rpv-question-text{text-align:center !important;width:100%;}
-/* Comme le simulateur tarifs réglementés : pas de barre de progression ni d'étiquette d'étape, titre plus grand, réponses centrées */
-.rpv-wrap .rpv-progress{display:none !important;}
-.rpv-wrap .rpv-step-label{display:none !important;}
-.rpv-wrap .rpv-title{font-size:32px !important;line-height:1.25 !important;margin-bottom:24px !important;}
-.rpv-wrap .rpv-options,.rpv-wrap .rpv-tiles,.rpv-wrap .rpv-input-wrap{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
-@media (max-width:600px){.rpv-wrap .rpv-title{font-size:26px !important;}}
+/* Repris du simulateur tarifs réglementés (FEPPN/tarif_jaune_vert_bleu), avec le violet papernest.
+   Pas de barre de progression ni d'étiquette d'étape ; au clic, la réponse se surligne en violet clair, sans se remplir. */
+.rpv-wrap{padding:16px !important;}
+.rpv-card{max-width:680px !important;}
+.rpv-wrap .rpv-progress,.rpv-wrap .rpv-step-label{display:none !important;}
+.rpv-wrap .rpv-title{font-size:32px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
+.rpv-wrap .rpv-question-block,.rpv-wrap .rpv-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
+.rpv-wrap .rpv-question-block.rpv-active,.rpv-wrap .rpv-result-box.rpv-show,.rpv-going-back .rpv-question-block.rpv-active,.rpv-going-back .rpv-result-box.rpv-show{animation:rpvFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
+@keyframes rpvFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.rpv-wrap .rpv-question-text{font-size:22px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
+.rpv-wrap .rpv-question-sub{font-size:14px !important;font-weight:500;line-height:1.45;text-align:center;margin:6px 0 0 !important;}
+.rpv-wrap .rpv-options,.rpv-wrap .rpv-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;max-width:480px;margin:24px auto 0 !important;}
+.rpv-wrap .rpv-input-wrap,.rpv-wrap .rpv-chips{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+.rpv-wrap .rpv-chips{justify-content:center !important;margin-top:24px !important;}
+.rpv-wrap .rpv-option-btn,.rpv-wrap .rpv-option-btn.rpv-tile{display:flex !important;align-items:center;gap:16px;padding:16px 20px !important;background:#fff !important;border:2px solid #E8E9ED !important;border-radius:12px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;transition:all .2s ease !important;transform:none;box-shadow:none;}
+.rpv-wrap .rpv-option-btn::before,.rpv-wrap .rpv-option-btn::after{display:none !important;content:none !important;}
+.rpv-wrap .rpv-ico,.rpv-wrap .rpv-option-btn.rpv-selected .rpv-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF !important;color:#5A52FF !important;}
+.rpv-wrap .rpv-ico svg{color:#5A52FF !important;}
+.rpv-wrap .rpv-lbl strong{font-size:16px;font-weight:700;color:#1A1A2E;}
+.rpv-wrap .rpv-lbl small{font-size:13.5px;line-height:1.35;color:#6B7280;}
+.rpv-wrap .rpv-chip{background:#fff !important;border:2px solid #E8E9ED !important;color:#1A1A2E !important;transition:all .2s ease !important;}
+@media (hover:hover){
+.rpv-wrap .rpv-option-btn:hover,.rpv-wrap .rpv-chip:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);}
+}
+@media (hover:none){.rpv-wrap .rpv-option-btn:hover,.rpv-wrap .rpv-chip:hover{border-color:#E8E9ED !important;transform:none;box-shadow:none;}}
+.rpv-wrap .rpv-option-btn.rpv-selected,.rpv-wrap .rpv-chip.rpv-chip-on{border-color:#5A52FF !important;background:#F0EFFF !important;color:#1A1A2E !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);transform:none;}
+.rpv-wrap .rpv-option-btn:focus-visible,.rpv-wrap .rpv-chip:focus-visible{outline:3px solid #5A52FF;outline-offset:2px;}
+.rpv-wrap .rpv-continue-btn{display:flex;align-items:center;justify-content:center;width:100%;max-width:380px;margin:24px auto 0 !important;padding:14px 28px !important;border-radius:99px !important;border:2px solid #5A52FF !important;background:#5A52FF !important;font-size:16px !important;font-weight:700;box-shadow:0 4px 16px rgba(90,82,255,0.25);}
+.rpv-wrap .rpv-continue-btn:hover{background:#4842CC !important;border-color:#4842CC !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
+.rpv-wrap .rpv-reset-btn{display:flex !important;align-items:center;justify-content:center;gap:8px;width:auto !important;margin:24px auto 0 !important;padding:10px 20px !important;background:none !important;border:0 !important;box-shadow:none !important;color:#6B7280 !important;font-size:15px !important;font-weight:700;transition:color .2s !important;}
+.rpv-wrap .rpv-reset-btn:hover{background:none !important;color:#5A52FF !important;transform:none;box-shadow:none !important;}
+.rpv-wrap .rpv-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rpv-wrap .rpv-link-btn{margin-top:16px !important;}
+@media (max-width:600px){
+.rpv-wrap .rpv-title{font-size:26px !important;}
+.rpv-wrap .rpv-question-block,.rpv-wrap .rpv-result-box{padding:24px 16px !important;}
+.rpv-wrap .rpv-question-text{font-size:20px !important;}
+.rpv-wrap .rpv-lbl strong{font-size:16px;}
+}
 </style>
 <div class="rpv-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025), § 13.1 – montants HT, réfaction 40 % incluse.
    Le « semi-équipé » n&#x27;existe qu&#x27;au-delà de 28 jours : en courte durée il est facturé comme un non fixe. */
@@ -336,7 +369,7 @@ rpvSendHeight();
 
     <div id="rpv-q2" class="rpv-question-block rpv-active">
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Durée</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">Combien de temps aurez-vous besoin d'électricité ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">Combien de temps aurez-vous besoin d'électricité&nbsp;?</div></div>
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerDuree('court')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v3" /><path d="M16 2v3" /><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /></svg></span><span class="rpv-lbl"><strong>28 jours ou moins</strong></span></button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerDuree('long')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M16 2v3" /><path d="M3 9h18" /><path d="M8 2v3" /><path d="M17 13h-6" /><path d="M13 17H7" /><path d="M7 13h.01" /><path d="M17 17h.01" /></svg></span><span class="rpv-lbl"><strong>Plus de 28 jours</strong></span></button>
@@ -346,7 +379,7 @@ rpvSendHeight();
     <div id="rpv-q3" class="rpv-question-block">
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Puissance</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">De quelle puissance avez-vous besoin ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">De quelle puissance avez-vous besoin&nbsp;?</div></div>
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('low')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></svg></span><span class="rpv-lbl"><strong>Jusqu'à 36 kVA</strong></span></button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerPower('medium')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" /><path d="M8 16h.01" /></svg></span><span class="rpv-lbl"><strong>De 36 à 250 kVA</strong></span></button>
@@ -358,7 +391,7 @@ rpvSendHeight();
     <div id="rpv-q4" class="rpv-question-block">
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Point de branchement</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement électrique sur place pour vous brancher ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">Y a-t-il un équipement électrique sur place pour vous brancher&nbsp;?</div></div>
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5" /><path d="M15 8V2" /><path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z" /><path d="M9 8V2" /></svg></span><span class="rpv-lbl"><strong>Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> prévue pour les branchements provisoires</strong></span></button>
         <button type="button" class="rpv-option-btn" id="rpv-opt-semi" onclick="rpvAnswerBranchement('semi')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></svg></span><span class="rpv-lbl"><strong>Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique Enedis au sol</strong></span></button>
@@ -370,7 +403,7 @@ rpvSendHeight();
     <div id="rpv-q5" class="rpv-question-block">
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-step-label"><span class="rpv-step-dot"></span>Réseau électrique</div>
-      <div class="rpv-question-header"><div class="rpv-question-text">Le <span class="rpv-term" tabindex="0" data-term="reseau">réseau électrique</span> passe-t-il devant votre terrain ?</div></div>
+      <div class="rpv-question-header"><div class="rpv-question-text">Le <span class="rpv-term" tabindex="0" data-term="reseau">réseau électrique</span> passe-t-il devant votre terrain&nbsp;?</div></div>
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerReseau('yes')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rpv-lbl"><strong>Oui</strong></span></button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerReseau('no')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></svg></span><span class="rpv-lbl"><strong>Non, il faut l'amener jusqu'à mon terrain</strong></span></button>
@@ -382,7 +415,7 @@ rpvSendHeight();
       <button type="button" class="rpv-back-btn" onclick="rpvGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rpv-result-title"><span class="rpv-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>Estimation du coût</div>
       <div id="rpv-result-content"></div>
-      <button type="button" class="rpv-reset-btn" onclick="rpvHandleReset()">Nouvelle estimation</button>
+      <button type="button" class="rpv-reset-btn" onclick="rpvHandleReset()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Nouvelle estimation</button>
     </div>
   </div>
 </div>
