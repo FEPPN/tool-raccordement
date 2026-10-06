@@ -127,25 +127,40 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-devis-line{margin-top:8px !important;}
 /* Style aligné sur les autres simulateurs papernest : police Avenir (déjà installée, pas de téléchargement), cartes, boutons ronds */
 .rac-wrap,.rac-wrap button,.rac-wrap input,.rac-term-tip{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
-.rac-wrap{color:#1B1940;}
-.rac-wrap .rac-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1B1940 !important;letter-spacing:-0.2px !important;}
+.rac-wrap{color:#1A1A2E;}
+.rac-wrap .rac-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1A1A2E !important;letter-spacing:-0.2px !important;}
 .rac-question-block,.rac-result-box{border:1px solid rgba(27,25,64,0.06) !important;box-shadow:0 4px 24px rgba(27,25,64,0.05);padding:26px 22px !important;}
-.rac-question-text{font-weight:800 !important;color:#1B1940 !important;}
-.rac-question-sub{color:#6B6A85 !important;}
-.rac-step-label{color:#6B6A85;}
-.rac-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1B1940 !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
+.rac-question-text{font-weight:800 !important;color:#1A1A2E !important;}
+.rac-question-sub{color:#6B7280 !important;}
+.rac-step-label{color:#6B7280;}
+.rac-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1A1A2E !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
 .rac-option-btn::before{left:16px !important;}
 .rac-option-btn:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);background:#fff !important;}
 .rac-option-btn.rac-selected{border-color:#5A52FF !important;background:#F3F2FF !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);}
 .rac-option-btn.rac-tile{padding:22px 12px !important;}
 .rac-tile svg{width:24px !important;height:24px !important;padding:12px;box-sizing:content-box;background:#F3F2FF;border-radius:12px;margin:0 auto 12px !important;}
-.rac-tile small{color:#6B6A85 !important;}
+.rac-tile small{color:#6B7280 !important;}
 .rac-chip{border:2px solid #E8E9ED !important;transition:all .2s ease;}
 .rac-chip:hover{border-color:#C9C5FF !important;transform:translateY(-1px);}
 .rac-reset-btn,.rac-continue-btn{border-radius:99px !important;box-shadow:0 4px 16px rgba(90,82,255,0.25);transition:all .2s ease !important;}
 .rac-reset-btn:hover,.rac-continue-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
-.rac-back-btn{color:#6B6A85 !important;}
+.rac-back-btn{color:#6B7280 !important;}
 @media (max-width:600px){.rac-question-block,.rac-result-box{padding:22px 16px !important;}}
+/* Réponses en cartes avec icône (Lucide), comme le simulateur tarifs réglementés */
+.rac-options,.rac-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;}
+.rac-option-btn,.rac-option-btn.rac-tile{display:flex !important;align-items:center;gap:14px;padding:12px 44px 12px 14px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;}
+.rac-option-btn::before{display:none !important;}
+.rac-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF;color:#5A52FF;display:flex;align-items:center;justify-content:center;}
+.rac-ico svg{width:22px !important;height:22px !important;padding:0 !important;margin:0 !important;background:none !important;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rac-lbl{display:flex;flex-direction:column;gap:2px;}
+.rac-lbl strong{font-size:15px;font-weight:700;color:#1A1A2E;}
+.rac-lbl small{display:block;font-size:13px;font-weight:400;color:#6B7280;margin:0;}
+.rac-option-btn.rac-selected .rac-ico{background:#5A52FF;color:#fff;}
+.rac-question-header,.rac-question-sub{text-align:center;}
+.rac-step-label{justify-content:center;}
+.rac-question-text{font-size:18px !important;}
+@media (max-width:600px){.rac-question-text{font-size:16px !important;}.rac-lbl strong{font-size:14px;}}
+.rac-question-header{justify-content:center !important;}.rac-question-text{text-align:center !important;width:100%;}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -404,8 +419,8 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre projet</div>
       <div class="rac-question-header"><div class="rac-question-text">Que souhaitez-vous raccorder ?</div></div>
       <div class="rac-options rac-tiles">
-        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('maison')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>Une maison</button>
-        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('autre')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>Autre projet<small>local pro, terrain, immeuble…</small></button>
+        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('maison')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>Une maison</strong></span></button>
+        <button type="button" class="rac-option-btn rac-tile" onclick="racAnswerType('autre')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 12h4" /><path d="M10 8h4" /><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></svg></span><span class="rac-lbl"><strong>Autre projet</strong><small>local pro, terrain, immeuble…</small></span></button>
       </div>
     </div>
 
@@ -414,9 +429,9 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre projet</div>
       <div class="rac-question-header"><div class="rac-question-text">Quel est votre projet ?</div></div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('pro')">Un local professionnel</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('terrain')">Viabiliser un terrain nu</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('logements')">Plusieurs logements (maisons, immeuble, lotissement…)</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('pro')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5" /><path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244" /><path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05" /></svg></span><span class="rac-lbl"><strong>Un local professionnel</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('terrain')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 8 6-3-6-3v10" /><path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" /><path d="m6.49 12.85 11.02 6.3" /><path d="M17.51 12.85 6.5 19.15" /></svg></span><span class="rac-lbl"><strong>Viabiliser un terrain nu</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerProjet('logements')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10h.01" /><path d="M12 14h.01" /><path d="M12 6h.01" /><path d="M16 10h.01" /><path d="M16 14h.01" /><path d="M16 6h.01" /><path d="M8 10h.01" /><path d="M8 14h.01" /><path d="M8 6h.01" /><path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" /><rect x="4" y="2" width="16" height="20" rx="2" /></svg></span><span class="rac-lbl"><strong>Plusieurs logements (maisons, immeuble, lotissement…)</strong></span></button>
       </div>
     </div>
 
@@ -425,9 +440,9 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Logements</div>
       <div class="rac-question-header"><div class="rac-question-text">Combien de logements faut-il raccorder ?</div></div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerNb(2)">2 logements</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerNb(3)">3 logements</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerNb(4)">4 logements ou plus</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerNb(2)"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>2 logements</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerNb(3)"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>3 logements</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerNb(4)"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10h.01" /><path d="M12 14h.01" /><path d="M12 6h.01" /><path d="M16 10h.01" /><path d="M16 14h.01" /><path d="M16 6h.01" /><path d="M8 10h.01" /><path d="M8 14h.01" /><path d="M8 6h.01" /><path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" /><rect x="4" y="2" width="16" height="20" rx="2" /></svg></span><span class="rac-lbl"><strong>4 logements ou plus</strong></span></button>
       </div>
     </div>
 
@@ -436,11 +451,11 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Puissance</div>
       <div class="rac-question-header"><div class="rac-question-text">De quelle puissance avez-vous besoin ?</div></div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')">Jusqu'à 36 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')">De 36 à 120 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')">De 120 à 250 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')">Plus de 250 kVA</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerPower('unknown')">Je ne sais pas</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('low')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></svg></span><span class="rac-lbl"><strong>Jusqu'à 36 kVA</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" /><path d="M8 16h.01" /></svg></span><span class="rac-lbl"><strong>De 36 à 120 kVA</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('medium120')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" /><path d="M8 16h.01" /></svg></span><span class="rac-lbl"><strong>De 120 à 250 kVA</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('high')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20" /><path d="M2 5h20" /><path d="M3 3v2" /><path d="M7 3v2" /><path d="M17 3v2" /><path d="M21 3v2" /><path d="m19 5-7 7-7-7" /></svg></span><span class="rac-lbl"><strong>Plus de 250 kVA</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerPower('unknown')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rac-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
@@ -450,9 +465,9 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-question-header"><div class="rac-question-text">Y a-t-il déjà un <span class="rac-term" tabindex="0" data-term="coffret">coffret électrique</span> en bordure de votre terrain ?</div></div>
       <div class="rac-question-sub">Par exemple sur un terrain <span class="rac-term" tabindex="0" data-term="viabilise">viabilisé</span> ou en lotissement.</div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerViab('yes')">Oui</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerViab('no')">Non</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerViab('unknown')">Je ne sais pas</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('yes')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rac-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('no')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span><span class="rac-lbl"><strong>Non</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerViab('unknown')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rac-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
       <button type="button" class="rac-link-btn" id="rac-link-plus36" onclick="racMaisonPlus36()">Votre maison a besoin de plus de 36 kVA ?</button>
     </div>
@@ -462,9 +477,9 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Réseau électrique</div>
       <div class="rac-question-header"><div class="rac-question-text">Le <span class="rac-term" tabindex="0" data-term="reseau">réseau électrique</span> passe-t-il devant votre terrain ?</div></div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerExt('no')">Oui</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerExt('yes')">Non, il faut l'amener jusqu'à mon terrain</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerExt('unknown')">Je ne sais pas</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('no')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rac-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('yes')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></svg></span><span class="rac-lbl"><strong>Non, il faut l'amener jusqu'à mon terrain</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerExt('unknown')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rac-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
@@ -503,9 +518,9 @@ window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x2
       <div class="rac-step-label"><span class="rac-step-dot"></span>Votre commune</div>
       <div class="rac-question-header"><div class="rac-question-text">Votre projet se situe-t-il dans une grande agglomération&nbsp;?</div></div>
       <div class="rac-options">
-        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFA')">Non, dans une commune de moins de 100 000 habitants</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFB')">Oui, dans une agglomération de plus de 100 000 habitants ou à Paris</button>
-        <button type="button" class="rac-option-btn" onclick="racAnswerZone('unknown')">Je ne sais pas</button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFA')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rac-lbl"><strong>Non, dans une commune de moins de 100 000 habitants</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('ZFB')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 12h4" /><path d="M10 8h4" /><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></svg></span><span class="rac-lbl"><strong>Oui, dans une agglomération de plus de 100 000 habitants ou à Paris</strong></span></button>
+        <button type="button" class="rac-option-btn" onclick="racAnswerZone('unknown')"><span class="rac-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rac-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 

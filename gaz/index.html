@@ -127,25 +127,40 @@ details.rgz-fold[open] summary::after{content:'−';}
 .rgz-devis-line{margin-top:8px !important;}
 /* Style aligné sur les autres simulateurs papernest : police Avenir (déjà installée, pas de téléchargement), cartes, boutons ronds */
 .rgz-wrap,.rgz-wrap button,.rgz-wrap input,.rgz-term-tip{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
-.rgz-wrap{color:#1B1940;}
-.rgz-wrap .rgz-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1B1940 !important;letter-spacing:-0.2px !important;}
+.rgz-wrap{color:#1A1A2E;}
+.rgz-wrap .rgz-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1A1A2E !important;letter-spacing:-0.2px !important;}
 .rgz-question-block,.rgz-result-box{border:1px solid rgba(27,25,64,0.06) !important;box-shadow:0 4px 24px rgba(27,25,64,0.05);padding:26px 22px !important;}
-.rgz-question-text{font-weight:800 !important;color:#1B1940 !important;}
-.rgz-question-sub{color:#6B6A85 !important;}
-.rgz-step-label{color:#6B6A85;}
-.rgz-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1B1940 !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
+.rgz-question-text{font-weight:800 !important;color:#1A1A2E !important;}
+.rgz-question-sub{color:#6B7280 !important;}
+.rgz-step-label{color:#6B7280;}
+.rgz-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1A1A2E !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
 .rgz-option-btn::before{left:16px !important;}
 .rgz-option-btn:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);background:#fff !important;}
 .rgz-option-btn.rgz-selected{border-color:#5A52FF !important;background:#F3F2FF !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);}
 .rgz-option-btn.rgz-tile{padding:22px 12px !important;}
 .rgz-tile svg{width:24px !important;height:24px !important;padding:12px;box-sizing:content-box;background:#F3F2FF;border-radius:12px;margin:0 auto 12px !important;}
-.rgz-tile small{color:#6B6A85 !important;}
+.rgz-tile small{color:#6B7280 !important;}
 .rgz-chip{border:2px solid #E8E9ED !important;transition:all .2s ease;}
 .rgz-chip:hover{border-color:#C9C5FF !important;transform:translateY(-1px);}
 .rgz-reset-btn,.rgz-continue-btn{border-radius:99px !important;box-shadow:0 4px 16px rgba(90,82,255,0.25);transition:all .2s ease !important;}
 .rgz-reset-btn:hover,.rgz-continue-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
-.rgz-back-btn{color:#6B6A85 !important;}
+.rgz-back-btn{color:#6B7280 !important;}
 @media (max-width:600px){.rgz-question-block,.rgz-result-box{padding:22px 16px !important;}}
+/* Réponses en cartes avec icône (Lucide), comme le simulateur tarifs réglementés */
+.rgz-options,.rgz-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;}
+.rgz-option-btn,.rgz-option-btn.rgz-tile{display:flex !important;align-items:center;gap:14px;padding:12px 44px 12px 14px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;}
+.rgz-option-btn::before{display:none !important;}
+.rgz-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF;color:#5A52FF;display:flex;align-items:center;justify-content:center;}
+.rgz-ico svg{width:22px !important;height:22px !important;padding:0 !important;margin:0 !important;background:none !important;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rgz-lbl{display:flex;flex-direction:column;gap:2px;}
+.rgz-lbl strong{font-size:15px;font-weight:700;color:#1A1A2E;}
+.rgz-lbl small{display:block;font-size:13px;font-weight:400;color:#6B7280;margin:0;}
+.rgz-option-btn.rgz-selected .rgz-ico{background:#5A52FF;color:#fff;}
+.rgz-question-header,.rgz-question-sub{text-align:center;}
+.rgz-step-label{justify-content:center;}
+.rgz-question-text{font-size:18px !important;}
+@media (max-width:600px){.rgz-question-text{font-size:16px !important;}.rgz-lbl strong{font-size:14px;}}
+.rgz-question-header{justify-content:center !important;}.rgz-question-text{text-align:center !important;width:100%;}
 </style>
 <div class="rgz-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Tarifs de raccordement au gaz GRDF, période du 1er juillet 2026 au 30 juin 2027.
    Sources : grdf.fr « Les prix du raccordement au gaz » et Catalogue des prestations GRDF du 1er juillet 2026, N°232.
@@ -330,8 +345,8 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre besoin</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Pour quoi utiliserez-vous le gaz ?</div></div>
       <div class="rgz-options rgz-tiles">
-        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 1.6 1.2 2.6 2.5 3 0-3 0-5.5 0-8z"/></svg>Pour me chauffer</button>
-        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Pour l'eau chaude et la cuisson uniquement</button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" /></svg></span><span class="rgz-lbl"><strong>Pour me chauffer</strong></span></button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20" /><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" /><path d="m4 8 16-4" /><path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8" /></svg></span><span class="rgz-lbl"><strong>Pour l'eau chaude et la cuisson uniquement</strong></span></button>
       </div>
       <button type="button" class="rgz-link-btn" onclick="rgzLotissement()">Maison neuve en lotissement, avec un coffret de comptage déjà posé ?</button>
     </div>
@@ -341,9 +356,9 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre chauffage</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Avec quel équipement allez-vous vous chauffer ?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('chaudiere')">Une chaudière gaz</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('pac')">Une pompe à chaleur hybride</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('unknown')">Je ne sais pas encore</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('chaudiere')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 8c2-3-2-3 0-6" /><path d="M15.5 8c2-3-2-3 0-6" /><path d="M6 10h.01" /><path d="M6 14h.01" /><path d="M10 16v-4" /><path d="M14 16v-4" /><path d="M18 16v-4" /><path d="M20 6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3" /><path d="M5 20v2" /><path d="M19 20v2" /></svg></span><span class="rgz-lbl"><strong>Une chaudière gaz</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('pac')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" /><path d="M12 12v.01" /></svg></span><span class="rgz-lbl"><strong>Une pompe à chaleur hybride</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas encore</strong></span></button>
       </div>
     </div>
 
@@ -352,9 +367,9 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Pompe à chaleur hybride</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Votre pompe à chaleur hybride couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année ?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')">Oui, au moins 70 %</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')">Non, moins de 70 %</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rgz-lbl"><strong>Oui, au moins 70 %</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span><span class="rgz-lbl"><strong>Non, moins de 70 %</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
@@ -363,8 +378,8 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre logement</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Votre logement a-t-il été construit il y a plus de 2 ans ?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')">Oui</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')">Non, il est neuf ou a moins de 2 ans</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="rgz-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.35 21H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 .71-1.53l7-6a2 2 0 0 1 2.58 0l7 6A2 2 0 0 1 21 10v2.35" /><path d="M14.8 12.4A1 1 0 0 0 14 12h-4a1 1 0 0 0-1 1v8" /><path d="M15 18h6" /><path d="M18 15v6" /></svg></span><span class="rgz-lbl"><strong>Non, il est neuf ou a moins de 2 ans</strong></span></button>
       </div>
     </div>
 
@@ -373,9 +388,9 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Réseau de gaz</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Le réseau de gaz passe-t-il devant votre maison ?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('yes')">Oui</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('no')">Non, il faut l'amener jusqu'à chez moi</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('yes')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></svg></span><span class="rgz-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('no')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></svg></span><span class="rgz-lbl"><strong>Non, il faut l'amener jusqu'à chez moi</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
@@ -384,9 +399,9 @@ rgzSendHeight();
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Distance</div>
       <div class="rgz-question-header"><div class="rgz-question-text">Sur quelle distance faut-il prolonger le réseau jusqu'à chez vous ?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('moins35')">35 m ou moins</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('plus35')">Plus de 35 m</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('moins35')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /><path d="m14.5 12.5 2-2" /><path d="m11.5 9.5 2-2" /><path d="m8.5 6.5 2-2" /><path d="m17.5 15.5 2-2" /></svg></span><span class="rgz-lbl"><strong>35 m ou moins</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('plus35')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /><path d="m14.5 12.5 2-2" /><path d="m11.5 9.5 2-2" /><path d="m8.5 6.5 2-2" /><path d="m17.5 15.5 2-2" /></svg></span><span class="rgz-lbl"><strong>Plus de 35 m</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
