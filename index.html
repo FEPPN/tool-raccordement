@@ -161,6 +161,13 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-question-text{font-size:18px !important;}
 @media (max-width:600px){.rac-question-text{font-size:16px !important;}.rac-lbl strong{font-size:14px;}}
 .rac-question-header{justify-content:center !important;}.rac-question-text{text-align:center !important;width:100%;}
+/* Comme le simulateur tarifs réglementés : pas de barre de progression ni d'étiquette d'étape, titre plus grand, réponses centrées */
+.rac-wrap .rac-progress{display:none !important;}
+.rac-wrap .rac-step-label{display:none !important;}
+.rac-wrap .rac-title{font-size:32px !important;line-height:1.25 !important;margin-bottom:24px !important;}
+.rac-wrap .rac-options,.rac-wrap .rac-tiles,.rac-wrap .rac-input-wrap{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+.rac-wrap .rac-chips{justify-content:center !important;}
+@media (max-width:600px){.rac-wrap .rac-title{font-size:26px !important;}}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;

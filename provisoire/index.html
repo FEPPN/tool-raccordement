@@ -161,6 +161,12 @@ details.rpv-fold[open] summary::after{content:'−';}
 .rpv-question-text{font-size:18px !important;}
 @media (max-width:600px){.rpv-question-text{font-size:16px !important;}.rpv-lbl strong{font-size:14px;}}
 .rpv-question-header{justify-content:center !important;}.rpv-question-text{text-align:center !important;width:100%;}
+/* Comme le simulateur tarifs réglementés : pas de barre de progression ni d'étiquette d'étape, titre plus grand, réponses centrées */
+.rpv-wrap .rpv-progress{display:none !important;}
+.rpv-wrap .rpv-step-label{display:none !important;}
+.rpv-wrap .rpv-title{font-size:32px !important;line-height:1.25 !important;margin-bottom:24px !important;}
+.rpv-wrap .rpv-options,.rpv-wrap .rpv-tiles,.rpv-wrap .rpv-input-wrap{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+@media (max-width:600px){.rpv-wrap .rpv-title{font-size:26px !important;}}
 </style>
 <div class="rpv-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025), § 13.1 – montants HT, réfaction 40 % incluse.
    Le « semi-équipé » n&#x27;existe qu&#x27;au-delà de 28 jours : en courte durée il est facturé comme un non fixe. */

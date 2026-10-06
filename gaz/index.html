@@ -161,6 +161,12 @@ details.rgz-fold[open] summary::after{content:'−';}
 .rgz-question-text{font-size:18px !important;}
 @media (max-width:600px){.rgz-question-text{font-size:16px !important;}.rgz-lbl strong{font-size:14px;}}
 .rgz-question-header{justify-content:center !important;}.rgz-question-text{text-align:center !important;width:100%;}
+/* Comme le simulateur tarifs réglementés : pas de barre de progression ni d'étiquette d'étape, titre plus grand, réponses centrées */
+.rgz-wrap .rgz-progress{display:none !important;}
+.rgz-wrap .rgz-step-label{display:none !important;}
+.rgz-wrap .rgz-title{font-size:32px !important;line-height:1.25 !important;margin-bottom:24px !important;}
+.rgz-wrap .rgz-options,.rgz-wrap .rgz-tiles,.rgz-wrap .rgz-input-wrap{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+@media (max-width:600px){.rgz-wrap .rgz-title{font-size:26px !important;}}
 </style>
 <div class="rgz-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Tarifs de raccordement au gaz GRDF, période du 1er juillet 2026 au 30 juin 2027.
    Sources : grdf.fr « Les prix du raccordement au gaz » et Catalogue des prestations GRDF du 1er juillet 2026, N°232.
