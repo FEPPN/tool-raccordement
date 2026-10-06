@@ -178,7 +178,7 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap .rac-option-btn,.rac-wrap .rac-option-btn.rac-tile{display:flex !important;align-items:center;gap:16px;padding:16px 20px !important;background:#fff !important;border:2px solid #E8E9ED !important;border-radius:12px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;transition:all .2s ease !important;transform:none;box-shadow:none;}
 .rac-wrap .rac-option-btn::before,.rac-wrap .rac-option-btn::after{display:none !important;content:none !important;}
 .rac-wrap .rac-ico,.rac-wrap .rac-option-btn.rac-selected .rac-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF !important;color:#5A52FF !important;}
-.rac-wrap .rac-ico svg{color:#5A52FF !important;}
+.rac-wrap .rac-ico svg{color:#5A52FF !important;border-radius:0 !important;overflow:visible !important;}
 .rac-wrap .rac-lbl strong{font-size:16px;font-weight:700;color:#1A1A2E;}
 .rac-wrap .rac-lbl small{font-size:13.5px;line-height:1.35;color:#6B7280;}
 .rac-wrap .rac-chip{background:#fff !important;border:2px solid #E8E9ED !important;color:#1A1A2E !important;transition:all .2s ease !important;}
@@ -278,18 +278,12 @@ document.addEventListener(&#x27;mouseover&#x27;,function(e){var t=e.target.close
 document.addEventListener(&#x27;mouseout&#x27;,function(e){var t=e.target.closest?e.target.closest(&#x27;.rac-term&#x27;):null;if(t&amp;&amp;window.matchMedia&amp;&amp;window.matchMedia(&#x27;(hover: hover)&#x27;).matches)racHideTip();});
 document.addEventListener(&#x27;keydown&#x27;,function(e){if(e.key===&#x27;Escape&#x27;)racHideTip();});
 window.addEventListener(&#x27;scroll&#x27;,racHideTip,{passive:true});
-document.addEventListener(&#x27;click&#x27;,function(e){
-  var b=e.target.closest?e.target.closest(&#x27;.rac-option-btn&#x27;):null;
-  if(!b||b.getAttribute(&#x27;data-go&#x27;)||e.target.closest(&#x27;.rac-term&#x27;))return;
-  e.stopImmediatePropagation();e.preventDefault();
-  b.classList.add(&#x27;rac-selected&#x27;);
-  setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
-},true);
+
 /* 4. Distances en un clic */
 window.racChip=function(which,v,el){
   var c=RAC_INPUTS[which];
   if(v===&#x27;autre&#x27;){el.parentNode.querySelectorAll(&#x27;.rac-chip&#x27;).forEach(function(x){x.classList.remove(&#x27;rac-chip-on&#x27;);});el.classList.add(&#x27;rac-chip-on&#x27;);document.getElementById(c.input).parentNode.style.display=&#x27;block&#x27;;document.getElementById(c.input).focus();el.closest(&#x27;.rac-question-block&#x27;).querySelector(&#x27;.rac-continue-btn&#x27;).style.display=&#x27;block&#x27;;racSendHeight();return;}
-  el.classList.add(&#x27;rac-chip-on&#x27;);document.getElementById(c.input).value=v;setTimeout(function(){racSubmitLength(which);},220);
+  el.classList.add(&#x27;rac-chip-on&#x27;);document.getElementById(c.input).value=v;racSubmitLength(which);
 };
 window.racInputKey=function(e,fn,arg){if(e.key===&#x27;Enter&#x27;){e.preventDefault();window[fn](arg);}};
 
@@ -449,6 +443,9 @@ function racCountUp(){
 window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-poste-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;document.getElementById(&#x27;rac-err-le&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-poste&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-lb&#x27;).style.display=&#x27;none&#x27;;racGoTo(&#x27;rac-q-type&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
 window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x27;rac-q-type&#x27;);racSendHeight();
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (32 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+function racFitTitle(){var t=document.querySelector(&#x27;.rac-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;20){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}racSendHeight();}
+window.addEventListener(&#x27;resize&#x27;,racFitTitle);racFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(racFitTitle);
 "></svg>
   <div class="rac-card">
     <div class="rac-title">Estimez le coût de votre raccordement électrique</div>
