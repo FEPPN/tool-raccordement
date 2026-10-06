@@ -1,4 +1,4 @@
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
+
 <style>
 .rac-wrap, .rac-wrap *{box-sizing:border-box;}
 .rac-wrap{font-family:'Inter','Segoe UI',Arial,sans-serif;background:transparent;padding:16px;line-height:1.6;color:#1A1A2E;overflow-x:hidden;}
@@ -125,6 +125,27 @@ details.rac-fold summary::-webkit-details-marker{display:none;}
 details.rac-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
 details.rac-fold[open] summary::after{content:'−';}
 .rac-devis-line{margin-top:8px !important;}
+/* Style aligné sur les autres simulateurs papernest : police Avenir (déjà installée, pas de téléchargement), cartes, boutons ronds */
+.rac-wrap,.rac-wrap button,.rac-wrap input,.rac-term-tip{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
+.rac-wrap{color:#1B1940;}
+.rac-wrap .rac-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1B1940 !important;letter-spacing:-0.2px !important;}
+.rac-question-block,.rac-result-box{border:1px solid rgba(27,25,64,0.06) !important;box-shadow:0 4px 24px rgba(27,25,64,0.05);padding:26px 22px !important;}
+.rac-question-text{font-weight:800 !important;color:#1B1940 !important;}
+.rac-question-sub{color:#6B6A85 !important;}
+.rac-step-label{color:#6B6A85;}
+.rac-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1B1940 !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
+.rac-option-btn::before{left:16px !important;}
+.rac-option-btn:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);background:#fff !important;}
+.rac-option-btn.rac-selected{border-color:#5A52FF !important;background:#F3F2FF !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);}
+.rac-option-btn.rac-tile{padding:22px 12px !important;}
+.rac-tile svg{width:24px !important;height:24px !important;padding:12px;box-sizing:content-box;background:#F3F2FF;border-radius:12px;margin:0 auto 12px !important;}
+.rac-tile small{color:#6B6A85 !important;}
+.rac-chip{border:2px solid #E8E9ED !important;transition:all .2s ease;}
+.rac-chip:hover{border-color:#C9C5FF !important;transform:translateY(-1px);}
+.rac-reset-btn,.rac-continue-btn{border-radius:99px !important;box-shadow:0 4px 16px rgba(90,82,255,0.25);transition:all .2s ease !important;}
+.rac-reset-btn:hover,.rac-continue-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
+.rac-back-btn{color:#6B6A85 !important;}
+@media (max-width:600px){.rac-question-block,.rac-result-box{padding:22px 16px !important;}}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
