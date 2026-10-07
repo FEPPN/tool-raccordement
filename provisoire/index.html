@@ -200,6 +200,8 @@ details.rpv-fold[open] summary::after{content:'−';}
 .rpv-wrap .rpv-question-text{font-size:20px !important;}
 .rpv-wrap .rpv-lbl strong{font-size:16px;}
 }
+#rpv-opt-nonfixe .rpv-ico-court,#rpv-opt-nonfixe.rpv-court .rpv-ico-long{display:none !important;}
+#rpv-opt-nonfixe.rpv-court .rpv-ico-court{display:block !important;}
 </style>
 <div class="rpv-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025), § 13.1 – montants HT, réfaction 40 % incluse.
    Le « semi-équipé » n&#x27;existe qu&#x27;au-delà de 28 jours : en courte durée il est facturé comme un non fixe. */
@@ -282,6 +284,7 @@ window.rpvAnswerDuree=function(duree){
   rpvData.duree=duree;rpvTrack(&#x27;select_duree_&#x27;+duree);
   document.getElementById(&#x27;rpv-opt-semi&#x27;).style.display=(duree===&#x27;court&#x27;)?&#x27;none&#x27;:&#x27;&#x27;;
   document.querySelector(&#x27;#rpv-opt-nonfixe strong&#x27;).textContent=(duree===&#x27;court&#x27;)?&#x27;Non&#x27;:&#x27;Non, seulement des poteaux ou des fils électriques&#x27;;
+  document.getElementById(&#x27;rpv-opt-nonfixe&#x27;).classList.toggle(&#x27;rpv-court&#x27;,duree===&#x27;court&#x27;);
   rpvGoTo(&#x27;rpv-q3&#x27;);
 };
 window.rpvAnswerPower=function(power){
@@ -391,7 +394,7 @@ window.addEventListener(&#x27;resize&#x27;,rpvFitTitle);rpvFitTitle();if(documen
       <div class="rpv-options">
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('fixe')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></svg></span><span class="rpv-lbl"><strong>Oui, une <span class="rpv-term" tabindex="0" data-term="borne">borne</span> prévue pour les branchements provisoires</strong></span></button>
         <button type="button" class="rpv-option-btn" id="rpv-opt-semi" onclick="rpvAnswerBranchement('semi')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></svg></span><span class="rpv-lbl"><strong>Oui, un <span class="rpv-term" tabindex="0" data-term="coffret">coffret</span> électrique Enedis au sol</strong></span></button>
-        <button type="button" class="rpv-option-btn" id="rpv-opt-nonfixe" onclick="rpvAnswerBranchement('nonfixe')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20" /><path d="M2 5h20" /><path d="M3 3v2" /><path d="M7 3v2" /><path d="M17 3v2" /><path d="M21 3v2" /><path d="m19 5-7 7-7-7" /></svg></span><span class="rpv-lbl"><strong>Non, seulement des poteaux ou des fils électriques</strong></span></button>
+        <button type="button" class="rpv-option-btn" id="rpv-opt-nonfixe" onclick="rpvAnswerBranchement('nonfixe')"><span class="rpv-ico"><svg class="rpv-ico-long" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20" /><path d="M2 5h20" /><path d="M3 3v2" /><path d="M7 3v2" /><path d="M17 3v2" /><path d="M21 3v2" /><path d="m19 5-7 7-7-7" /></svg><svg class="rpv-ico-court" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span><span class="rpv-lbl"><strong>Non, seulement des poteaux ou des fils électriques</strong></span></button>
         <button type="button" class="rpv-option-btn" onclick="rpvAnswerBranchement('unknown')"><span class="rpv-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rpv-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
