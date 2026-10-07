@@ -1,4 +1,4 @@
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
+
 <style>
 .rgz-wrap, .rgz-wrap *{box-sizing:border-box;}
 .rgz-wrap{font-family:'Inter','Segoe UI',Arial,sans-serif;background:transparent;padding:16px;line-height:1.6;color:#1A1A2E;overflow-x:hidden;}
@@ -125,6 +125,81 @@ details.rgz-fold summary::-webkit-details-marker{display:none;}
 details.rgz-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
 details.rgz-fold[open] summary::after{content:'−';}
 .rgz-devis-line{margin-top:8px !important;}
+/* Style aligné sur les autres simulateurs papernest : police Avenir (déjà installée, pas de téléchargement), cartes, boutons ronds */
+.rgz-wrap,.rgz-wrap button,.rgz-wrap input,.rgz-term-tip{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
+.rgz-wrap{color:#1A1A2E;}
+.rgz-wrap .rgz-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1A1A2E !important;letter-spacing:-0.2px !important;}
+.rgz-question-block,.rgz-result-box{border:1px solid rgba(27,25,64,0.06) !important;box-shadow:0 4px 24px rgba(27,25,64,0.05);padding:26px 22px !important;}
+.rgz-question-text{font-weight:800 !important;color:#1A1A2E !important;}
+.rgz-question-sub{color:#6B7280 !important;}
+.rgz-step-label{color:#6B7280;}
+.rgz-option-btn{border:2px solid #E8E9ED !important;border-radius:12px !important;padding:15px 18px 15px 46px !important;font-size:15px !important;color:#1A1A2E !important;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease,background .2s ease !important;}
+.rgz-option-btn::before{left:16px !important;}
+.rgz-option-btn:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);background:#fff !important;}
+.rgz-option-btn.rgz-selected{border-color:#5A52FF !important;background:#F3F2FF !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);}
+.rgz-option-btn.rgz-tile{padding:22px 12px !important;}
+.rgz-tile svg{width:24px !important;height:24px !important;padding:12px;box-sizing:content-box;background:#F3F2FF;border-radius:12px;margin:0 auto 12px !important;}
+.rgz-tile small{color:#6B7280 !important;}
+.rgz-chip{border:2px solid #E8E9ED !important;transition:all .2s ease;}
+.rgz-chip:hover{border-color:#C9C5FF !important;transform:translateY(-1px);}
+.rgz-reset-btn,.rgz-continue-btn{border-radius:99px !important;box-shadow:0 4px 16px rgba(90,82,255,0.25);transition:all .2s ease !important;}
+.rgz-reset-btn:hover,.rgz-continue-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
+.rgz-back-btn{color:#6B7280 !important;}
+@media (max-width:600px){.rgz-question-block,.rgz-result-box{padding:22px 16px !important;}}
+/* Réponses en cartes avec icône (Lucide), comme le simulateur tarifs réglementés */
+.rgz-options,.rgz-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;}
+.rgz-option-btn,.rgz-option-btn.rgz-tile{display:flex !important;align-items:center;gap:14px;padding:12px 44px 12px 14px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;}
+.rgz-option-btn::before{display:none !important;}
+.rgz-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF;color:#5A52FF;display:flex;align-items:center;justify-content:center;}
+.rgz-ico svg{width:22px !important;height:22px !important;padding:0 !important;margin:0 !important;background:none !important;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rgz-lbl{display:flex;flex-direction:column;gap:2px;}
+.rgz-lbl strong{font-size:15px;font-weight:700;color:#1A1A2E;}
+.rgz-lbl small{display:block;font-size:13px;font-weight:400;color:#6B7280;margin:0;}
+.rgz-option-btn.rgz-selected .rgz-ico{background:#5A52FF;color:#fff;}
+.rgz-question-header,.rgz-question-sub{text-align:center;}
+.rgz-step-label{justify-content:center;}
+.rgz-question-text{font-size:18px !important;}
+@media (max-width:600px){.rgz-question-text{font-size:16px !important;}.rgz-lbl strong{font-size:14px;}}
+.rgz-question-header{justify-content:center !important;}.rgz-question-text{text-align:center !important;width:100%;}
+/* Repris du simulateur tarifs réglementés (FEPPN/tarif_jaune_vert_bleu), avec le violet papernest.
+   Pas de barre de progression ni d'étiquette d'étape ; au clic, la réponse se surligne en violet clair, sans se remplir. */
+.rgz-wrap{padding:16px !important;}
+.rgz-card{max-width:680px !important;}
+.rgz-wrap .rgz-progress,.rgz-wrap .rgz-step-label{display:none !important;}
+.rgz-wrap .rgz-title{font-size:32px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
+.rgz-wrap .rgz-question-block,.rgz-wrap .rgz-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
+.rgz-wrap .rgz-question-block.rgz-active,.rgz-wrap .rgz-result-box.rgz-show,.rgz-going-back .rgz-question-block.rgz-active,.rgz-going-back .rgz-result-box.rgz-show{animation:rgzFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
+@keyframes rgzFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.rgz-wrap .rgz-question-text{font-size:22px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
+.rgz-wrap .rgz-question-sub{font-size:14px !important;font-weight:500;line-height:1.45;text-align:center;margin:6px 0 0 !important;}
+.rgz-wrap .rgz-options,.rgz-wrap .rgz-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;max-width:480px;margin:24px auto 0 !important;}
+.rgz-wrap .rgz-input-wrap,.rgz-wrap .rgz-chips{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
+.rgz-wrap .rgz-chips{justify-content:center !important;margin-top:24px !important;}
+.rgz-wrap .rgz-option-btn,.rgz-wrap .rgz-option-btn.rgz-tile{display:flex !important;align-items:center;gap:16px;padding:16px 20px !important;background:#fff !important;border:2px solid #E8E9ED !important;border-radius:12px !important;text-align:left !important;min-height:0 !important;line-height:1.3 !important;transition:all .2s ease !important;transform:none;box-shadow:none;}
+.rgz-wrap .rgz-option-btn::before,.rgz-wrap .rgz-option-btn::after{display:none !important;content:none !important;}
+.rgz-wrap .rgz-ico,.rgz-wrap .rgz-option-btn.rgz-selected .rgz-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF !important;color:#5A52FF !important;}
+.rgz-wrap .rgz-ico svg{color:#5A52FF !important;border-radius:0 !important;overflow:visible !important;}
+.rgz-wrap .rgz-lbl strong{font-size:16px;font-weight:700;color:#1A1A2E;}
+.rgz-wrap .rgz-lbl small{font-size:13.5px;line-height:1.35;color:#6B7280;}
+.rgz-wrap .rgz-chip{background:#fff !important;border:2px solid #E8E9ED !important;color:#1A1A2E !important;transition:all .2s ease !important;}
+@media (hover:hover){
+.rgz-wrap .rgz-option-btn:hover,.rgz-wrap .rgz-chip:hover{border-color:#C9C5FF !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.08);}
+}
+@media (hover:none){.rgz-wrap .rgz-option-btn:hover,.rgz-wrap .rgz-chip:hover{border-color:#E8E9ED !important;transform:none;box-shadow:none;}}
+.rgz-wrap .rgz-option-btn.rgz-selected,.rgz-wrap .rgz-chip.rgz-chip-on{border-color:#5A52FF !important;background:#F0EFFF !important;color:#1A1A2E !important;box-shadow:0 4px 16px rgba(90,82,255,0.15);transform:none;}
+.rgz-wrap .rgz-option-btn:focus-visible,.rgz-wrap .rgz-chip:focus-visible{outline:3px solid #5A52FF;outline-offset:2px;}
+.rgz-wrap .rgz-continue-btn{display:flex;align-items:center;justify-content:center;width:100%;max-width:380px;margin:24px auto 0 !important;padding:14px 28px !important;border-radius:99px !important;border:2px solid #5A52FF !important;background:#5A52FF !important;font-size:16px !important;font-weight:700;box-shadow:0 4px 16px rgba(90,82,255,0.25);}
+.rgz-wrap .rgz-continue-btn:hover{background:#4842CC !important;border-color:#4842CC !important;transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,82,255,0.35);}
+.rgz-wrap .rgz-reset-btn{display:flex !important;align-items:center;justify-content:center;gap:8px;width:auto !important;margin:24px auto 0 !important;padding:10px 20px !important;background:none !important;border:0 !important;box-shadow:none !important;color:#6B7280 !important;font-size:15px !important;font-weight:700;transition:color .2s !important;}
+.rgz-wrap .rgz-reset-btn:hover{background:none !important;color:#5A52FF !important;transform:none;box-shadow:none !important;}
+.rgz-wrap .rgz-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rgz-wrap .rgz-link-btn{margin-top:16px !important;}
+@media (max-width:600px){
+.rgz-wrap .rgz-title{font-size:26px !important;}
+.rgz-wrap .rgz-question-block,.rgz-wrap .rgz-result-box{padding:24px 16px !important;}
+.rgz-wrap .rgz-question-text{font-size:20px !important;}
+.rgz-wrap .rgz-lbl strong{font-size:16px;}
+}
 </style>
 <div class="rgz-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Tarifs de raccordement au gaz GRDF, période du 1er juillet 2026 au 30 juin 2027.
    Sources : grdf.fr « Les prix du raccordement au gaz » et Catalogue des prestations GRDF du 1er juillet 2026, N°232.
@@ -159,14 +234,7 @@ function rgzUpdateProgress(id){
   var done=rgzHistory.length,pct=(id===&#x27;rgz-result&#x27;)?100:Math.round(100*(done+0.5)/(done+RGZ_REST[id]+0.5));
   bar.style.width=Math.max(6,pct)+&#x27;%&#x27;;
 }
-/* La réponse choisie se colore, puis on passe à la suite. */
-document.addEventListener(&#x27;click&#x27;,function(e){
-  var b=e.target.closest?e.target.closest(&#x27;.rgz-option-btn&#x27;):null;
-  if(!b||b.getAttribute(&#x27;data-go&#x27;)||e.target.closest(&#x27;.rgz-term&#x27;))return;
-  e.stopImmediatePropagation();e.preventDefault();
-  b.classList.add(&#x27;rgz-selected&#x27;);
-  setTimeout(function(){b.setAttribute(&#x27;data-go&#x27;,&#x27;1&#x27;);b.click();b.removeAttribute(&#x27;data-go&#x27;);},260);
-},true);
+
 window.rgzGoBack=function(){if(!rgzHistory.length)return;rgzGoTo(rgzHistory.pop(),true);};
 function rgzTrack(actionName,customParams){
   customParams=customParams||{};
@@ -300,6 +368,9 @@ var rgzContainer=document.querySelector(&#x27;.rgz-card&#x27;);
 if(rgzContainer&amp;&amp;window.IntersectionObserver){var rgzObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rgzTrack(&#x27;tool_visible&#x27;);rgzObs.unobserve(en[i].target);}}},{threshold:0.5});rgzObs.observe(rgzContainer);}
 window.addEventListener(&#x27;resize&#x27;,rgzSendHeight);rgzUpdateProgress(&#x27;rgz-q-usage&#x27;);
 rgzSendHeight();
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (32 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+function rgzFitTitle(){var t=document.querySelector(&#x27;.rgz-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;20){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rgzSendHeight();}
+window.addEventListener(&#x27;resize&#x27;,rgzFitTitle);rgzFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(rgzFitTitle);
 "></svg>
   <div class="rgz-card">
     <div class="rgz-title">Estimez le coût de votre raccordement au gaz</div>
@@ -307,10 +378,10 @@ rgzSendHeight();
 
     <div id="rgz-q-usage" class="rgz-question-block rgz-active">
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre besoin</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Pour quoi utiliserez-vous le gaz ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Pour quoi utiliserez-vous le gaz&nbsp;?</div></div>
       <div class="rgz-options rgz-tiles">
-        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 1.6 1.2 2.6 2.5 3 0-3 0-5.5 0-8z"/></svg>Pour me chauffer</button>
-        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Pour l'eau chaude et la cuisson uniquement</button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('chauffage')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></svg></span><span class="rgz-lbl"><strong>Pour me chauffer</strong></span></button>
+        <button type="button" class="rgz-option-btn rgz-tile" onclick="rgzAnswerUsage('eau')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" /></svg></span><span class="rgz-lbl"><strong>Pour l'eau chaude et la cuisson uniquement</strong></span></button>
       </div>
       <button type="button" class="rgz-link-btn" onclick="rgzLotissement()">Maison neuve en lotissement, avec un coffret de comptage déjà posé ?</button>
     </div>
@@ -318,54 +389,54 @@ rgzSendHeight();
     <div id="rgz-q-equip" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre chauffage</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Avec quel équipement allez-vous vous chauffer ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Avec quel équipement allez-vous vous chauffer&nbsp;?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('chaudiere')">Une chaudière gaz</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('pac')">Une pompe à chaleur hybride</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('unknown')">Je ne sais pas encore</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('chaudiere')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></svg></span><span class="rgz-lbl"><strong>Une chaudière gaz</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('pac')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2" /><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" /><path d="M9.8 4.4A2 2 0 1 1 11 8H2" /></svg></span><span class="rgz-lbl"><strong>Une pompe à chaleur hybride</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerEquip('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas encore</strong></span></button>
       </div>
     </div>
 
     <div id="rgz-q-pac" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Pompe à chaleur hybride</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Votre pompe à chaleur hybride couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Votre pompe à chaleur hybride couvrira-t-elle au moins 70 % de vos besoins en chauffage sur l'année&nbsp;?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')">Oui, au moins 70 %</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')">Non, moins de 70 %</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('plus70')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg></span><span class="rgz-lbl"><strong>Oui, au moins 70 %</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('moins70')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span><span class="rgz-lbl"><strong>Non, moins de 70 %</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerPac('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
     <div id="rgz-q-age" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Votre logement</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Votre logement a-t-il été construit il y a plus de 2 ans ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Votre logement a-t-il été construit il y a plus de 2 ans&nbsp;?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')">Oui</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')">Non, il est neuf ou a moins de 2 ans</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('plus2')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg></span><span class="rgz-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerAge('moins2')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="rgz-lbl"><strong>Non, il est neuf ou a moins de 2 ans</strong></span></button>
       </div>
     </div>
 
     <div id="rgz-q-reseau" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Réseau de gaz</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Le réseau de gaz passe-t-il devant votre maison ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Le réseau de gaz passe-t-il devant votre maison&nbsp;?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('yes')">Oui</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('no')">Non, il faut l'amener jusqu'à chez moi</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('yes')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg></span><span class="rgz-lbl"><strong>Oui</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('no')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></svg></span><span class="rgz-lbl"><strong>Non, il faut l'amener jusqu'à chez moi</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerReseau('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
     <div id="rgz-q-dist" class="rgz-question-block">
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-step-label"><span class="rgz-step-dot"></span>Distance</div>
-      <div class="rgz-question-header"><div class="rgz-question-text">Sur quelle distance faut-il prolonger le réseau jusqu'à chez vous ?</div></div>
+      <div class="rgz-question-header"><div class="rgz-question-text">Sur quelle distance faut-il prolonger le réseau jusqu'à chez vous&nbsp;?</div></div>
       <div class="rgz-options">
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('moins35')">35 m ou moins</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('plus35')">Plus de 35 m</button>
-        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('unknown')">Je ne sais pas</button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('moins35')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /><path d="m14.5 12.5 2-2" /><path d="m11.5 9.5 2-2" /><path d="m8.5 6.5 2-2" /><path d="m17.5 15.5 2-2" /></svg></span><span class="rgz-lbl"><strong>35 m ou moins</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('plus35')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /><path d="m14.5 12.5 2-2" /><path d="m11.5 9.5 2-2" /><path d="m8.5 6.5 2-2" /><path d="m17.5 15.5 2-2" /></svg></span><span class="rgz-lbl"><strong>Plus de 35 m</strong></span></button>
+        <button type="button" class="rgz-option-btn" onclick="rgzAnswerDist('unknown')"><span class="rgz-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg></span><span class="rgz-lbl"><strong>Je ne sais pas</strong></span></button>
       </div>
     </div>
 
@@ -373,7 +444,7 @@ rgzSendHeight();
       <button type="button" class="rgz-back-btn" onclick="rgzGoBack()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Retour</button>
       <div class="rgz-result-title"><span class="rgz-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>Estimation du coût</div>
       <div id="rgz-result-content"></div>
-      <button type="button" class="rgz-reset-btn" onclick="rgzHandleReset()">Nouvelle estimation</button>
+      <button type="button" class="rgz-reset-btn" onclick="rgzHandleReset()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Nouvelle estimation</button>
     </div>
   </div>
 </div>
