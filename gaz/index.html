@@ -166,7 +166,7 @@ details.rgz-fold[open] summary::after{content:'−';}
 .rgz-wrap{padding:16px !important;}
 .rgz-card{max-width:680px !important;}
 .rgz-wrap .rgz-progress,.rgz-wrap .rgz-step-label{display:none !important;}
-.rgz-wrap .rgz-title{font-size:32px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
+.rgz-wrap .rgz-title{font-size:24px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
 .rgz-wrap .rgz-question-block,.rgz-wrap .rgz-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
 .rgz-wrap .rgz-question-block.rgz-active,.rgz-wrap .rgz-result-box.rgz-show,.rgz-going-back .rgz-question-block.rgz-active,.rgz-going-back .rgz-result-box.rgz-show{animation:rgzFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
 @keyframes rgzFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
@@ -195,7 +195,7 @@ details.rgz-fold[open] summary::after{content:'−';}
 .rgz-wrap .rgz-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .rgz-wrap .rgz-link-btn{margin-top:16px !important;}
 @media (max-width:600px){
-.rgz-wrap .rgz-title{font-size:26px !important;}
+.rgz-wrap .rgz-title{font-size:20px !important;}
 .rgz-wrap .rgz-question-block,.rgz-wrap .rgz-result-box{padding:24px 16px !important;}
 .rgz-wrap .rgz-question-text{font-size:20px !important;}
 .rgz-wrap .rgz-lbl strong{font-size:16px;}
@@ -368,8 +368,8 @@ var rgzContainer=document.querySelector(&#x27;.rgz-card&#x27;);
 if(rgzContainer&amp;&amp;window.IntersectionObserver){var rgzObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rgzTrack(&#x27;tool_visible&#x27;);rgzObs.unobserve(en[i].target);}}},{threshold:0.5});rgzObs.observe(rgzContainer);}
 window.addEventListener(&#x27;resize&#x27;,rgzSendHeight);rgzUpdateProgress(&#x27;rgz-q-usage&#x27;);
 rgzSendHeight();
-/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (32 px max). Trop étroit (mobile) : il passe sur deux lignes. */
-function rgzFitTitle(){var t=document.querySelector(&#x27;.rgz-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;20){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rgzSendHeight();}
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (24 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+function rgzFitTitle(){var t=document.querySelector(&#x27;.rgz-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;18){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rgzSendHeight();}
 window.addEventListener(&#x27;resize&#x27;,rgzFitTitle);rgzFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(rgzFitTitle);
 "></svg>
   <div class="rgz-card">
