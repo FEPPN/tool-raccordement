@@ -369,7 +369,7 @@ if(rgzContainer&amp;&amp;window.IntersectionObserver){var rgzObs=new Intersectio
 window.addEventListener(&#x27;resize&#x27;,rgzSendHeight);rgzUpdateProgress(&#x27;rgz-q-usage&#x27;);
 rgzSendHeight();
 /* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (20 px max). Trop étroit (mobile) : il passe sur deux lignes. */
-function rgzFitTitle(){var t=document.querySelector(&#x27;.rgz-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;15){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rgzSendHeight();}
+function rgzFitTitle(){var t=document.querySelector(&#x27;.rgz-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;17){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rgzSendHeight();}
 window.addEventListener(&#x27;resize&#x27;,rgzFitTitle);rgzFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(rgzFitTitle);
 /* La hauteur est renvoyée à la page à chaque changement de taille (ex. ouverture de « Ce qui n&#x27;est pas inclus »), pour que rien ne soit coupé en bas. */
 if(window.ResizeObserver){new ResizeObserver(function(){rgzSendHeight();}).observe(document.querySelector(&#x27;.rgz-wrap&#x27;));}
