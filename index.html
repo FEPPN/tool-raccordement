@@ -166,11 +166,11 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap{padding:16px !important;}
 .rac-card{max-width:680px !important;}
 .rac-wrap .rac-progress,.rac-wrap .rac-step-label{display:none !important;}
-.rac-wrap .rac-title{font-size:24px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 24px !important;text-align:center;}
+.rac-wrap .rac-title{font-size:20px !important;font-weight:800 !important;line-height:1.3 !important;margin:0 0 16px !important;text-align:center;}
 .rac-wrap .rac-question-block,.rac-wrap .rac-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
 .rac-wrap .rac-question-block.rac-active,.rac-wrap .rac-result-box.rac-show,.rac-going-back .rac-question-block.rac-active,.rac-going-back .rac-result-box.rac-show{animation:racFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
 @keyframes racFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.rac-wrap .rac-question-text{font-size:22px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
+.rac-wrap .rac-question-text{font-size:18px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
 .rac-wrap .rac-question-sub{font-size:14px !important;font-weight:500;line-height:1.45;text-align:center;margin:6px 0 0 !important;}
 .rac-wrap .rac-options,.rac-wrap .rac-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;max-width:480px;margin:24px auto 0 !important;}
 .rac-wrap .rac-input-wrap,.rac-wrap .rac-chips{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
@@ -195,9 +195,9 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap .rac-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .rac-wrap .rac-link-btn{margin-top:16px !important;}
 @media (max-width:600px){
-.rac-wrap .rac-title{font-size:20px !important;}
+.rac-wrap .rac-title{font-size:18px !important;}
 .rac-wrap .rac-question-block,.rac-wrap .rac-result-box{padding:24px 16px !important;}
-.rac-wrap .rac-question-text{font-size:20px !important;}
+.rac-wrap .rac-question-text{font-size:17px !important;}
 .rac-wrap .rac-lbl strong{font-size:16px;}
 }
 </style>
@@ -212,7 +212,7 @@ var RAC_TVA=1.20,RAC_REFACTION=0.40;
 function racNewData(){return {type:null,n:null,power:null,powerUnknown:false,viab:null,ext:null,le:null,zone:null,lb:null};}
 var racData=racNewData();
 var racHistory=[];
-function racSendHeight(){setTimeout(function(){var h=document.body.offsetHeight||document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
+function racSendHeight(){setTimeout(function(){var w=document.querySelector(&#x27;.rac-wrap&#x27;),cs=getComputedStyle(document.body);var h=w?Math.ceil(w.getBoundingClientRect().bottom+window.scrollY+parseFloat(cs.marginBottom)):document.documentElement.scrollHeight;window.parent.postMessage({height:h},&#x27;*&#x27;);},100);}
 function racCurrentScreenId(){var active=document.querySelector(&#x27;.rac-question-block.rac-active&#x27;);if(active)return active.id;var shown=document.getElementById(&#x27;rac-result&#x27;);if(shown&amp;&amp;shown.classList.contains(&#x27;rac-show&#x27;))return &#x27;rac-result&#x27;;return null;}
 function racGoTo(id,skipHistory){
   racHideTip();
@@ -443,9 +443,12 @@ function racCountUp(){
 window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-poste-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;document.getElementById(&#x27;rac-err-le&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-poste&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-lb&#x27;).style.display=&#x27;none&#x27;;racGoTo(&#x27;rac-q-type&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
 window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x27;rac-q-type&#x27;);racSendHeight();
-/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (24 px max). Trop étroit (mobile) : il passe sur deux lignes. */
-function racFitTitle(){var t=document.querySelector(&#x27;.rac-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;18){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}racSendHeight();}
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (20 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+function racFitTitle(){var t=document.querySelector(&#x27;.rac-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;15){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}racSendHeight();}
 window.addEventListener(&#x27;resize&#x27;,racFitTitle);racFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(racFitTitle);
+/* La hauteur est renvoyée à la page à chaque changement de taille (ex. ouverture de « Ce qui n&#x27;est pas inclus »), pour que rien ne soit coupé en bas. */
+if(window.ResizeObserver){new ResizeObserver(function(){racSendHeight();}).observe(document.querySelector(&#x27;.rac-wrap&#x27;));}
+document.addEventListener(&#x27;toggle&#x27;,function(){racSendHeight();},true);
 "></svg>
   <div class="rac-card">
     <div class="rac-title">Estimez le coût de votre raccordement électrique</div>
