@@ -166,7 +166,7 @@ details.rpv-fold[open] summary::after{content:'−';}
 .rpv-wrap{padding:16px !important;}
 .rpv-card{max-width:680px !important;}
 .rpv-wrap .rpv-progress,.rpv-wrap .rpv-step-label{display:none !important;}
-.rpv-wrap .rpv-title{font-size:20px !important;font-weight:800 !important;line-height:1.3 !important;margin:0 0 16px !important;text-align:center;}
+.rpv-wrap .rpv-title{font-size:24px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 20px !important;text-align:center;}
 .rpv-wrap .rpv-question-block,.rpv-wrap .rpv-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
 .rpv-wrap .rpv-question-block.rpv-active,.rpv-wrap .rpv-result-box.rpv-show,.rpv-going-back .rpv-question-block.rpv-active,.rpv-going-back .rpv-result-box.rpv-show{animation:rpvFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
 @keyframes rpvFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
@@ -195,7 +195,7 @@ details.rpv-fold[open] summary::after{content:'−';}
 .rpv-wrap .rpv-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .rpv-wrap .rpv-link-btn{margin-top:16px !important;}
 @media (max-width:600px){
-.rpv-wrap .rpv-title{font-size:18px !important;}
+.rpv-wrap .rpv-title{font-size:20px !important;}
 .rpv-wrap .rpv-question-block,.rpv-wrap .rpv-result-box{padding:24px 16px !important;}
 .rpv-wrap .rpv-question-text{font-size:17px !important;}
 .rpv-wrap .rpv-lbl strong{font-size:16px;}
@@ -357,8 +357,8 @@ var rpvContainer=document.querySelector(&#x27;.rpv-card&#x27;);
 if(rpvContainer&amp;&amp;window.IntersectionObserver){var rpvObs=new IntersectionObserver(function(en){for(var i=0;i&lt;en.length;i++){if(en[i].isIntersecting){rpvTrack(&#x27;tool_visible&#x27;);rpvObs.unobserve(en[i].target);}}},{threshold:0.5});rpvObs.observe(rpvContainer);}
 window.addEventListener(&#x27;resize&#x27;,rpvSendHeight);rpvUpdateProgress(&#x27;rpv-q2&#x27;);
 rpvSendHeight();
-/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (20 px max). Trop étroit (mobile) : il passe sur deux lignes. */
-function rpvFitTitle(){var t=document.querySelector(&#x27;.rpv-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;17){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rpvSendHeight();}
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (24 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+function rpvFitTitle(){var t=document.querySelector(&#x27;.rpv-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;18){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}rpvSendHeight();}
 window.addEventListener(&#x27;resize&#x27;,rpvFitTitle);rpvFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(rpvFitTitle);
 /* La hauteur est renvoyée à la page à chaque changement de taille (ex. ouverture de « Ce qui n&#x27;est pas inclus »), pour que rien ne soit coupé en bas. */
 if(window.ResizeObserver){new ResizeObserver(function(){rpvSendHeight();}).observe(document.querySelector(&#x27;.rpv-wrap&#x27;));}
