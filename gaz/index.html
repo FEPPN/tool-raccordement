@@ -200,6 +200,18 @@ details.rgz-fold[open] summary::after{content:'−';}
 .rgz-wrap .rgz-question-text{font-size:17px !important;}
 .rgz-wrap .rgz-lbl strong{font-size:16px;}
 }
+/* Résultat plus moderne : titre sans icône, lignes plus lisibles, total mis en avant dans un encadré violet clair */
+.rgz-wrap .rgz-result-title{display:block !important;text-transform:none !important;letter-spacing:0 !important;font-size:20px !important;font-weight:800 !important;line-height:1.3;color:#1A1A2E !important;text-align:center;margin:0 0 20px !important;}
+.rgz-wrap .rgz-result-title .rgz-check{display:none !important;}
+.rgz-wrap .rgz-line{font-size:15px !important;padding:8px 0 !important;}
+.rgz-wrap .rgz-line-desc{font-size:13.5px;color:#6B7280;}
+.rgz-wrap .rgz-total{background:#F3F2FF;border:none !important;border-radius:12px;padding:16px 20px !important;margin-top:14px !important;align-items:center !important;}
+.rgz-wrap .rgz-total > span:first-child{font-size:18px !important;font-weight:800 !important;color:#1A1A2E;}
+.rgz-wrap .rgz-total-value{font-size:32px !important;line-height:1.1;letter-spacing:-0.5px !important;}
+.rgz-wrap .rgz-total-value small{font-size:13px !important;}
+.rgz-wrap .rgz-total-value .rgz-from{font-size:15px !important;}
+.rgz-wrap .rgz-source{font-size:12px !important;margin-top:8px !important;}
+@media (max-width:600px){.rgz-wrap .rgz-result-title{font-size:18px !important;}.rgz-wrap .rgz-total{padding:14px 16px !important;}.rgz-wrap .rgz-total-value{font-size:26px !important;}.rgz-wrap .rgz-total > span:first-child{font-size:16px !important;}}
 </style>
 <div class="rgz-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Tarifs de raccordement au gaz GRDF, période du 1er juillet 2026 au 30 juin 2027.
    Sources : grdf.fr « Les prix du raccordement au gaz » et Catalogue des prestations GRDF du 1er juillet 2026, N°232.

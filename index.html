@@ -200,6 +200,18 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap .rac-question-text{font-size:17px !important;}
 .rac-wrap .rac-lbl strong{font-size:16px;}
 }
+/* Résultat plus moderne : titre sans icône, lignes plus lisibles, total mis en avant dans un encadré violet clair */
+.rac-wrap .rac-result-title{display:block !important;text-transform:none !important;letter-spacing:0 !important;font-size:20px !important;font-weight:800 !important;line-height:1.3;color:#1A1A2E !important;text-align:center;margin:0 0 20px !important;}
+.rac-wrap .rac-result-title .rac-check{display:none !important;}
+.rac-wrap .rac-line{font-size:15px !important;padding:8px 0 !important;}
+.rac-wrap .rac-line-desc{font-size:13.5px;color:#6B7280;}
+.rac-wrap .rac-total{background:#F3F2FF;border:none !important;border-radius:12px;padding:16px 20px !important;margin-top:14px !important;align-items:center !important;}
+.rac-wrap .rac-total > span:first-child{font-size:18px !important;font-weight:800 !important;color:#1A1A2E;}
+.rac-wrap .rac-total-value{font-size:32px !important;line-height:1.1;letter-spacing:-0.5px !important;}
+.rac-wrap .rac-total-value small{font-size:13px !important;}
+.rac-wrap .rac-total-value .rac-from{font-size:15px !important;}
+.rac-wrap .rac-source{font-size:12px !important;margin-top:8px !important;}
+@media (max-width:600px){.rac-wrap .rac-result-title{font-size:18px !important;}.rac-wrap .rac-total{padding:14px 16px !important;}.rac-wrap .rac-total-value{font-size:26px !important;}.rac-wrap .rac-total > span:first-child{font-size:16px !important;}}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;

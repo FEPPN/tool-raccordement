@@ -202,6 +202,18 @@ details.rpv-fold[open] summary::after{content:'−';}
 }
 #rpv-opt-nonfixe .rpv-ico-court,#rpv-opt-nonfixe.rpv-court .rpv-ico-long{display:none !important;}
 #rpv-opt-nonfixe.rpv-court .rpv-ico-court{display:block !important;}
+/* Résultat plus moderne : titre sans icône, lignes plus lisibles, total mis en avant dans un encadré violet clair */
+.rpv-wrap .rpv-result-title{display:block !important;text-transform:none !important;letter-spacing:0 !important;font-size:20px !important;font-weight:800 !important;line-height:1.3;color:#1A1A2E !important;text-align:center;margin:0 0 20px !important;}
+.rpv-wrap .rpv-result-title .rpv-check{display:none !important;}
+.rpv-wrap .rpv-line{font-size:15px !important;padding:8px 0 !important;}
+.rpv-wrap .rpv-line-desc{font-size:13.5px;color:#6B7280;}
+.rpv-wrap .rpv-total{background:#F3F2FF;border:none !important;border-radius:12px;padding:16px 20px !important;margin-top:14px !important;align-items:center !important;}
+.rpv-wrap .rpv-total > span:first-child{font-size:18px !important;font-weight:800 !important;color:#1A1A2E;}
+.rpv-wrap .rpv-total-value{font-size:32px !important;line-height:1.1;letter-spacing:-0.5px !important;}
+.rpv-wrap .rpv-total-value small{font-size:13px !important;}
+.rpv-wrap .rpv-total-value .rpv-from{font-size:15px !important;}
+.rpv-wrap .rpv-source{font-size:12px !important;margin-top:8px !important;}
+@media (max-width:600px){.rpv-wrap .rpv-result-title{font-size:18px !important;}.rpv-wrap .rpv-total{padding:14px 16px !important;}.rpv-wrap .rpv-total-value{font-size:26px !important;}.rpv-wrap .rpv-total > span:first-child{font-size:16px !important;}}
 </style>
 <div class="rpv-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025), § 13.1 – montants HT, réfaction 40 % incluse.
    Le « semi-équipé » n&#x27;existe qu&#x27;au-delà de 28 jours : en courte durée il est facturé comme un non fixe. */
