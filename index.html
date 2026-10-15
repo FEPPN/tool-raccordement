@@ -1,5 +1,10 @@
+<meta charset="utf-8">
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 
 <style>
+/* Police Inter (papernest), hébergée avec l'outil : le texte s'affiche tout de suite, puis passe en Inter dès qu'elle est chargée */
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url('fonts/inter.woff2') format('woff2');}
+
 .rac-wrap, .rac-wrap *{box-sizing:border-box;}
 .rac-wrap{font-family:'Inter','Segoe UI',Arial,sans-serif;background:transparent;padding:16px;line-height:1.6;color:#1A1A2E;overflow-x:hidden;}
 .rac-card{max-width:640px;margin:0 auto;background:transparent;border-radius:0 !important;padding:0;box-shadow:none;border:none;}
@@ -126,9 +131,9 @@ details.rac-fold summary::after{content:'+';color:#5A52FF;font-weight:700;}
 details.rac-fold[open] summary::after{content:'−';}
 .rac-devis-line{margin-top:8px !important;}
 /* Style aligné sur les autres simulateurs papernest : police Avenir (déjà installée, pas de téléchargement), cartes, boutons ronds */
-.rac-wrap,.rac-wrap button,.rac-wrap input,.rac-term-tip{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
+.rac-wrap,.rac-wrap button,.rac-wrap input,.rac-term-tip{font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;}
 .rac-wrap{color:#1A1A2E;}
-.rac-wrap .rac-title{font-family:"Avenir","Avenir Next",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1A1A2E !important;letter-spacing:-0.2px !important;}
+.rac-wrap .rac-title{font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif !important;font-weight:800 !important;color:#1A1A2E !important;letter-spacing:-0.2px !important;}
 .rac-question-block,.rac-result-box{border:1px solid rgba(27,25,64,0.06) !important;box-shadow:0 4px 24px rgba(27,25,64,0.05);padding:26px 22px !important;}
 .rac-question-text{font-weight:800 !important;color:#1A1A2E !important;}
 .rac-question-sub{color:#6B7280 !important;}
@@ -166,11 +171,11 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap{padding:16px !important;}
 .rac-card{max-width:680px !important;}
 .rac-wrap .rac-progress,.rac-wrap .rac-step-label{display:none !important;}
-.rac-wrap .rac-title{font-size:24px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 20px !important;text-align:center;}
+.rac-wrap .rac-title{font-size:23px !important;font-weight:800 !important;line-height:1.25 !important;margin:0 0 20px !important;text-align:center;}
 .rac-wrap .rac-question-block,.rac-wrap .rac-result-box{background:#fff !important;border-radius:16px !important;padding:32px 24px !important;box-shadow:0 4px 24px rgba(27,25,64,0.04) !important;border:1px solid rgba(27,25,64,0.03) !important;}
 .rac-wrap .rac-question-block.rac-active,.rac-wrap .rac-result-box.rac-show,.rac-going-back .rac-question-block.rac-active,.rac-going-back .rac-result-box.rac-show{animation:racFadeUp .4s cubic-bezier(0.16,1,0.3,1) !important;}
 @keyframes racFadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.rac-wrap .rac-question-text{font-size:18px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
+.rac-wrap .rac-question-text{font-size:16.5px !important;font-weight:800 !important;line-height:1.35 !important;text-align:center !important;margin:0 !important;}
 .rac-wrap .rac-question-sub{font-size:14px !important;font-weight:500;line-height:1.45;text-align:center;margin:6px 0 0 !important;}
 .rac-wrap .rac-options,.rac-wrap .rac-tiles{display:flex !important;flex-direction:column !important;gap:12px !important;max-width:480px;margin:24px auto 0 !important;}
 .rac-wrap .rac-input-wrap,.rac-wrap .rac-chips{max-width:480px;margin-left:auto !important;margin-right:auto !important;}
@@ -179,7 +184,7 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap .rac-option-btn::before,.rac-wrap .rac-option-btn::after{display:none !important;content:none !important;}
 .rac-wrap .rac-ico,.rac-wrap .rac-option-btn.rac-selected .rac-ico{flex:0 0 44px;height:44px;border-radius:10px;background:#F0EFFF !important;color:#5A52FF !important;}
 .rac-wrap .rac-ico svg{color:#5A52FF !important;border-radius:0 !important;overflow:visible !important;}
-.rac-wrap .rac-lbl strong{font-size:16px;font-weight:700;color:#1A1A2E;}
+.rac-wrap .rac-lbl strong{font-size:15px;font-weight:700;color:#1A1A2E;}
 .rac-wrap .rac-lbl small{font-size:13.5px;line-height:1.35;color:#6B7280;}
 .rac-wrap .rac-chip{background:#fff !important;border:2px solid #E8E9ED !important;color:#1A1A2E !important;transition:all .2s ease !important;}
 @media (hover:hover){
@@ -195,23 +200,23 @@ details.rac-fold[open] summary::after{content:'−';}
 .rac-wrap .rac-reset-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .rac-wrap .rac-link-btn{margin-top:16px !important;}
 @media (max-width:600px){
-.rac-wrap .rac-title{font-size:20px !important;}
+.rac-wrap .rac-title{font-size:19px !important;}
 .rac-wrap .rac-question-block,.rac-wrap .rac-result-box{padding:24px 16px !important;}
-.rac-wrap .rac-question-text{font-size:17px !important;}
-.rac-wrap .rac-lbl strong{font-size:16px;}
+.rac-wrap .rac-question-text{font-size:15.5px !important;}
+.rac-wrap .rac-lbl strong{font-size:15px;}
 }
 /* Résultat plus moderne : titre sans icône, lignes plus lisibles, total mis en avant dans un encadré violet clair */
-.rac-wrap .rac-result-title{display:block !important;text-transform:none !important;letter-spacing:0 !important;font-size:20px !important;font-weight:800 !important;line-height:1.3;color:#1A1A2E !important;text-align:center;margin:0 0 20px !important;}
+.rac-wrap .rac-result-title{display:block !important;text-transform:none !important;letter-spacing:0 !important;font-size:19px !important;font-weight:800 !important;line-height:1.3;color:#1A1A2E !important;text-align:center;margin:0 0 20px !important;}
 .rac-wrap .rac-result-title .rac-check{display:none !important;}
 .rac-wrap .rac-line{font-size:15px !important;padding:8px 0 !important;}
 .rac-wrap .rac-line-desc{font-size:13.5px;color:#6B7280;}
 .rac-wrap .rac-total{background:none;border:none !important;border-top:1px solid #E8E9ED !important;border-radius:0;padding:16px 0 0 !important;margin-top:12px !important;align-items:center !important;}
-.rac-wrap .rac-total > span:first-child{font-size:18px !important;font-weight:800 !important;color:#1A1A2E;}
-.rac-wrap .rac-total-value{font-size:32px !important;line-height:1.1;letter-spacing:-0.5px !important;}
+.rac-wrap .rac-total > span:first-child{font-size:16.5px !important;font-weight:800 !important;color:#1A1A2E;}
+.rac-wrap .rac-total-value{font-size:30px !important;line-height:1.1;letter-spacing:0 !important;}
 .rac-wrap .rac-total-value small{font-size:13px !important;}
 .rac-wrap .rac-total-value .rac-from{font-size:15px !important;}
 .rac-wrap .rac-source{font-size:12px !important;margin-top:8px !important;}
-@media (max-width:600px){.rac-wrap .rac-result-title{font-size:18px !important;}.rac-wrap .rac-total{padding:14px 0 0 !important;}.rac-wrap .rac-total-value{font-size:26px !important;}.rac-wrap .rac-total > span:first-child{font-size:16px !important;}}
+@media (max-width:600px){.rac-wrap .rac-result-title{font-size:17px !important;}.rac-wrap .rac-total{padding:14px 0 0 !important;}.rac-wrap .rac-total-value{font-size:24px !important;}.rac-wrap .rac-total > span:first-child{font-size:15px !important;}}
 </style>
 <div class="rac-wrap"><svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" onload="/* Barème Enedis-NMO-RAC_009E v7.2 (17/07/2025) – raccordement individuel en consommation.
    Montants HT avant réfaction. § 5.5 : BT ≤ 36 kVA ; § 6.5 : BT &gt; 36 kVA ; § 3.4 : réfaction 40 % ;
@@ -358,7 +363,7 @@ window.racSubmitLength=function(which){
 };
 window.racUnknownLength=function(which){var c=RAC_INPUTS[which],key=c.key||which;racClearFrom(key);racData[key]=-1;racTrack(c.event+&#x27;_unknown&#x27;);racAdvance();};
 
-function racFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function racFmt(n){return n.toLocaleString(&#x27;fr-FR&#x27;,{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/\u202f/g,&#x27;\u00a0&#x27;);}
 function racRange(lo,hi,sign){sign=sign||&#x27;&#x27;;return (Math.abs(lo-hi)&lt;0.005)?sign+racFmt(lo)+&#x27; €&#x27;:sign+racFmt(lo)+&#x27; € à &#x27;+sign+racFmt(hi)+&#x27; €&#x27;;}
 function racTtc(ht){return ht*RAC_TVA;}
 function racApres(ht){return ht*(1-RAC_REFACTION)*RAC_TVA;}
@@ -455,7 +460,7 @@ function racCountUp(){
 window.racHandleReset=function(){racTrack(&#x27;click_reset_simulator&#x27;,{is_cta:true});racData=racNewData();racHistory=[];document.getElementById(&#x27;rac-extension-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-poste-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-branchement-length&#x27;).value=&#x27;&#x27;;document.getElementById(&#x27;rac-result-content&#x27;).innerHTML=&#x27;&#x27;;document.getElementById(&#x27;rac-err-le&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-poste&#x27;).style.display=&#x27;none&#x27;;document.getElementById(&#x27;rac-err-lb&#x27;).style.display=&#x27;none&#x27;;racGoTo(&#x27;rac-q-type&#x27;,true);};
 var racContainer=document.querySelector(&#x27;.rac-card&#x27;);if(racContainer&amp;&amp;window.IntersectionObserver){var racObserver=new IntersectionObserver(function(entries){for(var i=0;i&lt;entries.length;i++){if(entries[i].isIntersecting){racTrack(&#x27;tool_visible&#x27;,{event_type:&#x27;interaction&#x27;});racObserver.unobserve(entries[i].target);}}},{threshold:0.5});racObserver.observe(racContainer);}
 window.addEventListener(&#x27;resize&#x27;,racSendHeight);racUpdateProgress(&#x27;rac-q-type&#x27;);racSendHeight();
-/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (24 px max). Trop étroit (mobile) : il passe sur deux lignes. */
+/* Titre sur une seule ligne : on réduit la taille juste assez pour qu&#x27;il tienne (23 px max). Trop étroit (mobile) : il passe sur deux lignes. */
 function racFitTitle(){var t=document.querySelector(&#x27;.rac-title&#x27;);if(!t)return;t.style.removeProperty(&#x27;font-size&#x27;);t.style.whiteSpace=&#x27;nowrap&#x27;;var w=t.clientWidth,sw=t.scrollWidth;if(sw&gt;w){var fs=Math.floor(parseFloat(getComputedStyle(t).fontSize)*w/sw*10)/10;if(fs&lt;18){t.style.whiteSpace=&#x27;&#x27;;}else{t.style.setProperty(&#x27;font-size&#x27;,fs+&#x27;px&#x27;,&#x27;important&#x27;);}}racSendHeight();}
 window.addEventListener(&#x27;resize&#x27;,racFitTitle);racFitTitle();if(document.fonts&amp;&amp;document.fonts.ready)document.fonts.ready.then(racFitTitle);
 /* La hauteur est renvoyée à la page à chaque changement de taille (ex. ouverture de « Ce qui n&#x27;est pas inclus »), pour que rien ne soit coupé en bas. */
